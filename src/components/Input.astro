@@ -1,0 +1,18 @@
+---
+interface Props {
+  label: string
+}
+
+const {label} = Astro.props
+---
+<label class="flex flex-col gap-1">
+{label}
+  <input class="
+  border-2
+  p-1
+  border-t-stone-300
+  border-r-stone-200
+  border-b-stone-200
+  border-l-stone-300
+  " {...Astro.props} />
+</label>

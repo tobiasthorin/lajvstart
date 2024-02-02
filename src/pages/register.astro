@@ -1,8 +1,9 @@
 ---
-import BaseHtml from "../layouts/baseHtml.astro"
+import Button from "../components/Button.astro"
+import MainPage from "../layouts/MainPage.astro"
 ---
 
-<BaseHtml>
+<MainPage>
   <h1>Register</h1>
 
   <p>Already have an account? <a href="/signin">Sign in</a></p>
@@ -14,6 +15,6 @@ import BaseHtml from "../layouts/baseHtml.astro"
     <label for="password">Password</label>
     <input type="password" name="password" id="password" />
 
-    <button type="submit">Register</button>
+    <Button type="submit">Register</Button>
   </form>
-</BaseHtml>
+</MainPage>

@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" class="min-h-screen">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -6,8 +6,15 @@
     <meta name="generator" content={Astro.generator} />
     <title>Astro</title>
     <script src="https://unpkg.com/htmx.org@1"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+Display:wght@700&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body>
+  <body class="min-h-screen flex flex-col bg-stone-50">
     <slot />
   </body>
 </html>
