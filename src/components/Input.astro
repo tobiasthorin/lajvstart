@@ -1,18 +1,19 @@
 ---
 interface Props {
   label: string
+  type:string
+  id: string
 }
 
-const {label} = Astro.props
+const {class: className, label, id, type, ...rest} = Astro.props
 ---
-<label class="flex flex-col gap-1">
+<div class={className}>
+  <label for={id} class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{label}</label>
+  <input type={type} id={id} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required>
+</div>
+<!-- 
+<label class={fullClass} {...rest}>
 {label}
-  <input class="
-  border-2
-  p-1
-  border-t-stone-300
-  border-r-stone-200
-  border-b-stone-200
-  border-l-stone-300
-  " {...Astro.props} />
 </label>
+  <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" {...Astro.props} />
+ -->

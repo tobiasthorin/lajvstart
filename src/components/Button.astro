@@ -1,11 +1,7 @@
-<button class="
-min-w-24 p-2 rounded drop-shadow-md 
-bg-gradient-to-r from-amber-400 to-amber-500
-hover:from-amber-300 hover:to-amber-400 hover:-translate-y-px
-active:from-amber-500 active:to-amber-600 active:translate-y-px active:drop-shadow-none
-
-"
-
-{...Astro.props}>
-  <slot />
+---
+const {class: className, ...rest} = Astro.props
+const fullClass = `text-white bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-orange-300 dark:focus:ring-orange-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${className}`
+---
+<button type="button" class={fullClass}>
+  <slot/>
 </button>

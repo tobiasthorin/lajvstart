@@ -15,6 +15,7 @@
     "@astrojs/tailwind": "^5.1.0",
     "@supabase/supabase-js": "^2.39.3",
     "astro": "^4.1.1",
+    "flowbite": "^2.2.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
   },

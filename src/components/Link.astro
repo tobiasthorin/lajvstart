@@ -1,5 +1,6 @@
 ---
 const {class: className, ...rest} = Astro.props
+const fullClass = `font-medium text-blue-600 dark:text-blue-500 hover:underline ${className}`
 ---
 
-<a class={`text-lime-800 hover:underline decoration-2 decoration-amber-500 ${className}`} {...rest}><slot /></a>
+<a class={fullClass} {...rest}><slot /></a>

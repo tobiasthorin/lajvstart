@@ -10,11 +10,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif+Display:wght@700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Londrina+Solid&display=swap"
       rel="stylesheet"
     />
   </head>
-  <body class="min-h-screen flex flex-col bg-stone-50">
+  <body class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
     <slot />
+
+    <script
+      is:inline
+      src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.js"
+    ></script>
   </body>
 </html>
