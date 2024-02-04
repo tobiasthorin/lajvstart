@@ -16,15 +16,24 @@ if (accessToken && refreshToken) redirect("/dashboard")
 <MainPage>
   <main class="flex-1 p-4 flex flex-col items-center">
     <form
-      action="/api/auth/signin"
-      method="post"
-      class="mt-32 flex flex-col gap-4 max-w-lg"
+      hx-ext="response-targets"
+      hx-post="/api/auth/signin"
+      hx-target-4*="#error-message"
+      hx-swap="innerHTML"
+      class="mt-32 flex flex-col gap-4 w-72"
     >
-      <Input label="Email" type="email" name="email" id="email" />
+      <Input label="Email" type="email" name="email" id="email" required />
 
-      <Input label="Password" type="password" name="password" id="password" />
+      <Input
+        label="Password"
+        type="password"
+        name="password"
+        id="password"
+        required
+      />
 
       <Button type="submit">Login</Button>
+      <div id="error-message"></div>
     </form>
 
     <Link class="mt-8" href="/register">Create an account</Link>

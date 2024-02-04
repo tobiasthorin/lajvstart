@@ -3,10 +3,11 @@ import {
   ACCESS_TOKEN_COOKIE,
   REFRESH_TOKEN_COOKIE,
 } from "../../../utils/constants"
+import { HxRedirect } from "../../../utils/navigationUtils"
 
-export const GET: APIRoute = async ({ cookies, redirect }) => {
+export const GET: APIRoute = async ({ cookies }) => {
   cookies.delete(ACCESS_TOKEN_COOKIE, { path: "/" })
   cookies.delete(REFRESH_TOKEN_COOKIE, { path: "/" })
 
-  return redirect("/signin")
+  return HxRedirect("/signin")
 }

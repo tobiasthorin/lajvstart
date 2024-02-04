@@ -29,9 +29,9 @@ const email = data.user?.email
 ---
 
 <MainPage>
-  <h1>Welcome {email}</h1>
-  <p>We are happy to see you here</p>
-  <form action="/api/auth/signout">
+  <h2>Welcome {email}</h2>
+  <p>Not much to do here yet.</p>
+  <form hx-get="/api/auth/signout">
     <Button type="submit">Sign out</Button>
   </form>
 </MainPage>

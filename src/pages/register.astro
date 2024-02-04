@@ -1,20 +1,30 @@
 ---
 import Button from "../components/Button.astro"
+import Input from "../components/Input.astro"
 import MainPage from "../layouts/MainPage.astro"
 ---
 
 <MainPage>
-  <h1>Register</h1>
+  <main class="flex-1 p-4 flex flex-col items-center">
+    <form
+      hx-ext="response-targets"
+      hx-post="/api/auth/register"
+      hx-target-4*="#error-message"
+      hx-swap="innerHTML"
+      class="mt-32 flex flex-col gap-4 w-72"
+    >
+      <Input label="Email" type="email" name="email" id="email" required />
 
-  <p>Already have an account? <a href="/signin">Sign in</a></p>
+      <Input
+        label="Password"
+        type="password"
+        name="password"
+        id="password"
+        required
+      />
 
-  <form action="/api/auth/register" method="post">
-    <label for="email" for="email">Email</label>
-    <input type="email" name="email" id="email" />
-
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" />
-
-    <Button type="submit">Register</Button>
-  </form>
+      <Button type="submit">Register!</Button>
+      <div id="error-message"></div>
+    </form>
+  </main>
 </MainPage>

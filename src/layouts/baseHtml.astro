@@ -1,12 +1,19 @@
 <html lang="en" class="min-h-screen">
   <head>
-    <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
-    <script src="https://unpkg.com/htmx.org@1"></script>
 
+    <title>Astro</title>
+
+    <!-- HTMX -->
+    <script is:inline src="https://unpkg.com/htmx.org@1"></script>
+    <script
+      is:inline
+      src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
+
+    <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,6 +24,7 @@
   <body class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
     <slot />
 
+    <!-- FLOWBITE JS -->
     <script
       is:inline
       src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.js"
