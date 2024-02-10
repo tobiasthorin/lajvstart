@@ -1,11 +1,10 @@
 ---
-import { isLoggedIn } from "../utils/authUtils"
+import { isSignedIn } from "../utils/authUtils"
 
 const { cookies, redirect } = Astro
 
-if (isLoggedIn(cookies)) {
-  return redirect("/dashboard")
-} else {
-  return redirect("/signin")
-}
+const sessionData = await isSignedIn(cookies)
+
+if (!sessionData) return redirect("/signin")
+return redirect("/dashboard")
 ---

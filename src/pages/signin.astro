@@ -2,24 +2,22 @@
 import Button from "../components/Button.astro"
 import Input from "../components/Input.astro"
 import Link from "../components/Link.astro"
-import MainPage from "../layouts/MainPage.astro"
-import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from "../utils/constants"
+import SignedOutPage from "../layouts/SignedOutPage.astro"
+import { isSignedIn } from "../utils/authUtils"
 
 const { cookies, redirect } = Astro
 
-const accessToken = cookies.get(ACCESS_TOKEN_COOKIE)
-const refreshToken = cookies.get(REFRESH_TOKEN_COOKIE)
+const sessionData = await isSignedIn(cookies, redirect)
 
-if (accessToken && refreshToken) redirect("/dashboard")
+if (sessionData) redirect("/dashboard")
 ---
 
-<MainPage>
+<SignedOutPage>
   <main class="flex-1 p-4 flex flex-col items-center">
     <form
       hx-ext="response-targets"
       hx-post="/api/auth/signin"
       hx-target-4*="#error-message"
-      hx-swap="innerHTML"
       class="mt-32 flex flex-col gap-4 w-72"
     >
       <Input label="Email" type="email" name="email" id="email" required />
@@ -38,4 +36,4 @@ if (accessToken && refreshToken) redirect("/dashboard")
 
     <Link class="mt-8" href="/register">Create an account</Link>
   </main>
-</MainPage>
+</SignedOutPage>

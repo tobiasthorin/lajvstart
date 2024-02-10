@@ -6,3 +6,6 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+declare const initFlowbite: () => void
+declare const htmx: { onLoad: (fn: () => void) => void }

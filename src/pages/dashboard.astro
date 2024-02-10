@@ -1,37 +1,24 @@
 ---
-import { supabase } from "../lib/supabase"
-import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from "../utils/constants"
-import Button from "../components/Button.astro"
-import MainPage from "../layouts/MainPage.astro"
+import { getUserDetails } from "../services/userService"
+import SignedInPage from "../layouts/SignedInPage.astro"
+import { isSignedIn } from "../utils/authUtils"
 
 const { cookies, redirect } = Astro
 
-const accessToken = cookies.get(ACCESS_TOKEN_COOKIE)
-const refreshToken = cookies.get(REFRESH_TOKEN_COOKIE)
+const sessionData = await isSignedIn(cookies)
 
-if (!accessToken || !refreshToken) {
-  return redirect("/signin")
+if (!sessionData || !sessionData.user) return redirect("/signin")
+
+const userId = sessionData.user.id
+
+const { data: userDetails, error: userError } = await getUserDetails(userId)
+
+if (userError) {
+  console.error(userError)
 }
-
-const { data, error } = await supabase.auth.setSession({
-  refresh_token: refreshToken.value,
-  access_token: accessToken.value,
-})
-
-if (error) {
-  cookies.delete(ACCESS_TOKEN_COOKIE, { path: "/" })
-  cookies.delete(REFRESH_TOKEN_COOKIE, { path: "/" })
-
-  return redirect("/signin")
-}
-
-const email = data.user?.email
 ---
 
-<MainPage>
-  <h2>Welcome {email}</h2>
+<SignedInPage userName={userDetails.name}>
+  <h2>Welcome {userDetails.name}</h2>
   <p>Not much to do here yet.</p>
-  <form hx-get="/api/auth/signout">
-    <Button type="submit">Sign out</Button>
-  </form>
-</MainPage>
+</SignedInPage>

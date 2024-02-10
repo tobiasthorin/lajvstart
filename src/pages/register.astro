@@ -1,10 +1,10 @@
 ---
 import Button from "../components/Button.astro"
 import Input from "../components/Input.astro"
-import MainPage from "../layouts/MainPage.astro"
+import SignedOutPage from "../layouts/SignedOutPage.astro"
 ---
 
-<MainPage>
+<SignedOutPage>
   <main class="flex-1 p-4 flex flex-col items-center">
     <form
       hx-ext="response-targets"
@@ -27,4 +27,4 @@ import MainPage from "../layouts/MainPage.astro"
       <div id="error-message"></div>
     </form>
   </main>
-</MainPage>
+</SignedOutPage>

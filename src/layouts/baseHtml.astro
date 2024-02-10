@@ -1,4 +1,4 @@
-<html lang="en" class="min-h-screen">
+<html lang="en" class="min-h-screen antialiased">
   <head>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta charset="utf-8" />
@@ -29,5 +29,8 @@
       is:inline
       src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.js"
     ></script>
+    <script>
+      htmx.onLoad(() => initFlowbite())
+    </script>
   </body>
 </html>
