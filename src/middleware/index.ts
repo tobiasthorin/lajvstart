@@ -1,8 +1,9 @@
 import { defineMiddleware } from "astro/middleware"
 import { supabase } from "../lib/supabase"
 import micromatch from "micromatch"
+import { getUserDetails } from "../services/userService"
 
-const protectedRoutes = ["/dashboard(|/)"]
+const protectedRoutes = ["/dashboard(|/)", "/profile(|/)"]
 const redirectRoutes = ["/", "/signin(|/)", "/register(|/)"]
 
 export const onRequest = defineMiddleware(
@@ -20,7 +21,11 @@ export const onRequest = defineMiddleware(
         access_token: accessToken.value,
       })
 
-      if (error) {
+      const { data: userDetails, error: userError } = await getUserDetails(
+        data.user?.id!
+      )
+
+      if (error || userError) {
         cookies.delete("sb-access-token", {
           path: "/",
         })
@@ -33,6 +38,7 @@ export const onRequest = defineMiddleware(
       locals.user = {
         id: data.user?.id!,
         email: data.user?.email!,
+        details: userDetails,
       }
 
       cookies.set("sb-access-token", data?.session?.access_token!, {

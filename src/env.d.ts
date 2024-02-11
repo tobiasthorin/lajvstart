@@ -15,6 +15,7 @@ declare namespace App {
     user: {
       id: string
       email: string
+      details: { name: string }
     }
   }
 }

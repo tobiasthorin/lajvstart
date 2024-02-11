@@ -1,10 +1,11 @@
 ---
 import SignedInPage from "../layouts/SignedInPage.astro"
 
+Astro.response.headers.set("HX-Location", "/profile")
+
 const userName = Astro.locals.user.details.name
 ---
 
 <SignedInPage>
-  <h2>Welcome {userName}</h2>
-  <p>Not much to do here yet.</p>
+  <h2>{userName}</h2>
 </SignedInPage>

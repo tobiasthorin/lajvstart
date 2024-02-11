@@ -1,11 +1,7 @@
 ---
 import BaseHtml from "./BaseHtml.astro"
 
-interface Props {
-  userName: string
-}
-
-const { userName } = Astro.props
+const userName = Astro.locals.user.details.name
 ---
 
 <BaseHtml>
@@ -57,9 +53,14 @@ const { userName } = Astro.props
             </div>
             <ul class="p-2" aria-labelledby="user-menu-button">
               <li>
+                <a href="/profile">Profile</a>
+              </li>
+
+              <li>
                 <form
                   class="p-2 block hover:bg-gray-100"
-                  hx-get="/api/auth/signout"
+                  action="/api/auth/signout"
+                  
                 >
                   <button
                     class="text-sm w-full flex text-gray-700"
@@ -104,9 +105,9 @@ const { userName } = Astro.props
           >
             <li>
               <a
-                href="#"
+                href="/dashboard"
                 class="block py-2 px-3 text-white rounded"
-                aria-current="page">Home</a
+                aria-current="page">Dashboard</a
               >
             </li>
           </ul>

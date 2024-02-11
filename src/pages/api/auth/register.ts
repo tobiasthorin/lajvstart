@@ -1,8 +1,7 @@
 import type { APIRoute } from "astro"
 import { supabase } from "../../../lib/supabase"
-import { HxRedirect } from "../../../utils/navigationUtils"
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, redirect }) => {
   const formData = await request.formData()
   const email = formData.get("email")?.toString()
   const password = formData.get("password")?.toString()
@@ -22,5 +21,5 @@ export const POST: APIRoute = async ({ request }) => {
     })
   }
 
-  return HxRedirect("/signin")
+  return redirect("/signin")
 }

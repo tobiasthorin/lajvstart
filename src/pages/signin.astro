@@ -9,7 +9,8 @@ import SignedOutPage from "../layouts/SignedOutPage.astro"
   <main class="flex-1 p-4 flex flex-col items-center">
     <form
       hx-ext="response-targets"
-      hx-post="/api/auth/signin"
+      action="/api/auth/signin"
+      method="post"
       hx-target-4*="#error-message"
       class="mt-32 flex flex-col gap-4 w-72"
     >

@@ -1,10 +1,5 @@
 import type { APIRoute } from "astro"
 import { supabase } from "../../../lib/supabase"
-import {
-  ACCESS_TOKEN_COOKIE,
-  REFRESH_TOKEN_COOKIE,
-} from "../../../utils/constants"
-import { HxRedirect } from "../../../utils/navigationUtils"
 
 export const POST: APIRoute = async ({ request, cookies, redirect }) => {
   const formData = await request.formData()
@@ -49,5 +44,5 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     secure: true,
   })
 
-  return HxRedirect("/dashboard")
+  return redirect("/dashboard")
 }
