@@ -1,6 +1,9 @@
 import { supabase } from "../lib/supabase"
+import type { Tables } from "../types/supabase"
 
-export type UserID = string
+export type UserDetails = Tables<"userDetails">
+
+export type UserID = UserDetails["id"]
 
 export async function getUserDetails(userId: UserID) {
   const { data, error } = await supabase

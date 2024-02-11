@@ -25,6 +25,12 @@ export const onRequest = defineMiddleware(
         data.user?.id!
       )
 
+      const {
+        data: { publicUrl },
+      } = supabase.storage
+        .from("user-files")
+        .getPublicUrl(`avatars/${data.user?.email!}`)
+
       if (error || userError) {
         cookies.delete("sb-access-token", {
           path: "/",
@@ -38,7 +44,8 @@ export const onRequest = defineMiddleware(
       locals.user = {
         id: data.user?.id!,
         email: data.user?.email!,
-        details: userDetails,
+        details: userDetails!,
+        avatarUrl: publicUrl,
       }
 
       cookies.set("sb-access-token", data?.session?.access_token!, {

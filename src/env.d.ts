@@ -15,7 +15,8 @@ declare namespace App {
     user: {
       id: string
       email: string
-      details: { name: string }
+      details: import("./types/supabase").Tables<"userDetails">
+      avatarUrl: string
     }
   }
 }
