@@ -38,10 +38,15 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
   }
 
   const { access_token, refresh_token } = data.session
-  cookies.set(ACCESS_TOKEN_COOKIE, access_token, { path: "/", sameSite: "lax" })
-  cookies.set(REFRESH_TOKEN_COOKIE, refresh_token, {
-    path: "/",
+  cookies.set("sb-access-token", access_token, {
     sameSite: "lax",
+    path: "/",
+    secure: true,
+  })
+  cookies.set("sb-refresh-token", refresh_token, {
+    sameSite: "lax",
+    path: "/",
+    secure: true,
   })
 
   return HxRedirect("/dashboard")

@@ -1,15 +1,8 @@
 ---
 import { getUserDetails } from "../services/userService"
 import SignedInPage from "../layouts/SignedInPage.astro"
-import { isSignedIn } from "../utils/authUtils"
 
-const { cookies, redirect } = Astro
-
-const sessionData = await isSignedIn(cookies)
-
-if (!sessionData || !sessionData.user) return redirect("/signin")
-
-const userId = sessionData.user.id
+const userId = Astro.locals.user.id
 
 const { data: userDetails, error: userError } = await getUserDetails(userId)
 

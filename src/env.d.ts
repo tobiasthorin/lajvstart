@@ -9,3 +9,12 @@ interface ImportMeta {
 
 declare const initFlowbite: () => void
 declare const htmx: { onLoad: (fn: () => void) => void }
+
+declare namespace App {
+  interface Locals {
+    user: {
+      id: string
+      email: string
+    }
+  }
+}
