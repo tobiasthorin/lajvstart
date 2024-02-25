@@ -3,6 +3,14 @@ import BaseHtml from "./BaseHtml.astro"
 
 const userName = Astro.locals.user.details.name
 const avatarUrl = Astro.locals.user.avatarUrl
+const path = Astro.url.pathname
+
+function activeStyle(sectionName: string) {
+  if (path.includes(sectionName)) {
+    return "underline underline-offset-8 decoration-4"
+  }
+  return null
+}
 ---
 
 <BaseHtml>
@@ -113,7 +121,7 @@ const avatarUrl = Astro.locals.user.avatarUrl
             <li>
               <a
                 href="/dashboard"
-                class="block py-2 px-3 text-white rounded"
+                class={`block py-2 px-3 text-white rounded ${activeStyle("dashboard")}`}
                 aria-current="page">Dashboard</a
               >
             </li>
