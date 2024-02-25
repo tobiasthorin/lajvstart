@@ -1,0 +1,18 @@
+---
+import Button from "../components/Button.astro"
+import TextArea from "../components/TextArea.astro"
+import Input from "../components/Input.astro"
+
+const {
+  id,
+  details: { name, biography },
+} = Astro.locals.user
+---
+
+<form hx-put={`/api/userDetails/${id}`} hx-target="#profile-main">
+  <Input type="text" label="Name" name="name" value={name} />
+
+  <TextArea label="Biography" name="biography" value={biography} />
+
+  <Button type="submit">Save</Button>
+</form>

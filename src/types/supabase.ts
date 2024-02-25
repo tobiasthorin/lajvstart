@@ -12,32 +12,32 @@ export type Database = {
       userDetails: {
         Row: {
           biography: string | null
-          birthDate: string
-          createdAt: string
+          birth_date: string
+          created_at: string
           id: string
           name: string
-          userId: string
+          user_id: string
         }
         Insert: {
           biography?: string | null
-          birthDate: string
-          createdAt?: string
+          birth_date: string
+          created_at?: string
           id?: string
           name: string
-          userId: string
+          user_id: string
         }
         Update: {
           biography?: string | null
-          birthDate?: string
-          createdAt?: string
+          birth_date?: string
+          created_at?: string
           id?: string
           name?: string
-          userId?: string
+          user_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "userDetails_userId_fkey"
-            columns: ["userId"]
+            columns: ["user_id"]
             isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]

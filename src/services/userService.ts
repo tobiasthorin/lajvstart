@@ -10,7 +10,7 @@ export async function getUserDetails(userId: UserID) {
     .from("userDetails")
     .select()
     .limit(1)
-    .eq("userId", userId)
+    .eq("user_id", userId)
     .single()
 
   return { data, error }

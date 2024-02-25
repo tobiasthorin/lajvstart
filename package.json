@@ -7,7 +7,8 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "types": "npx supabase gen types typescript --project-id \"wgynzdvpnljfdbwevvuq\" --schema public > src/types/supabase.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.4",

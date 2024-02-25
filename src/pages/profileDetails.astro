@@ -1,0 +1,27 @@
+---
+import Button from "../components/Button.astro"
+
+const { name, biography, created_at } = Astro.locals.user.details
+const publicUrl = Astro.locals.user.avatarUrl
+
+const joinDate = new Date(created_at).toLocaleDateString()
+---
+
+<div class="h-24 md:h-32 mb-4 flex items-center gap-2">
+  <img
+    class="w-24 h-24 md:w-32 md:h-32 rounded"
+    src={publicUrl}
+    alt={`Avatar of ${name}`}
+  />
+  <h2
+    class="flex items-center h-24 md:h-32 flex-1 p-4 border rounded bg-gray-100 text-5xl md:text-6xl font-display text-gray-800"
+  >
+    {name}
+  </h2>
+</div>
+
+<p class="mb-4 text-sm text-gray-500">Member since {joinDate}</p>
+
+<p>{biography}</p>
+
+<Button hx-get="/editProfile" hx-target="#profile-main">Edit profile</Button>

@@ -3,12 +3,11 @@ import { supabase } from "../lib/supabase"
 import micromatch from "micromatch"
 import { getUserDetails } from "../services/userService"
 
-const protectedRoutes = ["/dashboard(|/)", "/profile(|/)"]
 const redirectRoutes = ["/", "/signin(|/)", "/register(|/)"]
 
 export const onRequest = defineMiddleware(
   async ({ locals, url, cookies, redirect }, next) => {
-    if (micromatch.isMatch(url.pathname, protectedRoutes)) {
+    if (!micromatch.isMatch(url.pathname, redirectRoutes)) {
       const accessToken = cookies.get("sb-access-token")
       const refreshToken = cookies.get("sb-refresh-token")
 
