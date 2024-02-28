@@ -10,6 +10,7 @@ import SignedOutPage from "../layouts/SignedOutPage.astro"
       hx-ext="response-targets"
       hx-post="/api/auth/register"
       hx-target-4*="#error-message"
+      hx-target-3*="#error-message"
       hx-swap="innerHTML"
       class="mt-32 flex flex-col gap-4 w-72"
     >

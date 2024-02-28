@@ -3,6 +3,8 @@ import Button from "../components/Button.astro"
 import Input from "../components/Input.astro"
 import Link from "../components/Link.astro"
 import SignedOutPage from "../layouts/SignedOutPage.astro"
+
+const justRegistered = Astro.url.searchParams.get("registered")
 ---
 
 <SignedOutPage>
@@ -29,5 +31,14 @@ import SignedOutPage from "../layouts/SignedOutPage.astro"
     </form>
 
     <Link class="mt-8" href="/register">Create an account</Link>
+
+    {
+      justRegistered && (
+        <p class="mt-8">
+          A confirmation email has been sent to your inbox. Click the link
+          there, and then sign in!
+        </p>
+      )
+    }
   </main>
 </SignedOutPage>
