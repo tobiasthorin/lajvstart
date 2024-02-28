@@ -11,11 +11,11 @@
     "types": "npx supabase gen types typescript --project-id \"wgynzdvpnljfdbwevvuq\" --schema public > src/types/supabase.ts"
   },
   "dependencies": {
-    "@astrojs/check": "^0.3.4",
-    "@astrojs/netlify": "^4.1.0",
+    "@astrojs/check": "^0.5.6",
+    "@astrojs/netlify": "^5.1.3",
     "@astrojs/tailwind": "^5.1.0",
-    "@supabase/supabase-js": "^2.39.3",
-    "astro": "^4.1.1",
+    "@supabase/supabase-js": "^2.39.7",
+    "astro": "^4.4.6",
     "flowbite": "^2.2.1",
     "micromatch": "^4.0.5",
     "tailwindcss": "^3.4.1",
