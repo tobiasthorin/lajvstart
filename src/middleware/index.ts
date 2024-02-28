@@ -3,15 +3,18 @@ import { supabase } from "../lib/supabase"
 import micromatch from "micromatch"
 import { getUserDetails } from "../services/userService"
 
+const protectedRoutes = ["/dashboard(|/)", "/profile(|/)"]
 const redirectRoutes = ["/", "/signin(|/)", "/register(|/)"]
 
 export const onRequest = defineMiddleware(
   async ({ locals, url, cookies, redirect }, next) => {
-    if (!micromatch.isMatch(url.pathname, redirectRoutes)) {
+    if (micromatch.isMatch(url.pathname, protectedRoutes)) {
       const accessToken = cookies.get("sb-access-token")
       const refreshToken = cookies.get("sb-refresh-token")
 
-      if (!accessToken || !refreshToken) {
+      const isSignedOut = !accessToken || !refreshToken
+
+      if (isSignedOut) {
         return redirect("/signin")
       }
 
@@ -63,10 +66,13 @@ export const onRequest = defineMiddleware(
       const accessToken = cookies.get("sb-access-token")
       const refreshToken = cookies.get("sb-refresh-token")
 
-      if (accessToken && refreshToken) {
+      const isSignedIn = accessToken && refreshToken
+
+      if (isSignedIn) {
         return redirect("/dashboard")
       }
     }
+
     return next()
   }
 )
