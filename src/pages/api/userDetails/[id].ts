@@ -12,7 +12,7 @@ export const PUT: APIRoute = async ({ request, params, redirect }) => {
   }
 
   const { error } = await supabase
-    .from("userDetails")
+    .from("user_details")
     .update({ name, biography })
     .eq("user_id", userId)
 

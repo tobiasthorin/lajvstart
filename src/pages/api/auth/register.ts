@@ -10,7 +10,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response("Email and password are required", { status: 400 })
   }
 
-  const { error } = await supabase.auth.signUp({ email, password })
+  const { error, data } = await supabase.auth.signUp({ email, password })
 
   if (error) {
     return new Response(`<p class='text-red-600'>${error.message}<p>`, {
@@ -19,6 +19,14 @@ export const POST: APIRoute = async ({ request }) => {
         "Content-Type": "text/html",
       }),
     })
+  }
+
+  const { error: dbError } = await supabase
+    .from("user_details")
+    .insert({ user_id: data.user!.id, created_at: data.user!.created_at })
+
+  if (dbError) {
+    console.log(dbError)
   }
 
   return new Response(null, {

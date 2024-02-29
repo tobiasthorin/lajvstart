@@ -9,29 +9,29 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      userDetails: {
+      user_details: {
         Row: {
           biography: string | null
-          birth_date: string
+          birth_date: string | null
           created_at: string
           id: string
-          name: string
+          name: string | null
           user_id: string
         }
         Insert: {
           biography?: string | null
-          birth_date: string
+          birth_date?: string | null
           created_at?: string
           id?: string
-          name: string
+          name?: string | null
           user_id: string
         }
         Update: {
           biography?: string | null
-          birth_date?: string
+          birth_date?: string | null
           created_at?: string
           id?: string
-          name?: string
+          name?: string | null
           user_id?: string
         }
         Relationships: [
