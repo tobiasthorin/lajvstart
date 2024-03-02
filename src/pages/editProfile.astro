@@ -9,10 +9,23 @@ const {
 } = Astro.locals.user
 ---
 
-<form hx-put={`/api/userDetails/${id}`} hx-target="#profile-main">
+<form
+  enctype="multipart/form-data"
+  hx-put={`/api/userDetails/${id}`}
+  hx-target="#profile-main"
+  hx-target-5*="#error-message"
+>
   <Input type="text" label="Name" name="name" value={name} />
 
   <TextArea label="Biography" name="biography" value={biography} />
 
+  <Input
+    type="file"
+    label="Profile picture"
+    name="profilePicture"
+    accept=".jpg,.jpeg,.png,.bmp,.webp"
+  />
+
   <Button type="submit">Save</Button>
+  <div id="error-message"></div>
 </form>

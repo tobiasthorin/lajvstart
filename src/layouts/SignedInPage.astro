@@ -2,7 +2,7 @@
 import BaseHtml from "./Html.astro"
 
 const userName = Astro.locals.user.details.name
-const avatarUrl = Astro.locals.user.avatarUrl
+const avatarUrl = Astro.locals.user.details.profile_picture_url
 const path = Astro.url.pathname
 
 function activeStyle(sectionName: string) {

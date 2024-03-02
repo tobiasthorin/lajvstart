@@ -2,7 +2,7 @@
 import Button from "../components/Button.astro"
 
 const { name, biography, created_at } = Astro.locals.user.details
-const publicUrl = Astro.locals.user.avatarUrl
+const publicUrl = Astro.locals.user.details.profile_picture_url
 
 const joinDate = new Date(created_at).toLocaleDateString()
 ---

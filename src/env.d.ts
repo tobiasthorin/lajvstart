@@ -8,7 +8,10 @@ interface ImportMeta {
 }
 
 declare const initFlowbite: () => void
-declare const htmx: { onLoad: (fn: () => void) => void }
+declare const htmx: {
+  onLoad: (fn: () => void) => void
+  process: (element: HTMLElement) => void
+}
 
 declare namespace App {
   interface Locals {
@@ -16,7 +19,6 @@ declare namespace App {
       id: string
       email: string
       details: import("./types/supabase").Tables<"user_details">
-      avatarUrl: string
     }
   }
 }

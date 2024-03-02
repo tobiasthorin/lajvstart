@@ -10,9 +10,7 @@ const justRegistered = Astro.url.searchParams.get("registered")
 <SignedOutPage>
   <main class="flex-1 p-4 flex flex-col items-center">
     <form
-      hx-ext="response-targets"
-      action="/api/auth/signin"
-      method="post"
+      hx-post="/api/auth/signin"
       hx-target-4*="#error-message"
       class="mt-32 flex flex-col gap-4 w-72"
     >

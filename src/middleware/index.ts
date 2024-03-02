@@ -3,12 +3,18 @@ import { supabase } from "../lib/supabase"
 import micromatch from "micromatch"
 import { getUserDetails } from "../services/userService"
 
-const protectedRoutes = ["/dashboard(|/)", "/profile(|/)"]
+const protectedRoutes = [
+  "/dashboard(|/)",
+  "/profile(|/)",
+  "/editProfile(|/)",
+  "/profileDetails(|/)",
+]
 const redirectRoutes = ["/", "/signin(|/)", "/register(|/)"]
 
 export const onRequest = defineMiddleware(
   async ({ locals, url, cookies, redirect }, next) => {
     if (micromatch.isMatch(url.pathname, protectedRoutes)) {
+      console.log("protected")
       const accessToken = cookies.get("sb-access-token")
       const refreshToken = cookies.get("sb-refresh-token")
 
@@ -18,20 +24,14 @@ export const onRequest = defineMiddleware(
         return redirect("/signin")
       }
 
-      const { data, error } = await supabase.auth.setSession({
+      const { data: sessionData, error } = await supabase.auth.setSession({
         refresh_token: refreshToken.value,
         access_token: accessToken.value,
       })
 
       const { data: userDetails, error: userError } = await getUserDetails(
-        data.user?.id!
+        sessionData.user?.id!
       )
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage
-        .from("user-files")
-        .getPublicUrl(`avatars/${data.user?.email!}`)
 
       if (error || userError) {
         cookies.delete("sb-access-token", {
@@ -44,18 +44,17 @@ export const onRequest = defineMiddleware(
       }
 
       locals.user = {
-        id: data.user?.id!,
-        email: data.user?.email!,
+        id: sessionData.user?.id!,
+        email: sessionData.user?.email!,
         details: userDetails!,
-        avatarUrl: publicUrl,
       }
 
-      cookies.set("sb-access-token", data?.session?.access_token!, {
+      cookies.set("sb-access-token", sessionData?.session?.access_token!, {
         sameSite: "lax",
         path: "/",
         secure: true,
       })
-      cookies.set("sb-refresh-token", data?.session?.refresh_token!, {
+      cookies.set("sb-refresh-token", sessionData?.session?.refresh_token!, {
         sameSite: "lax",
         path: "/",
         secure: true,
