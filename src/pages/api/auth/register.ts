@@ -1,33 +1,47 @@
 import type { APIRoute } from "astro"
 import { supabase } from "../../../lib/supabase"
+import { errorResponse } from "../../../utils/responseUtils"
 
 export const POST: APIRoute = async ({ request }) => {
   const formData = await request.formData()
   const email = formData.get("email")?.toString()
   const password = formData.get("password")?.toString()
+  const name = formData.get("name")?.toString()
+  const birthDate = formData.get("birthDate")?.toString()
+  const biography = formData.get("biography")?.toString() || null
 
-  if (!email || !password) {
-    return new Response("Email and password are required", { status: 400 })
-  }
-
-  const { error, data } = await supabase.auth.signUp({ email, password })
-
-  if (error) {
-    return new Response(`<p class='text-red-600'>${error.message}<p>`, {
-      status: 403,
-      headers: new Headers({
-        "Content-Type": "text/html",
-      }),
+  if (!email || !password || !birthDate || !name) {
+    return new Response("Email, password, birth date, name are required", {
+      status: 400,
     })
   }
 
-  const { error: dbError } = await supabase
-    .from("user_details")
-    .insert({ user_id: data.user!.id, created_at: data.user!.created_at })
+  const { error: signUpError, data } = await supabase.auth.signUp({
+    email,
+    password,
+  })
 
-  if (dbError) {
-    console.log(dbError)
-  }
+  if (signUpError)
+    return errorResponse(`Error signing up: ${signUpError.message}`, 500)
+
+  let filePath: string | null = null
+
+  const { error: createProfileError } = await supabase
+    .from("user_details")
+    .insert({
+      user_id: data.user!.id,
+      created_at: data.user!.created_at,
+      biography,
+      birth_date: birthDate,
+      profile_picture_url: filePath,
+      name,
+    })
+
+  if (createProfileError)
+    return errorResponse(
+      `Error creating profile: ${createProfileError.message}`,
+      500
+    )
 
   return new Response(null, {
     status: 302,

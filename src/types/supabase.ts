@@ -12,29 +12,35 @@ export type Database = {
       user_details: {
         Row: {
           biography: string | null
-          birth_date: string | null
+          birth_date: string
+          birth_date_public: boolean
           created_at: string
           id: string
           name: string | null
           profile_picture_url: string | null
+          special_needs: string | null
           user_id: string
         }
         Insert: {
           biography?: string | null
-          birth_date?: string | null
+          birth_date: string
+          birth_date_public?: boolean
           created_at?: string
           id?: string
           name?: string | null
           profile_picture_url?: string | null
+          special_needs?: string | null
           user_id: string
         }
         Update: {
           biography?: string | null
-          birth_date?: string | null
+          birth_date?: string
+          birth_date_public?: boolean
           created_at?: string
           id?: string
           name?: string | null
           profile_picture_url?: string | null
+          special_needs?: string | null
           user_id?: string
         }
         Relationships: [

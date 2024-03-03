@@ -1,16 +1,17 @@
 ---
 import Button from "../components/Button.astro"
 import Input from "../components/Input.astro"
+import TextArea from "../components/TextArea.astro"
 import SignedOutPage from "../layouts/SignedOutPage.astro"
 ---
 
 <SignedOutPage>
   <main class="flex-1 p-4 flex flex-col items-center">
     <form
+      enctype="multipart/form-data"
       hx-ext="response-targets"
       hx-post="/api/auth/register"
-      hx-target-4*="#error-message"
-      hx-target-3*="#error-message"
+      hx-target-error="#error-message"
       hx-swap="innerHTML"
       class="mt-32 flex flex-col gap-4 w-72"
     >
@@ -22,6 +23,29 @@ import SignedOutPage from "../layouts/SignedOutPage.astro"
         name="password"
         id="password"
         required
+      />
+
+      <Input
+        id="nameInput"
+        label="What is your name?"
+        type="text"
+        name="name"
+        required
+      />
+
+      <Input
+        id="bdayInput"
+        label="When were you born?"
+        type="date"
+        name="birthDate"
+        required
+      />
+
+      <TextArea
+        id="bioInput"
+        label="Describe yourself!"
+        name="biography"
+        value=""
       />
 
       <Button type="submit">Register!</Button>

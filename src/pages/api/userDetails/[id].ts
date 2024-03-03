@@ -1,23 +1,23 @@
 import type { APIRoute } from "astro"
 import { supabase } from "../../../lib/supabase"
-
-function returnError(errorMessage: string) {
-  return new Response(`<p class='text-red-600'>${errorMessage}<p>`, {
-    status: 500,
-    headers: new Headers({
-      "Content-Type": "text/html",
-    }),
-  })
-}
+import { errorResponse } from "../../../utils/responseUtils"
+import { uploadAvatar } from "../../../utils/storageUtils"
+import { BadRequestError, InternalError } from "../../../utils/errorUtils"
+import type { UserDetails } from "../../../services/userService"
 
 export const PUT: APIRoute = async ({ request, params, redirect }) => {
   const formData = await request.formData()
   const name = formData.get("name")?.toString()
   const biography = formData.get("biography")?.toString()
+  const birthDate = formData.get("birthDate")?.toString()
+  const birthDatePublic = formData.get("birthDatePublic")?.toString()
+  const specialNeeds = formData.get("specialNeeds")?.toString()
   const userId = params.id
 
-  if (!name || !userId || !biography) {
-    return new Response("Name, userId, biography are required", { status: 400 })
+  if (!name || !userId || !biography || !birthDate) {
+    return new Response("Name, userId, biography, birthDate are required", {
+      status: 400,
+    })
   }
 
   const avatarFile = formData.get("profilePicture") as File | null
@@ -25,32 +25,31 @@ export const PUT: APIRoute = async ({ request, params, redirect }) => {
   let filePath: string | null = null
 
   if (avatarFile) {
-    if (!avatarFile.type.includes("image/"))
-      // TODO: file size
-      return new Response("Invalid file type", { status: 400 })
-
-    const fileNameParts = avatarFile.name.split(".")
-    const fileExtention = fileNameParts[fileNameParts.length - 1]
-
-    const { data: fileUploadData, error: fileUploadError } =
-      await supabase.storage
-        .from("user-files")
-        .upload(`avatars/${userId}.${fileExtention}`, avatarFile, {
-          cacheControl: "3600",
-          upsert: true,
-        })
-
-    if (fileUploadError) return returnError(fileUploadError.message)
-
-    filePath = `https://wgynzdvpnljfdbwevvuq.supabase.co/storage/v1/object/public/user-files/${fileUploadData.path}`
+    try {
+      filePath = await uploadAvatar(avatarFile, userId)
+    } catch (error) {
+      if (error instanceof BadRequestError || error instanceof InternalError)
+        return errorResponse(error.message, error.errorCode)
+      else throw error
+    }
   }
+
+  const newData: Partial<UserDetails> = {
+    name,
+    biography,
+    birth_date: birthDate,
+    birth_date_public: !!birthDatePublic,
+    special_needs: specialNeeds || null,
+  }
+
+  if (filePath) newData.profile_picture_url = filePath
 
   const { error: updateError } = await supabase
     .from("user_details")
-    .update({ name, biography, profile_picture_url: filePath })
+    .update(newData)
     .eq("user_id", userId)
 
-  if (updateError) return returnError(updateError.message)
+  if (updateError) return errorResponse(updateError.message, 500)
 
   return redirect("/profileDetails")
 }

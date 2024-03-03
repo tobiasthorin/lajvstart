@@ -5,7 +5,7 @@ import Input from "../components/Input.astro"
 
 const {
   id,
-  details: { name, biography },
+  details: { name, biography, birth_date, birth_date_public, special_needs },
 } = Astro.locals.user
 ---
 
@@ -15,11 +15,40 @@ const {
   hx-target="#profile-main"
   hx-target-5*="#error-message"
 >
-  <Input type="text" label="Name" name="name" value={name} />
-
-  <TextArea label="Biography" name="biography" value={biography} />
+  <Input id="nameInput" type="text" label="Name" name="name" value={name} />
 
   <Input
+    id="bdayInput"
+    type="date"
+    label="Birth date"
+    name="birthDate"
+    value={birth_date}
+  />
+
+  <Input
+    id="bdayPublicInput"
+    type="checkbox"
+    label="Public birthdate"
+    name="birthDatePublic"
+    checked={birth_date_public || undefined}
+  />
+
+  <TextArea
+    id="needsInput"
+    label="Allergies and special needs"
+    name="specialNeeds"
+    value={special_needs}
+  />
+
+  <TextArea
+    id="bioInput"
+    label="Biography"
+    name="biography"
+    value={biography}
+  />
+
+  <Input
+    id="picInput"
     type="file"
     label="Profile picture"
     name="profilePicture"
