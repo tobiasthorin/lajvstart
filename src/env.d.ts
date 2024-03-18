@@ -1,6 +1,8 @@
 interface ImportMetaEnv {
   readonly SUPABASE_URL: string
   readonly SUPABASE_ANON_KEY: string
+  readonly DEBUG: "true" | undefined
+  readonly DEBUG_LOGS: "true" | undefined
 }
 
 interface ImportMeta {

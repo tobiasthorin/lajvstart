@@ -2,19 +2,15 @@ import { defineMiddleware } from "astro/middleware"
 import { supabase } from "../lib/supabase"
 import micromatch from "micromatch"
 import { getUserDetails } from "../services/userService"
+import { log } from "../lib/logger"
 
-const protectedRoutes = [
-  "/dashboard(|/)",
-  "/profile(|/)",
-  "/editProfile(|/)",
-  "/profileDetails(|/)",
-]
+const protectedRoutes = ["/events(|/)*", "/profile(|/)*"]
 const redirectRoutes = ["/", "/signin(|/)", "/register(|/)"]
 
 export const onRequest = defineMiddleware(
   async ({ locals, url, cookies, redirect }, next) => {
     if (micromatch.isMatch(url.pathname, protectedRoutes)) {
-      console.log("protected")
+      log(`Accessing protected route: ${url.pathname}`)
       const accessToken = cookies.get("sb-access-token")
       const refreshToken = cookies.get("sb-refresh-token")
 
@@ -68,7 +64,8 @@ export const onRequest = defineMiddleware(
       const isSignedIn = accessToken && refreshToken
 
       if (isSignedIn) {
-        return redirect("/dashboard")
+        log(`Logged in user redirectinng to '/events'`)
+        return redirect("/events")
       }
     }
 

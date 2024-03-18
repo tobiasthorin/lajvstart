@@ -46,6 +46,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   return new Response(null, {
     status: 302,
-    headers: { "HX-Redirect": "/dashboard" },
+    headers: { "HX-Redirect": "/events" },
   })
 }

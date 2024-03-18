@@ -51,5 +51,5 @@ export const PUT: APIRoute = async ({ request, params, redirect }) => {
 
   if (updateError) return errorResponse(updateError.message, 500)
 
-  return redirect("/profileDetails")
+  return redirect("/profile/details")
 }

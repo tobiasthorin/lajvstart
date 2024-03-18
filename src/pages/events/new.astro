@@ -1,0 +1,76 @@
+---
+import Button from "../../components/Button.astro"
+import Input from "../../components/Input.astro"
+import Select from "../../components/Select.astro"
+import TextArea from "../../components/TextArea.astro"
+---
+
+<h2>Create new event</h2>
+
+<form
+  enctype="multipart/form-data"
+  hx-post={`/api/event`}
+  hx-target="#events-main"
+  hx-target-5*="#error-message"
+>
+  <Input id="eventName" type="text" label="Name" name="name" required />
+
+  <Input
+    id="eventStartDateInput"
+    type="date"
+    label="Start Date"
+    name="startDate"
+    required
+  />
+
+  <Input
+    id="eventEndDateInput"
+    type="date"
+    label="End Date"
+    name="endDate"
+    required
+  />
+
+  <Input
+    id="eventLocation"
+    type="text"
+    label="Location"
+    name="location"
+    required
+  />
+
+  <TextArea id="eventDescription" label="Description" name="description" />
+
+  <Input
+    id="eventPicInput"
+    type="file"
+    label="Event picture"
+    name="eventPicture"
+    accept=".jpg,.jpeg,.png,.bmp,.webp"
+  />
+
+  <Select multiple id="eventTagsInput" label="Tags" name="tags">
+    <option value="fantasy">Fantasy</option>
+    <option value="pirate">Pirate</option>
+    <option value="historical">Historical</option>
+    <option value="horror">Horror</option>
+  </Select>
+
+  <Input
+    id="eventBeginnerFriendly"
+    type="checkbox"
+    label="Beginner friendly"
+    name="beginnerFriendly"
+  />
+
+  <Input
+    id="ageRestriction"
+    type="number"
+    label="Lowest age allowed"
+    name="ageRestriction"
+  />
+
+  <Button type="submit">Create</Button>
+
+  <div id="error-message"></div>
+</form>

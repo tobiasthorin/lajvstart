@@ -9,6 +9,81 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      event_tags: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_name: string
+          id: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_name: string
+          id?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_name?: string
+          id?: string
+          value?: string
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          created_at: string
+          date_end: string
+          date_signup: string | null
+          date_start: string
+          description: string
+          event_image_url: string | null
+          id: string
+          is_beginner_friendly: boolean
+          location_latitude: number | null
+          location_longitude: number | null
+          location_name: string | null
+          minimum_age: number | null
+          name: string
+          tags: string[] | null
+        }
+        Insert: {
+          created_at?: string
+          date_end: string
+          date_signup?: string | null
+          date_start: string
+          description?: string
+          event_image_url?: string | null
+          id?: string
+          is_beginner_friendly?: boolean
+          location_latitude?: number | null
+          location_longitude?: number | null
+          location_name?: string | null
+          minimum_age?: number | null
+          name?: string
+          tags?: string[] | null
+        }
+        Update: {
+          created_at?: string
+          date_end?: string
+          date_signup?: string | null
+          date_start?: string
+          description?: string
+          event_image_url?: string | null
+          id?: string
+          is_beginner_friendly?: boolean
+          location_latitude?: number | null
+          location_longitude?: number | null
+          location_name?: string | null
+          minimum_age?: number | null
+          name?: string
+          tags?: string[] | null
+        }
+        Relationships: []
+      }
       user_details: {
         Row: {
           biography: string | null

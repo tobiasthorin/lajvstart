@@ -1,5 +1,5 @@
 ---
-import Button from "../components/Button.astro"
+import Button from "../../components/Button.astro"
 
 const {
   name,
@@ -59,4 +59,4 @@ const birthDate = new Date(birth_date).toLocaleDateString()
 
 <p>{biography}</p>
 
-<Button hx-get="/editProfile" hx-target="#profile-main">Edit profile</Button>
+<Button hx-get="/profile/edit" hx-target="#profile-main">Edit profile</Button>
