@@ -3,12 +3,12 @@ import { supabase } from "../lib/supabase"
 import micromatch from "micromatch"
 import { getUserDetails, type UserDetails } from "../services/userService"
 import { log } from "../lib/logger"
-import { useNamespace } from "../lib/cache"
+import { useNamespace, USERS_CACHE } from "../lib/cache"
 
 const protectedRoutes = ["/events(|/)*", "/profile(|/)*"]
 const redirectRoutes = ["/", "/signin(|/)", "/register(|/)"]
 
-const usersCache = useNamespace<UserDetails>("users")
+const usersCache = useNamespace<UserDetails>(USERS_CACHE)
 
 export const onRequest = defineMiddleware(
   async ({ locals, url, cookies, redirect }, next) => {

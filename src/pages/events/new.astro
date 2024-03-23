@@ -13,7 +13,14 @@ import TextArea from "../../components/TextArea.astro"
   hx-target="#events-main"
   hx-target-5*="#error-message"
 >
-  <Input id="eventName" type="text" label="Name" name="name" required />
+  <Input
+    id="eventName"
+    type="text"
+    label="Name"
+    name="name"
+    required
+    maxlength="100"
+  />
 
   <Input
     id="eventStartDateInput"
@@ -37,6 +44,13 @@ import TextArea from "../../components/TextArea.astro"
     label="Location"
     name="location"
     required
+  />
+
+  <TextArea
+    id="eventDescriptionShort"
+    label="Short description"
+    name="descriptionShort"
+    maxlength="200"
   />
 
   <TextArea id="eventDescription" label="Description" name="description" />

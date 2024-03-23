@@ -1,5 +1,8 @@
 import { log } from "./logger"
 
+export const EVENTS_CACHE = "events"
+export const USERS_CACHE = "users"
+
 const cacheStore: Record<
   string,
   Map<string, { value: unknown; expiresAt: number | undefined }>

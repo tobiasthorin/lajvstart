@@ -2,18 +2,17 @@
 import Button from "../../components/Button.astro"
 import EventCard from "../../components/EventCard.astro"
 import { supabase } from "../../lib/supabase"
-import { useNamespace } from "../../lib/cache"
+import { EVENTS_CACHE, useNamespace } from "../../lib/cache"
 import { errorResponse } from "../../utils/responseUtils"
 import type { LARPEvent } from "../../types/types"
 import { log } from "../../lib/logger"
 
-const userName = Astro.locals.user.details.name
-
-const eventsCache = useNamespace<LARPEvent[]>("events")
+const eventsCache = useNamespace<LARPEvent[]>(EVENTS_CACHE)
 let events = eventsCache.get("upcoming")
 
 if (!events) {
   log("Getting events from DB")
+
   const { data, error: getEventsError } = await supabase
     .from("events")
     .select()
@@ -27,15 +26,13 @@ if (!events) {
 }
 ---
 
-<p>Welcome {userName}!</p>
-
-<h2>Upcoming events</h2>
+<h2 class="text-4xl text-orange-500 font-display mb-8">Upcoming events</h2>
 
 {events === null && <p>No upcoming events</p>}
 
 {
   events !== null && (
-    <ul>
+    <ul class="grid grid-cols-events gap-8 mb-8">
       {events.map((event) => (
         <li>
           <EventCard event={event} />

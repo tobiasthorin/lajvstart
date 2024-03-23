@@ -4,20 +4,30 @@ import { uploadEventPicture } from "../../../utils/storageUtils"
 import { BadRequestError, InternalError } from "../../../utils/errorUtils"
 import { errorResponse } from "../../../utils/responseUtils"
 import { v4 as uuidv4 } from "uuid"
+import { EVENTS_CACHE, useNamespace } from "../../../lib/cache"
 
 export const POST: APIRoute = async ({ request, redirect }) => {
+  const eventsCache = useNamespace(EVENTS_CACHE)
   const formData = await request.formData()
 
   const name = formData.get("name")?.toString()
   const startDate = formData.get("startDate")?.toString()
   const endDate = formData.get("endDate")?.toString()
   const location = formData.get("location")?.toString()
+  const descriptionShort = formData.get("descriptionShort")?.toString()
   const description = formData.get("description")?.toString()
   const tags = formData.getAll("tags")?.toString()
   const beginnerFriendly = formData.get("beginnerFriendly")?.toString()
   const ageRestriction = formData.get("ageRestriction")?.toString()
 
-  if (!name || !startDate || !endDate || !location || !description)
+  if (
+    !name ||
+    !startDate ||
+    !endDate ||
+    !location ||
+    !description ||
+    !descriptionShort
+  )
     return new Response()
 
   const eventFile = formData.get("eventPicture") as File | null
@@ -39,6 +49,7 @@ export const POST: APIRoute = async ({ request, redirect }) => {
     id: eventId,
     name,
     description,
+    description_short: descriptionShort,
     date_start: startDate,
     date_end: endDate,
     location_name: location,
@@ -50,5 +61,7 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 
   if (createEventError) return errorResponse(createEventError.message, 500)
 
-  return redirect("/events")
+  eventsCache.clear()
+
+  return redirect("/events/explore")
 }
