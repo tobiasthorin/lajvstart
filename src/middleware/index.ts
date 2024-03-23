@@ -1,11 +1,14 @@
 import { defineMiddleware } from "astro/middleware"
 import { supabase } from "../lib/supabase"
 import micromatch from "micromatch"
-import { getUserDetails } from "../services/userService"
+import { getUserDetails, type UserDetails } from "../services/userService"
 import { log } from "../lib/logger"
+import { useNamespace } from "../lib/cache"
 
 const protectedRoutes = ["/events(|/)*", "/profile(|/)*"]
 const redirectRoutes = ["/", "/signin(|/)", "/register(|/)"]
+
+const usersCache = useNamespace<UserDetails>("users")
 
 export const onRequest = defineMiddleware(
   async ({ locals, url, cookies, redirect }, next) => {
@@ -25,24 +28,33 @@ export const onRequest = defineMiddleware(
         access_token: accessToken.value,
       })
 
-      const { data: userDetails, error: userError } = await getUserDetails(
-        sessionData.user?.id!
-      )
+      let userDetails = usersCache.get(sessionData.user?.id!)
 
-      if (error || userError) {
-        cookies.delete("sb-access-token", {
-          path: "/",
-        })
-        cookies.delete("sb-refresh-token", {
-          path: "/",
-        })
-        return redirect("/signin")
+      if (!userDetails) {
+        log(`Getting user details for ${sessionData.user?.id!} from DB.`)
+
+        const { data: userData, error: userError } = await getUserDetails(
+          sessionData.user?.id!
+        )
+
+        if (error || userError) {
+          cookies.delete("sb-access-token", {
+            path: "/",
+          })
+          cookies.delete("sb-refresh-token", {
+            path: "/",
+          })
+          return redirect("/signin")
+        }
+
+        usersCache.set(sessionData.user?.id!, userData!, 1000 * 60 * 60)
+        userDetails = userData!
       }
 
       locals.user = {
         id: sessionData.user?.id!,
         email: sessionData.user?.email!,
-        details: userDetails!,
+        details: userDetails,
       }
 
       cookies.set("sb-access-token", sessionData?.session?.access_token!, {

@@ -9,8 +9,8 @@ import { log } from "../../lib/logger"
 
 const userName = Astro.locals.user.details.name
 
-const cache = useNamespace<LARPEvent[]>("events")
-let events = cache.get("upcoming")
+const eventsCache = useNamespace<LARPEvent[]>("events")
+let events = eventsCache.get("upcoming")
 
 if (!events) {
   log("Getting events from DB")
@@ -22,7 +22,7 @@ if (!events) {
 
   if (getEventsError) return errorResponse("Error while fetching events")
 
-  cache.set("upcoming", data, 1000 * 60 * 5)
+  eventsCache.set("upcoming", data, 1000 * 60 * 5)
   events = data
 }
 ---
