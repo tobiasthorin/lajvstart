@@ -1,10 +1,48 @@
 ---
 import SignedInPage from "../../layouts/SignedInPage.astro"
-import Explore from "./explore.astro"
+import Button from "../../components/Button.astro"
+import EventCard from "../../components/EventCard.astro"
+import { supabase } from "../../lib/supabase"
+import { EVENTS_CACHE, useNamespace } from "../../lib/cache"
+import { errorResponse } from "../../utils/responseUtils"
+import type { LARPEvent } from "../../types/types"
+import { log } from "../../lib/logger"
+
+const eventsCache = useNamespace<LARPEvent[]>(EVENTS_CACHE)
+let events = eventsCache.get("upcoming")
+
+if (!events) {
+  log("Getting events from DB")
+
+  const { data, error: getEventsError } = await supabase
+    .from("events")
+    .select()
+    .gte("date_start", new Date().toISOString())
+    .order("date_start")
+
+  if (getEventsError) return errorResponse("Error while fetching events")
+
+  eventsCache.set("upcoming", data, 1000 * 60 * 5)
+  events = data
+}
 ---
 
 <SignedInPage>
-  <main id="events-main" class="md:max-w-screen-xl w-full mx-auto p-4">
-    <Explore />
-  </main>
+  <h2 class="text-4xl text-orange-500 font-display mb-8">Upcoming events</h2>
+
+  {events === null && <p>No upcoming events</p>}
+
+  {
+    events !== null && (
+      <ul class="grid grid-cols-events gap-8 mb-8">
+        {events.map((event) => (
+          <li>
+            <EventCard event={event} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  <a href="/events/new" hx-boost="true" hx-target="#main">Create event</a>
 </SignedInPage>

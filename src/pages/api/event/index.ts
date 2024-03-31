@@ -63,5 +63,9 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 
   eventsCache.clear()
 
-  return redirect("/events/explore")
+  return new Response(null, {
+    headers: new Headers({
+      "HX-Location": '{"path":"/events", "target":"#main"}',
+    }),
+  })
 }

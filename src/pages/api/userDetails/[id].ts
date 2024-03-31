@@ -5,7 +5,7 @@ import { uploadAvatar } from "../../../utils/storageUtils"
 import { BadRequestError, InternalError } from "../../../utils/errorUtils"
 import type { UserDetails } from "../../../services/userService"
 
-export const PUT: APIRoute = async ({ request, params, redirect }) => {
+export const PUT: APIRoute = async ({ request, params }) => {
   const formData = await request.formData()
   const name = formData.get("name")?.toString()
   const biography = formData.get("biography")?.toString()
@@ -51,5 +51,9 @@ export const PUT: APIRoute = async ({ request, params, redirect }) => {
 
   if (updateError) return errorResponse(updateError.message, 500)
 
-  return redirect("/profile/details")
+  return new Response(null, {
+    headers: new Headers({
+      "HX-Location": '{"path":"/profile", "target":"#main"}',
+    }),
+  })
 }

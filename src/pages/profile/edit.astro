@@ -2,6 +2,7 @@
 import Button from "../../components/Button.astro"
 import TextArea from "../../components/TextArea.astro"
 import Input from "../../components/Input.astro"
+import SignedInPage from "../../layouts/SignedInPage.astro"
 
 const {
   id,
@@ -9,52 +10,55 @@ const {
 } = Astro.locals.user
 ---
 
-<form
-  enctype="multipart/form-data"
-  hx-put={`/api/userDetails/${id}`}
-  hx-target="#profile-main"
-  hx-target-5*="#error-message"
->
-  <Input id="nameInput" type="text" label="Name" name="name" value={name} />
+<SignedInPage>
+  <form
+    method="put"
+    action={`/api/userDetails/${id}`}
+    hx-boost="true"
+    enctype="multipart/form-data"
+    hx-target-5*="#error-message"
+  >
+    <Input id="nameInput" type="text" label="Name" name="name" value={name} />
 
-  <Input
-    id="bdayInput"
-    type="date"
-    label="Birth date"
-    name="birthDate"
-    value={birth_date}
-  />
+    <Input
+      id="bdayInput"
+      type="date"
+      label="Birth date"
+      name="birthDate"
+      value={birth_date}
+    />
 
-  <Input
-    id="bdayPublicInput"
-    type="checkbox"
-    label="Public birthdate"
-    name="birthDatePublic"
-    checked={birth_date_public || undefined}
-  />
+    <Input
+      id="bdayPublicInput"
+      type="checkbox"
+      label="Public birthdate"
+      name="birthDatePublic"
+      checked={birth_date_public || undefined}
+    />
 
-  <TextArea
-    id="needsInput"
-    label="Allergies and special needs"
-    name="specialNeeds"
-    value={special_needs}
-  />
+    <TextArea
+      id="needsInput"
+      label="Allergies and special needs"
+      name="specialNeeds"
+      value={special_needs}
+    />
 
-  <TextArea
-    id="bioInput"
-    label="Biography"
-    name="biography"
-    value={biography}
-  />
+    <TextArea
+      id="bioInput"
+      label="Biography"
+      name="biography"
+      value={biography}
+    />
 
-  <Input
-    id="picInput"
-    type="file"
-    label="Profile picture"
-    name="profilePicture"
-    accept=".jpg,.jpeg,.png,.bmp,.webp"
-  />
+    <Input
+      id="picInput"
+      type="file"
+      label="Profile picture"
+      name="profilePicture"
+      accept=".jpg,.jpeg,.png,.bmp,.webp"
+    />
 
-  <Button type="submit">Save</Button>
-  <div id="error-message"></div>
-</form>
+    <Button type="submit">Save</Button>
+    <div id="error-message"></div>
+  </form>
+</SignedInPage>

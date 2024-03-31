@@ -3,17 +3,16 @@ import BaseHtml from "./Html.astro"
 
 const userName = Astro.locals.user.details.name
 const avatarUrl = Astro.locals.user.details.profile_picture_url
-const path = Astro.url.pathname
+const headers = Astro.request.headers
 
-function activeStyle(sectionName: string) {
-  if (path.includes(sectionName)) {
-    return "underline underline-offset-8 decoration-4"
-  }
-  return null
-}
+const isHtmxRequest = headers.get("HX-Request") === 'true'
+console.log("HX-Request", headers.get("HX-Request"), isHtmxRequest)
+
 ---
 
-<BaseHtml>
+{isHtmxRequest && <slot/> }
+
+{!isHtmxRequest && <BaseHtml>
   <header
     class="p-4 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600"
   >
@@ -21,6 +20,8 @@ function activeStyle(sectionName: string) {
       <div class="flex flex-wrap items-center justify-between mx-auto">
         <a
           href="/events"
+          hx-boost="true"
+          hx-target="#main"
           class="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <h1 class="text-4xl text-white font-display">Lajvstart</h1>
@@ -67,9 +68,10 @@ function activeStyle(sectionName: string) {
             <div class="px-4 py-3">
               <span class="block text-sm text-gray-900">{userName}</span>
             </div>
+
             <ul class="p-2" aria-labelledby="user-menu-button">
               <li class="p-2 text-sm text-gray-700 hover:bg-gray-100">
-                <a href="/profile">Profile</a>
+                <a href="/profile" hx-boost="true" hx-target="#main">Profile</a>
               </li>
 
               <li>
@@ -121,7 +123,9 @@ function activeStyle(sectionName: string) {
             <li>
               <a
                 href="/events"
-                class={`block py-2 px-3 text-white rounded ${activeStyle("events")}`}
+                hx-boost="true"
+                hx-target="#main"
+                class={`block py-2 px-3 text-white rounded}`}
                 aria-current="page">Events</a
               >
             </li>
@@ -131,5 +135,9 @@ function activeStyle(sectionName: string) {
     </nav>
   </header>
 
-  <slot />
+  <main id="main" class="md:max-w-screen-xl w-full mx-auto p-4">
+    <slot />
+  </main>
 </BaseHtml>
+}
+
