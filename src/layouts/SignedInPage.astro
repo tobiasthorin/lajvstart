@@ -5,139 +5,138 @@ const userName = Astro.locals.user.details.name
 const avatarUrl = Astro.locals.user.details.profile_picture_url
 const headers = Astro.request.headers
 
-const isHtmxRequest = headers.get("HX-Request") === 'true'
+const isHtmxRequest = headers.get("HX-Request") === "true"
 console.log("HX-Request", headers.get("HX-Request"), isHtmxRequest)
-
 ---
 
-{isHtmxRequest && <slot/> }
+{
+  isHtmxRequest ? (
+    <slot />
+  ) : (
+    <BaseHtml>
+      <header class="p-4 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600">
+        <nav class="md:max-w-screen-xl w-full mx-auto px-4">
+          <div class="flex flex-wrap items-center justify-between mx-auto">
+            <a
+              href="/events"
+              hx-boost="true"
+              hx-target="#main"
+              class="flex items-center space-x-3 rtl:space-x-reverse"
+            >
+              <h1 class="text-4xl text-white font-display">Lajvstart</h1>
+            </a>
 
-{!isHtmxRequest && <BaseHtml>
-  <header
-    class="p-4 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600"
-  >
-    <nav class="md:max-w-screen-xl w-full mx-auto px-4">
-      <div class="flex flex-wrap items-center justify-between mx-auto">
-        <a
-          href="/events"
-          hx-boost="true"
-          hx-target="#main"
-          class="flex items-center space-x-3 rtl:space-x-reverse"
-        >
-          <h1 class="text-4xl text-white font-display">Lajvstart</h1>
-        </a>
+            <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+              <button
+                type="button"
+                class="flex text-sm rounded-full md:me-0 focus:ring-4"
+                id="user-menu-button"
+                aria-expanded="false"
+                data-dropdown-toggle="user-dropdown"
+                data-dropdown-placement="bottom-start"
+              >
+                <span class="sr-only">Open user menu</span>
+                {avatarUrl ? (
+                  <img src={avatarUrl} class="w-10 h-10 rounded-full" />
+                ) : (
+                  <svg
+                    class="w-10 h-10 text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M12 20a8 8 0 0 1-5-1.8v-.6c0-1.8 1.5-3.3 3.3-3.3h3.4c1.8 0 3.3 1.5 3.3 3.3v.6a8 8 0 0 1-5 1.8ZM2 12a10 10 0 1 1 10 10A10 10 0 0 1 2 12Zm10-5a3.3 3.3 0 0 0-3.3 3.3c0 1.7 1.5 3.2 3.3 3.2 1.8 0 3.3-1.5 3.3-3.3C15.3 8.6 13.8 7 12 7Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                )}
+              </button>
 
-        <div
-          class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
-        >
-          <button
-            type="button"
-            class="flex text-sm rounded-full md:me-0 focus:ring-4"
-            id="user-menu-button"
-            aria-expanded="false"
-            data-dropdown-toggle="user-dropdown"
-            data-dropdown-placement="bottom-start"
-          >
-            <span class="sr-only">Open user menu</span>
-            {
-              avatarUrl ? (
-                <img src={avatarUrl} class="w-10 h-10 rounded-full" />
-              ) : (
+              <div
+                class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow"
+                id="user-dropdown"
+              >
+                <div class="px-4 py-3">
+                  <span class="block text-sm text-gray-900">{userName}</span>
+                </div>
+
+                <ul class="p-2" aria-labelledby="user-menu-button">
+                  <li class="p-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <a href="/profile" hx-boost="true" hx-target="#main">
+                      Profile
+                    </a>
+                  </li>
+
+                  <li>
+                    <form
+                      class="p-2 block hover:bg-gray-100"
+                      action="/api/auth/signout"
+                    >
+                      <button
+                        class="text-sm w-full flex text-gray-700"
+                        type="submit"
+                      >
+                        Sign out
+                      </button>
+                    </form>
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                data-collapse-toggle="navbar-user"
+                type="button"
+                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden"
+                aria-controls="navbar-user"
+                aria-expanded="false"
+              >
+                <span class="sr-only">Open main menu</span>
                 <svg
-                  class="w-10 h-10 text-white"
+                  class="w-5 h-5"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
+                  fill="none"
+                  viewBox="0 0 17 14"
                 >
                   <path
-                    fill-rule="evenodd"
-                    d="M12 20a8 8 0 0 1-5-1.8v-.6c0-1.8 1.5-3.3 3.3-3.3h3.4c1.8 0 3.3 1.5 3.3 3.3v.6a8 8 0 0 1-5 1.8ZM2 12a10 10 0 1 1 10 10A10 10 0 0 1 2 12Zm10-5a3.3 3.3 0 0 0-3.3 3.3c0 1.7 1.5 3.2 3.3 3.2 1.8 0 3.3-1.5 3.3-3.3C15.3 8.6 13.8 7 12 7Z"
-                    clip-rule="evenodd"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M1 1h15M1 7h15M1 13h15"
                   />
                 </svg>
-              )
-            }
-          </button>
-
-          <!-- Dropdown menu -->
-          <div
-            class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow"
-            id="user-dropdown"
-          >
-            <div class="px-4 py-3">
-              <span class="block text-sm text-gray-900">{userName}</span>
+              </button>
             </div>
 
-            <ul class="p-2" aria-labelledby="user-menu-button">
-              <li class="p-2 text-sm text-gray-700 hover:bg-gray-100">
-                <a href="/profile" hx-boost="true" hx-target="#main">Profile</a>
-              </li>
-
-              <li>
-                <form
-                  class="p-2 block hover:bg-gray-100"
-                  action="/api/auth/signout"
-                >
-                  <button
-                    class="text-sm w-full flex text-gray-700"
-                    type="submit">Sign out</button
-                  >
-                </form>
-              </li>
-            </ul>
-          </div>
-
-          <button
-            data-collapse-toggle="navbar-user"
-            type="button"
-            class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden"
-            aria-controls="navbar-user"
-            aria-expanded="false"
-          >
-            <span class="sr-only">Open main menu</span>
-            <svg
-              class="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 17 14"
+            <div
+              class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+              id="navbar-user"
             >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M1 1h15M1 7h15M1 13h15"></path>
-            </svg>
-          </button>
-        </div>
+              <ul class="flex flex-col text-xl mt-4 border md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+                <li>
+                  <a
+                    href="/events"
+                    hx-boost="true"
+                    hx-target="#main"
+                    class={`block py-2 px-3 text-white rounded}`}
+                    aria-current="page"
+                  >
+                    Events
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
 
-        <div
-          class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
-          id="navbar-user"
-        >
-          <ul
-            class="flex flex-col text-xl mt-4 border md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
-          >
-            <li>
-              <a
-                href="/events"
-                hx-boost="true"
-                hx-target="#main"
-                class={`block py-2 px-3 text-white rounded}`}
-                aria-current="page">Events</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </header>
-
-  <main id="main" class="md:max-w-screen-xl w-full mx-auto p-4">
-    <slot />
-  </main>
-</BaseHtml>
+      <main id="main" class="md:max-w-screen-xl w-full mx-auto p-4">
+        <slot />
+      </main>
+    </BaseHtml>
+  )
 }
-
