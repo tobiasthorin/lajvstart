@@ -5,7 +5,7 @@ import { getUserDetails, type UserDetails } from "../services/userService"
 import { log } from "../lib/logger"
 import { useNamespace, USERS_CACHE } from "../lib/cache"
 
-const protectedRoutes = ["/events(|/)*", "/profile(|/)*"]
+const protectedRoutes = ["/events/**", "/profile/**"]
 const redirectRoutes = ["/", "/signin(|/)", "/register(|/)"]
 
 const usersCache = useNamespace<UserDetails>(USERS_CACHE)
@@ -14,6 +14,11 @@ export const onRequest = defineMiddleware(
   async ({ locals, url, cookies, redirect }, next) => {
     if (micromatch.isMatch(url.pathname, protectedRoutes)) {
       log(`Accessing protected route: ${url.pathname}`)
+    } else {
+      log(`Accessing unprotected route: ${url.pathname}`)
+    }
+
+    if (micromatch.isMatch(url.pathname, protectedRoutes)) {
       const accessToken = cookies.get("sb-access-token")
       const refreshToken = cookies.get("sb-refresh-token")
 
