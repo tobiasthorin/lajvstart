@@ -4,10 +4,10 @@ import { uploadEventPicture } from "../../../utils/storageUtils"
 import { BadRequestError, InternalError } from "../../../utils/errorUtils"
 import { errorResponse } from "../../../utils/responseUtils"
 import { v4 as uuidv4 } from "uuid"
-import { EVENTS_CACHE, useNamespace } from "../../../lib/cache"
+import { EVENT_COLLECTIONS_CACHE, useNamespace } from "../../../lib/cache"
 
 export const POST: APIRoute = async ({ request, redirect }) => {
-  const eventsCache = useNamespace(EVENTS_CACHE)
+  const eventsCache = useNamespace(EVENT_COLLECTIONS_CACHE)
   const formData = await request.formData()
 
   const name = formData.get("name")?.toString()

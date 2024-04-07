@@ -47,7 +47,6 @@ export const onRequest = defineMiddleware(
           return redirect("/signin")
         }
 
-        usersCache.set(sessionData.user?.id!, userData!, 1000 * 60 * 60)
         userDetails = userData!
       }
 

@@ -1,0 +1,66 @@
+---
+import SignedInPage from "../../layouts/SignedInPage.astro"
+import { useNamespace, EVENTS_CACHE } from "../../lib/cache"
+import type { LARPEvent } from "../../types/types"
+import { log } from "../../lib/logger"
+import { getEvent } from "../../services/eventService"
+import Button from "../../components/Button.astro"
+
+const eventsCache = useNamespace<LARPEvent>(EVENTS_CACHE)
+
+const { id } = Astro.params
+
+if (!id) throw new Error("Missing id url param")
+
+let event = eventsCache.get(id)
+
+if (!event) {
+  log(`Getting event ${id} from DB`)
+
+  const { data, error } = await getEvent(id)
+
+  if (error || !data) return errorResponse(`Error while fetching event ${id}`)
+
+  event = data
+}
+---
+
+<SignedInPage>
+  <div class="flex flex-col md:flex-row justify-between items-baseline mb-4">
+    <h2 class="text-5xl text-orange-500 font-display">{event.name}</h2>
+    <p class="text-3xl text-orange-500 font-display">
+      {event.date_start} - {event.date_end}
+    </p>
+  </div>
+
+  <img
+    src={event.event_image_url}
+    alt="Event image"
+    class="w-full h-36 object-cover mb-8"
+  />
+
+  <div class="flex flex-col-reverse md:flex-row gap-8">
+    <p class="grow-[2]">{event.description}</p>
+
+    <aside class="grow-[1]">
+      <ul
+        class="flex flex-col gap-4 p-4 bg-green-50 rounded border-green-300 border mb-4"
+      >
+        <li>Loction: {event.location_name}</li>
+        <li>Last sign up date: {event.date_signup}</li>
+        <li>Age limit: {event.minimum_age}+</li>
+        <li>
+          Tags: {
+            (event.tags || []).map((tag) => (
+              <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 capitalize self-start">
+                {tag}
+              </span>
+            ))
+          }
+        </li>
+      </ul>
+
+      <Button disabled>Sign up!</Button>
+    </aside>
+  </div>
+</SignedInPage>
