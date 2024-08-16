@@ -1,0 +1,14 @@
+---
+import Button from "./Button.astro"
+
+interface Props {
+  eventId: string
+  favouriteExists: boolean
+}
+
+const { eventId, favouriteExists } = Astro.props
+---
+
+<Button hx-post={`/api/favourite/${eventId}`} hx-swap="outerHTML">
+  {!favouriteExists ? "Add " : "Added "}to favourites
+</Button>

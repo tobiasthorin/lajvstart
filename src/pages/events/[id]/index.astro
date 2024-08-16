@@ -1,28 +1,24 @@
 ---
-import SignedInPage from "../../layouts/SignedInPage.astro"
-import { useNamespace, EVENTS_CACHE } from "../../lib/cache"
-import type { LARPEvent } from "../../types/types"
-import { log } from "../../lib/logger"
-import { getEvent } from "../../services/eventService"
-import Button from "../../components/Button.astro"
-
-const eventsCache = useNamespace<LARPEvent>(EVENTS_CACHE)
+import SignedInPage from "../../../layouts/SignedInPage.astro"
+import type { LARPEvent } from "../../../types/types"
+import { getEvent } from "../../../services/eventService"
+import FavButton from "../../../components/FavButton.astro"
+import { getFavourite } from "../../../services/favouritesService"
 
 const { id } = Astro.params
+const userId = Astro.locals.user.id
 
 if (!id) throw new Error("Missing id url param")
 
-let event = eventsCache.get(id)
+let event: LARPEvent
 
-if (!event) {
-  log(`Getting event ${id} from DB`)
-
-  const { data, error } = await getEvent(id)
-
-  if (error || !data) return errorResponse(`Error while fetching event ${id}`)
-
-  event = data
+try {
+  event = await getEvent(id)
+} catch (error) {
+  return errorResponse(error)
 }
+
+const favourite = await getFavourite(userId, event.id)
 ---
 
 <SignedInPage>
@@ -60,7 +56,10 @@ if (!event) {
         </li>
       </ul>
 
-      <Button disabled>Sign up!</Button>
+      <a href={`/events/${id}/register`} hx-boost="true" hx-target="#main"
+        >Sign up!</a
+      >
+      <FavButton favouriteExists={favourite !== null} eventId={event.id} />
     </aside>
   </div>
 </SignedInPage>
