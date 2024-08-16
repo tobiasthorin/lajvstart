@@ -11,7 +11,6 @@ export async function getFavourite(userId: UserID, eventId: EventID) {
     .select()
     .eq("user_id", userId)
     .eq("event_id", eventId)
-    .eq("deleted", false)
     .single()
 
   return favourite
@@ -38,7 +37,7 @@ export async function toggleFavourite(userId: UserID, eventId: EventID) {
   } else {
     const { error } = await supabase
       .from("favourites")
-      .update({ deleted: true })
+      .delete()
       .eq("id", favourite.id)
 
     if (error) throw new Error(error.message)

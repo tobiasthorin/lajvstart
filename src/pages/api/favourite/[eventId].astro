@@ -3,7 +3,6 @@ import FavButton from "../../../components/FavButton.astro"
 import { toggleFavourite } from "../../../services/favouritesService"
 
 const { eventId } = Astro.params
-console.log(Astro.locals)
 const userId = Astro.locals.user.id
 
 if (!eventId) return

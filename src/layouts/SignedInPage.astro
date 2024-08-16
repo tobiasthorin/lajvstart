@@ -6,7 +6,6 @@ const avatarUrl = Astro.locals.user.details.profile_picture_url
 const headers = Astro.request.headers
 
 const isHtmxRequest = headers.get("HX-Request") === "true"
-console.log("HX-Request", headers.get("HX-Request"), isHtmxRequest)
 ---
 
 {
@@ -64,6 +63,16 @@ console.log("HX-Request", headers.get("HX-Request"), isHtmxRequest)
                 </div>
 
                 <ul class="p-2" aria-labelledby="user-menu-button">
+                  <li class="p-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <a
+                      href="/events/favourites"
+                      hx-boost="true"
+                      hx-target="#main"
+                    >
+                      My favourites
+                    </a>
+                  </li>
+
                   <li class="p-2 text-sm text-gray-700 hover:bg-gray-100">
                     <a href="/profile" hx-boost="true" hx-target="#main">
                       Profile

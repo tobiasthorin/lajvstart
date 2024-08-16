@@ -5,6 +5,10 @@ import {
   EVENTS_CACHE,
 } from "../lib/cache"
 import type { LARPEvent } from "../types/types"
+import { log } from "../lib/logger"
+import type { UserID } from "./userService"
+
+export type EventID = LARPEvent["id"]
 
 const eventCollectionsCache = useNamespace<LARPEvent[]>(EVENT_COLLECTIONS_CACHE)
 const eventsCache = useNamespace<LARPEvent>(EVENTS_CACHE)
@@ -21,14 +25,42 @@ export async function getUpcomingEvents() {
   return { data, error }
 }
 
-export async function getEvent(eventId: LARPEvent["id"]) {
+export async function getFavouriteEvents(userId: UserID) {
   const { data, error } = await supabase
     .from("events")
-    .select()
-    .eq("id", eventId)
-    .single()
+    .select("*, favourites!inner(event_id, user_id)")
+    .order("date_start")
 
-  if (!error) eventsCache.set(eventId, data, 1000 * 60 * 5)
+  // TODO: do this in query
+  const filteredData = data?.filter((event) =>
+    event.favourites.some((fav) => fav.user_id === userId)
+  )
 
-  return { data, error }
+  // TODO: cache?
+
+  return { data: filteredData, error }
+}
+
+export async function getEvent(eventId: LARPEvent["id"]) {
+  let event = eventsCache.get(eventId)
+
+  if (event) {
+    return event
+  } else {
+    log(`Getting event ${eventId} from DB`)
+
+    const { data, error } = await supabase
+      .from("events")
+      .select()
+      .eq("id", eventId)
+      .single()
+
+    if (error) {
+      throw new Error(error.message)
+    } else {
+      eventsCache.set(eventId, data, 1000 * 60 * 5)
+    }
+
+    return data
+  }
 }

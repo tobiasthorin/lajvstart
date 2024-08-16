@@ -1,0 +1,43 @@
+---
+import SignedInPage from "../../layouts/SignedInPage.astro"
+import EventCard from "../../components/EventCard.astro"
+import { EVENT_COLLECTIONS_CACHE, useNamespace } from "../../lib/cache"
+import { errorResponse } from "../../utils/responseUtils"
+import type { LARPEvent } from "../../types/types"
+import { log } from "../../lib/logger"
+import { getFavouriteEvents } from "../../services/eventService"
+
+const userId = Astro.locals.user.id
+
+const eventsCache = useNamespace<LARPEvent[]>(EVENT_COLLECTIONS_CACHE)
+let events = eventsCache.get(`favourites-${userId}`)
+
+if (!events) {
+  log("Getting events from DB")
+
+  const { data, error: getEventsError } = await getFavouriteEvents(userId)
+
+  if (getEventsError || !data)
+    return errorResponse("Error while fetching events")
+
+  events = data
+}
+---
+
+<SignedInPage>
+  <h2 class="text-4xl text-orange-500 font-display mb-8">Favourite events</h2>
+
+  {events === null && <p>No favourite events</p>}
+
+  {
+    events !== null && (
+      <ul class="grid grid-cols-events gap-8 mb-8">
+        {events.map((event) => (
+          <li>
+            <EventCard event={event} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</SignedInPage>
