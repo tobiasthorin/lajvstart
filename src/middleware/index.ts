@@ -5,7 +5,12 @@ import { getUserDetails, type UserDetails } from "../services/userService"
 import { log } from "../lib/logger"
 import { useNamespace, USERS_CACHE } from "../lib/cache"
 
-const protectedRoutes = ["/events/**", "/profile/**", "/api/favourite/**"]
+const protectedRoutes = [
+  "/events/**",
+  "/profile/**",
+  "/api/favourite/**",
+  "/api/event/**",
+]
 const redirectRoutes = ["/", "/signin(|/)", "/register(|/)"]
 
 const usersCache = useNamespace<UserDetails>(USERS_CACHE)

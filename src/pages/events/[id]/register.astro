@@ -1,0 +1,66 @@
+---
+import SignedInPage from "../../../layouts/SignedInPage.astro"
+import type { LARPEvent } from "../../../types/types"
+import { getEvent } from "../../../services/eventService"
+import { errorResponse } from "../../../utils/responseUtils"
+import Input from "../../../components/Input.astro"
+import TextArea from "../../../components/TextArea.astro"
+import Button from "../../../components/Button.astro"
+import { getRegistration } from "../../../services/registrationService"
+
+const { id } = Astro.params
+const userId = Astro.locals.user.id
+
+if (!id) throw new Error("Missing id url param")
+
+let event: LARPEvent
+
+try {
+  event = await getEvent(id)
+} catch (error) {
+  return errorResponse(error)
+}
+
+const registration = await getRegistration(userId, event.id)
+
+let characterName = registration?.details.find(
+  (detail) => detail.name === "characterName"
+)?.value
+let characterDescription = registration?.details.find(
+  (detail) => detail.name === "characterDescription"
+)?.value
+---
+
+<SignedInPage
+  >{registration ? "Edit details" : "Register"} for {event.name}
+
+  <form
+    method={"put"}
+    action={`/api/event/${event.id}/register`}
+    hx-boost="true"
+    enctype="multipart/form-data"
+    hx-target-5*="#error-message"
+  >
+    <Input
+      id="characterName"
+      type="text"
+      label="Character name"
+      name="characterName"
+      required
+      value={characterName}
+    />
+
+    <TextArea
+      id="characterDescription"
+      label="Character description"
+      name="characterDescription"
+      maxlength="1000"
+      required
+      value={characterDescription}
+    />
+
+    <Button type="submit">{registration ? "Update" : "Register"}</Button>
+
+    <div id="error-message"></div>
+  </form>
+</SignedInPage>

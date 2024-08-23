@@ -101,21 +101,18 @@ export type Database = {
       favourites: {
         Row: {
           created_at: string
-          deleted: boolean
           event_id: string | null
           id: string
           user_id: string | null
         }
         Insert: {
           created_at?: string
-          deleted?: boolean
           event_id?: string | null
           id?: string
           user_id?: string | null
         }
         Update: {
           created_at?: string
-          deleted?: boolean
           event_id?: string | null
           id?: string
           user_id?: string | null
@@ -140,26 +137,26 @@ export type Database = {
       registrations: {
         Row: {
           created_at: string
+          details: Json | null
           event_id: string
           id: string
           is_paid: boolean
-          type: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          details?: Json | null
           event_id: string
           id?: string
           is_paid?: boolean
-          type?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          details?: Json | null
           event_id?: string
           id?: string
           is_paid?: boolean
-          type?: string
           user_id?: string
         }
         Relationships: [
@@ -228,7 +225,33 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      json_matches_schema: {
+        Args: {
+          schema: Json
+          instance: Json
+        }
+        Returns: boolean
+      }
+      jsonb_matches_schema: {
+        Args: {
+          schema: Json
+          instance: Json
+        }
+        Returns: boolean
+      }
+      jsonschema_is_valid: {
+        Args: {
+          schema: Json
+        }
+        Returns: boolean
+      }
+      jsonschema_validation_errors: {
+        Args: {
+          schema: Json
+          instance: Json
+        }
+        Returns: string[]
+      }
     }
     Enums: {
       [_ in never]: never

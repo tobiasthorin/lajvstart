@@ -6,7 +6,7 @@ import { errorResponse } from "../../../utils/responseUtils"
 import { v4 as uuidv4 } from "uuid"
 import { EVENT_COLLECTIONS_CACHE, useNamespace } from "../../../lib/cache"
 
-export const POST: APIRoute = async ({ request, redirect }) => {
+export const POST: APIRoute = async ({ request }) => {
   const eventsCache = useNamespace(EVENT_COLLECTIONS_CACHE)
   const formData = await request.formData()
 

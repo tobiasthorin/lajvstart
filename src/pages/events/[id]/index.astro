@@ -4,6 +4,7 @@ import type { LARPEvent } from "../../../types/types"
 import { getEvent } from "../../../services/eventService"
 import FavButton from "../../../components/FavButton.astro"
 import { getFavourite } from "../../../services/favouritesService"
+import { getRegistration } from "../../../services/registrationService"
 
 const { id } = Astro.params
 const userId = Astro.locals.user.id
@@ -19,6 +20,7 @@ try {
 }
 
 const favourite = await getFavourite(userId, event.id)
+const registration = await getRegistration(userId, event.id)
 ---
 
 <SignedInPage>
@@ -57,8 +59,9 @@ const favourite = await getFavourite(userId, event.id)
       </ul>
 
       <a href={`/events/${id}/register`} hx-boost="true" hx-target="#main"
-        >Sign up!</a
+        >{registration ? "Edit registration" : "Register"}</a
       >
+
       <FavButton favouriteExists={favourite !== null} eventId={event.id} />
     </aside>
   </div>
