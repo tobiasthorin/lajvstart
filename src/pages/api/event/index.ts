@@ -4,10 +4,15 @@ import { uploadEventPicture } from "../../../utils/storageUtils"
 import { BadRequestError, InternalError } from "../../../utils/errorUtils"
 import { errorResponse } from "../../../utils/responseUtils"
 import { v4 as uuidv4 } from "uuid"
-import { EVENT_COLLECTIONS_CACHE, useNamespace } from "../../../lib/cache"
+import {
+  EVENT_COLLECTIONS_CACHE,
+  useNamespace,
+  USER_EVENTS_CACHE,
+} from "../../../lib/cache"
 
 export const POST: APIRoute = async ({ request }) => {
   const eventsCache = useNamespace(EVENT_COLLECTIONS_CACHE)
+  const userEventsCache = useNamespace(USER_EVENTS_CACHE)
   const formData = await request.formData()
 
   const name = formData.get("name")?.toString()
@@ -62,6 +67,7 @@ export const POST: APIRoute = async ({ request }) => {
   if (createEventError) return errorResponse(createEventError.message, 500)
 
   eventsCache.clear()
+  userEventsCache.clear()
 
   return new Response(null, {
     headers: new Headers({

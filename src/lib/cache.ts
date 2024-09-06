@@ -2,6 +2,7 @@ import { log } from "./logger"
 
 export const EVENT_COLLECTIONS_CACHE = "events_collections"
 export const EVENTS_CACHE = "events"
+export const USER_EVENTS_CACHE = "user_events"
 export const USERS_CACHE = "users"
 
 const cacheStore: Record<

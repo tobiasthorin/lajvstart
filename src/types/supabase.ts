@@ -141,6 +141,7 @@ export type Database = {
           event_id: string
           id: string
           is_paid: boolean
+          user_details: string | null
           user_id: string
         }
         Insert: {
@@ -149,6 +150,7 @@ export type Database = {
           event_id: string
           id?: string
           is_paid?: boolean
+          user_details?: string | null
           user_id: string
         }
         Update: {
@@ -157,6 +159,7 @@ export type Database = {
           event_id?: string
           id?: string
           is_paid?: boolean
+          user_details?: string | null
           user_id?: string
         }
         Relationships: [
@@ -173,6 +176,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registrations_user_details_fkey"
+            columns: ["user_details"]
+            isOneToOne: false
+            referencedRelation: "user_details"
+            referencedColumns: ["user_id"]
           },
         ]
       }

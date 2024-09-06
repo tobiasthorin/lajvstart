@@ -1,11 +1,15 @@
 ---
+import { getMyEvents } from "../services/eventService"
 import BaseHtml from "./Html.astro"
 
 const userName = Astro.locals.user.details.name
+const userId = Astro.locals.user.details.user_id
 const avatarUrl = Astro.locals.user.details.profile_picture_url
 const headers = Astro.request.headers
 
 const isHtmxRequest = headers.get("HX-Request") === "true"
+
+const userEvents = await getMyEvents(userId)
 ---
 
 {
@@ -63,6 +67,14 @@ const isHtmxRequest = headers.get("HX-Request") === "true"
                 </div>
 
                 <ul class="p-2" aria-labelledby="user-menu-button">
+                  {userEvents.length > 0 && (
+                    <li class="p-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <a href="/events/my" hx-boost="true" hx-target="#main">
+                        My events
+                      </a>
+                    </li>
+                  )}
+
                   <li class="p-2 text-sm text-gray-700 hover:bg-gray-100">
                     <a
                       href="/events/favourites"

@@ -1,0 +1,54 @@
+---
+import SignedInPage from "../../layouts/SignedInPage.astro"
+import { useNamespace, USER_EVENTS_CACHE } from "../../lib/cache"
+import { errorResponse } from "../../utils/responseUtils"
+import type { LARPEvent } from "../../types/types"
+import { log } from "../../lib/logger"
+import { getUpcomingEvents } from "../../services/eventService"
+
+const userId = Astro.locals.user.id
+
+const userEventsCache = useNamespace<LARPEvent[]>(USER_EVENTS_CACHE)
+let events = userEventsCache.get(userId)
+
+if (!events) {
+  log("Getting events from DB")
+
+  const { data, error: getEventsError } = await getUpcomingEvents()
+
+  if (getEventsError || !data)
+    return errorResponse("Error while fetching user events")
+
+  events = data
+}
+---
+
+<SignedInPage>
+  <h2 class="text-4xl text-orange-500 font-display mb-8">My events</h2>
+
+  <table>
+    <thead>
+      <th>Event</th>
+      <th>Start at</th>
+    </thead>
+
+    <tbody>
+      {
+        events.map((event) => (
+          <tr>
+            <td>
+              <a
+                href={`/events/${event.id}/manage`}
+                hx-target="#main"
+                hx-boost="true"
+              >
+                {event.name}
+              </a>
+            </td>
+            <td>{event.date_start}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</SignedInPage>

@@ -1,0 +1,24 @@
+---
+import ManageEvent from "../../../../layouts/ManageEvent.astro"
+import { getEvent } from "../../../../services/eventService"
+import type { LARPEvent } from "../../../../types/types"
+
+const { id } = Astro.params
+const userId = Astro.locals.user.id
+
+if (!id) throw new Error("Missing id url param")
+
+let event: LARPEvent
+
+try {
+  event = await getEvent(id)
+} catch (error) {
+  return errorResponse(error)
+}
+
+if (event.owner_id !== userId) Astro.redirect("/events")
+---
+
+<ManageEvent eventId={event.id}>
+  <h2>Here be them stats</h2>
+</ManageEvent>

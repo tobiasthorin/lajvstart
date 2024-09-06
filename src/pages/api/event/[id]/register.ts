@@ -1,8 +1,9 @@
 import type { APIRoute } from "astro"
-import { supabase } from "../../../../lib/supabase"
 import { errorResponse } from "../../../../utils/responseUtils"
 import {
+  createRegistration,
   getRegistration,
+  updateRegistration,
   type RegistrationDetails,
 } from "../../../../services/registrationService"
 
@@ -30,29 +31,22 @@ export const PUT: APIRoute = async ({ request, params, locals }) => {
       type: "textLong",
     },
   ]
-
-  if (registration) {
-    const { error: updateRegistrationError } = await supabase
-      .from("registrations")
-      .update({
-        details,
-      })
-      .eq("id", registration.id)
-
-    if (updateRegistrationError)
-      return errorResponse(updateRegistrationError.message, 500)
-  } else {
-    const { error: createRegistrationError } = await supabase
-      .from("registrations")
-      .insert({
-        event_id: eventId,
-        user_id: locals.user.id,
-        is_paid: false,
-        details,
-      })
-
-    if (createRegistrationError)
-      return errorResponse(createRegistrationError.message, 500)
+  try {
+    if (registration) {
+      updateRegistration(registration.id, details)
+    } else {
+      createRegistration(
+        eventId,
+        locals.user.id,
+        locals.user.details.user_id,
+        details
+      )
+    }
+  } catch (error: unknown) {
+    console.error(error)
+    if (error instanceof Error) {
+      return errorResponse(error.message, 500)
+    }
   }
 
   return new Response(null, {

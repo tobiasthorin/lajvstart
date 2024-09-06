@@ -1,0 +1,68 @@
+---
+import Button from "../../../../components/Button.astro"
+import ManageEvent from "../../../../layouts/ManageEvent.astro"
+import { getEvent } from "../../../../services/eventService"
+import { getRegistrations } from "../../../../services/registrationService"
+import type { LARPEvent } from "../../../../types/types"
+import { getDetailValue } from "../../../../utils/registrationUtils"
+
+const { id } = Astro.params
+const userId = Astro.locals.user.id
+
+if (!id) throw new Error("Missing id url param")
+
+let event: LARPEvent
+
+try {
+  event = await getEvent(id)
+} catch (error) {
+  return errorResponse(error)
+}
+
+if (event.owner_id !== userId) Astro.redirect("/events")
+
+const registrations = await getRegistrations(event.id)
+
+const details = registrations[0]?.details
+---
+
+<ManageEvent eventId={event.id}>
+  <h2>Registrations</h2>
+  {
+    registrations === null || registrations.length === 0 ? (
+      <p>No registrations</p>
+    ) : (
+      <table>
+        <thead>
+          <th>Name</th>
+          <th>Paid</th>
+          <th>Special needs</th>
+          {details?.map((detail) => (
+            <th>{detail.name}</th>
+          ))}
+          <th>Delete</th>
+          <th>Toggle paid</th>
+        </thead>
+
+        <tbody>
+          {registrations.map((registration) => (
+            <tr>
+              <td>{registration.user_details.name}</td>
+              <td>{registration.is_paid ? "Yes" : "No"}</td>
+              <td>{registration.user_details.special_needs}</td>
+              {registration.details.map((detail) => (
+                <td>{getDetailValue(detail)}</td>
+              ))}
+              <td>
+                <Button>Delete</Button>
+              </td>
+              <td>
+                <Button>Toggle paid</Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+</ManageEvent>

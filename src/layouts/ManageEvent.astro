@@ -1,0 +1,22 @@
+---
+import type { EventID } from "../services/eventService"
+import SignedInPage from "./SignedInPage.astro"
+
+interface Props {
+  eventId: EventID
+}
+
+const { eventId } = Astro.props
+---
+
+<SignedInPage>
+  <nav>
+    <ul>
+      <li>
+        <a href={`/events/${eventId}/manage/registrations`}>Registrations</a>
+      </li>
+    </ul>
+  </nav>
+
+  <slot />
+</SignedInPage>
