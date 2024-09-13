@@ -16,17 +16,13 @@ const registrationSchema = z.object({
   id: z.string(),
   is_paid: z.boolean(),
   user_id: z.string(),
-})
-
-const userDetailsSchema = z.object({
   user_details: z.object({
     name: z.string(),
     special_needs: z.string().nullable(),
   }),
 })
-const registrationsSchema = z.array(
-  z.intersection(registrationSchema, userDetailsSchema)
-)
+
+const registrationsSchema = z.array(registrationSchema)
 
 export type Registration = z.infer<typeof registrationSchema>
 export type RegistrationDetails = z.infer<typeof registrationDetailsSchema>
@@ -67,9 +63,18 @@ export async function updateRegistration(
 export async function getRegistration(userId: UserID, eventId: EventID) {
   const { data: registration } = await supabase
     .from("registrations")
-    .select()
+    .select(
+      `
+      *,
+      user_details (
+        name,
+        special_needs
+      )
+      `
+    )
     .eq("user_id", userId)
     .eq("event_id", eventId)
+    .eq("deleted", false)
     .single()
 
   if (registration === null) return null
@@ -90,15 +95,20 @@ export async function getRegistrations(eventId: EventID) {
       `
     )
     .eq("event_id", eventId)
+    .eq("deleted", false)
 
   return registrationsSchema.parse(registrations)
 }
 
-export async function deleteRegistration(registrationId) {
+export async function deleteRegistration(
+  eventId: EventID,
+  registrationId: Registration["id"]
+) {
   const { error: updateRegistrationError } = await supabase
     .from("registrations")
-    .update()
+    .update({ deleted: true })
     .eq("id", registrationId)
+    .eq("event_id", eventId)
 
   if (updateRegistrationError) throw new Error(updateRegistrationError.message)
 }

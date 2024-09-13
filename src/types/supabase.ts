@@ -9,6 +9,38 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      event_groups: {
+        Row: {
+          created_at: string
+          description: string | null
+          event_id: string | null
+          id: string
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          event_id?: string | null
+          id?: string
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          event_id?: string | null
+          id?: string
+          name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_groups_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_tags: {
         Row: {
           created_at: string
@@ -137,6 +169,7 @@ export type Database = {
       registrations: {
         Row: {
           created_at: string
+          deleted: boolean | null
           details: Json | null
           event_id: string
           id: string
@@ -146,6 +179,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deleted?: boolean | null
           details?: Json | null
           event_id: string
           id?: string
@@ -155,6 +189,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deleted?: boolean | null
           details?: Json | null
           event_id?: string
           id?: string
