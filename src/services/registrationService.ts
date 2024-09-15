@@ -46,7 +46,7 @@ export async function createRegistration(
   if (createRegistrationError) throw new Error(createRegistrationError.message)
 }
 
-export async function updateRegistration(
+export async function replaceRegistration(
   registrationId: Registration["id"],
   details: RegistrationDetails[]
 ) {
@@ -108,6 +108,30 @@ export async function deleteRegistration(
     .from("registrations")
     .update({ deleted: true })
     .eq("id", registrationId)
+    .eq("event_id", eventId)
+
+  if (updateRegistrationError) throw new Error(updateRegistrationError.message)
+}
+
+export async function updateRegistration(
+  userId: UserID,
+  eventId: EventID,
+  fields: { isPaid: boolean | undefined }
+) {
+  const registration = await getRegistration(userId, eventId)
+
+  if (!registration)
+    throw new Error(
+      `Could not find registration for user ${userId}, event ${eventId}`
+    )
+  console.log(fields.isPaid !== undefined, fields.isPaid, registration.is_paid)
+  const { error: updateRegistrationError } = await supabase
+    .from("registrations")
+    .update({
+      is_paid:
+        fields.isPaid !== undefined ? fields.isPaid : registration.is_paid,
+    })
+    .eq("id", registration.id)
     .eq("event_id", eventId)
 
   if (updateRegistrationError) throw new Error(updateRegistrationError.message)

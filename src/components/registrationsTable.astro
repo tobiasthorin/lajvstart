@@ -1,0 +1,31 @@
+---
+import type { EventID } from "../services/eventService"
+import type { Registration } from "../services/registrationService"
+import RegistrationRow from "./registrationRow.astro"
+
+interface Props {
+  registrations: Registration[]
+  eventId: EventID
+}
+const { registrations, eventId } = Astro.props
+const details = registrations[0]?.details
+---
+
+<table id="registrationsTable">
+  <thead>
+    <th>Name</th>
+    <th>Paid</th>
+    <th>Special needs</th>
+    {details && details.map((detail) => <th>{detail.name}</th>)}
+    <th>Delete</th>
+    <th>Toggle paid</th>
+  </thead>
+
+  <tbody>
+    {
+      registrations.map((registration) => (
+        <RegistrationRow registration={registration} eventId={eventId} />
+      ))
+    }
+  </tbody>
+</table>

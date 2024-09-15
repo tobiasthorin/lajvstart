@@ -1,0 +1,18 @@
+---
+export const partial = true
+
+import RegistrationRow from "../../../../../components/registrationRow.astro"
+import { getRegistration } from "../../../../../services/registrationService"
+
+const { eventId } = Astro.params
+const userId = Astro.url.searchParams.get("userId")
+
+if (!eventId) throw new Error("Missing eventId url param")
+if (!userId) throw new Error("Missing userId url param")
+
+const registration = await getRegistration(userId, eventId)
+
+if (!registration) return
+---
+
+<RegistrationRow registration={registration} eventId={eventId} />

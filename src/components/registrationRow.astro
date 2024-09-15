@@ -1,0 +1,37 @@
+---
+import type { EventID } from "../services/eventService"
+import type { Registration } from "../services/registrationService"
+import { getDetailValue } from "../utils/registrationUtils"
+import Button from "./Button.astro"
+
+interface Props {
+  registration: Registration
+  eventId: EventID
+}
+
+const { registration, eventId } = Astro.props
+---
+
+<tr id={`row-${registration.id}`}>
+  <td>{registration.user_details.name}</td>
+  <td>{registration.is_paid ? "Yes" : "No"}</td>
+  <td>{registration.user_details.special_needs}</td>
+  {registration.details.map((detail) => <td>{getDetailValue(detail)}</td>)}
+  <td>
+    <Button
+      hx-delete={`/api/event/${eventId}/registration/${registration.id}`}
+      hx-target="#registrationsTable"
+    >
+      Delete
+    </Button>
+  </td>
+  <td>
+    <Button
+      hx-patch={`/api/event/${eventId}/registration/${registration.id}`}
+      hx-vals=`{"isPaid": ${!registration.is_paid}, "userId": "${registration.user_id}"}`
+      hx-target={`#row-${registration.id}`}
+      hx-swap="outerHTML"
+      >{registration.is_paid ? "Mark unpaid" : " Mark paid"}</Button
+    >
+  </td>
+</tr>
