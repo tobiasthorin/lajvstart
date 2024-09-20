@@ -139,6 +139,7 @@ const userEvents = await getMyEvents(userId)
             >
               <ul class="flex flex-col text-xl mt-4 border md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                 <li>
+                  {/* TODO: current */}
                   <a
                     href="/events"
                     hx-boost="true"
@@ -147,6 +148,18 @@ const userEvents = await getMyEvents(userId)
                     aria-current="page"
                   >
                     Events
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="/map"
+                    hx-boost="true"
+                    hx-target="#main"
+                    class={`block py-2 px-3 text-white rounded}`}
+                    aria-current="page"
+                  >
+                    Map
                   </a>
                 </li>
               </ul>

@@ -1,0 +1,43 @@
+---
+import SignedInPage from "../layouts/SignedInPage.astro"
+import { getUpcomingEvents } from "../services/eventService"
+import { errorResponse } from "../utils/responseUtils"
+
+const { data: events } = await getUpcomingEvents()
+if (!events) {
+  return errorResponse("Could not get upcoming events")
+}
+
+const locationScripts = events.map(
+  (event) =>
+    `L.marker([${event.location_latitude}, ${event.location_longitude}])
+    .addTo(map)
+    .bindPopup("<h3 class='font-bold text-lg'>${event.name}</h3> <p>${event.location_name}</p> <p>${event.description_short}</p> <p><a href='/events/${event.id}'>Go to event</a></p>");`
+)
+---
+
+<SignedInPage>
+  <script
+    is:inline
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+
+  <h2 class="text-4xl text-orange-500 font-display mb-8">
+    Find events near you
+  </h2>
+
+  <div id="map" style="height: calc(100vh - 190px);"></div>
+
+  <script is:inline>
+    var map = L.map("map").setView([61, 14], 6)
+
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map)
+  </script>
+
+  {locationScripts.map((script) => <script is:inline set:html={script} />)}
+</SignedInPage>

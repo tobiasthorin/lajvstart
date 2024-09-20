@@ -10,6 +10,7 @@ const protectedRoutes = [
   "/profile/**",
   "/api/favourite/**",
   "/api/event/**",
+  "/map",
 ]
 const redirectRoutes = ["/", "/signin(|/)", "/register(|/)"]
 

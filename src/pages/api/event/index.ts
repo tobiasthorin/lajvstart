@@ -25,6 +25,8 @@ export const POST: APIRoute = async ({ request }) => {
   const beginnerFriendly = formData.get("beginnerFriendly")?.toString()
   const ageRestriction = formData.get("ageRestriction")?.toString()
   const maximumParticipants = formData.get("maximumParticipants")?.toString()
+  const latitude = formData.get("latitude")?.toString()
+  const longitude = formData.get("longitude")?.toString()
 
   if (
     !name ||
@@ -33,9 +35,11 @@ export const POST: APIRoute = async ({ request }) => {
     !location ||
     !description ||
     !descriptionShort ||
-    !maximumParticipants
+    !maximumParticipants ||
+    !latitude ||
+    !longitude
   )
-    return new Response()
+    return errorResponse("Missing form data")
 
   const eventFile = formData.get("eventPicture") as File | null
 
@@ -65,6 +69,8 @@ export const POST: APIRoute = async ({ request }) => {
     is_beginner_friendly: !!beginnerFriendly,
     minimum_age: Number(ageRestriction),
     maximum_participants: Number(maximumParticipants),
+    location_latitude: Number(latitude),
+    location_longitude: Number(longitude),
   })
 
   if (createEventError) return errorResponse(createEventError.message, 500)
