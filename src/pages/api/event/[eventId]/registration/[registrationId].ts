@@ -23,7 +23,7 @@ export const DELETE: APIRoute = async ({ params, rewrite }) => {
   }
 }
 
-export const PATCH: APIRoute = async ({ request, params, rewrite, locals }) => {
+export const PATCH: APIRoute = async ({ request, params, rewrite }) => {
   const eventId = params.eventId
   const registrationId = params.registrationId
 
@@ -38,7 +38,7 @@ export const PATCH: APIRoute = async ({ request, params, rewrite, locals }) => {
   if (!userId) {
     return errorResponse("Missing userId")
   }
-  console.log(typeof isPaid)
+
   try {
     await updateRegistration(String(userId), eventId, {
       isPaid: isPaid !== null ? (isPaid === "true" ? true : false) : undefined,

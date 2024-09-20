@@ -1,19 +1,51 @@
 ---
-import type { EventID } from "../services/eventService"
+import { getEvent, type EventID } from "../services/eventService"
 import SignedInPage from "./SignedInPage.astro"
 
 interface Props {
   eventId: EventID
 }
 
-const { eventId } = Astro.props
+const {
+  props: { eventId },
+  url,
+} = Astro
+
+const event = await getEvent(eventId)
+
+const activeClass =
+  "inline-block p-4 text-orange-600 border-b-2 border-orange-600 rounded-t-lg active dark:text-orange-500 dark:border-orange-500"
+const inActiveClass =
+  "inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
 ---
 
 <SignedInPage>
-  <nav>
-    <ul>
-      <li>
-        <a href={`/events/${eventId}/manage/registrations`}>Registrations</a>
+  <h2 class="text-5xl font-extrabold dark:text-white font-display">
+    {event.name}
+  </h2>
+  <nav
+    class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-8"
+  >
+    <ul class="flex flex-wrap -mb-px">
+      <li class="me-2">
+        <a
+          href={`/events/${eventId}/manage/overview`}
+          hx-boost="true"
+          hx-target="#main"
+          class={url.pathname.includes("overview")
+            ? activeClass
+            : inActiveClass}>Overview</a
+        >
+      </li>
+      <li class="me-2">
+        <a
+          href={`/events/${eventId}/manage/registrations`}
+          hx-boost="true"
+          hx-target="#main"
+          class={url.pathname.includes("registrations")
+            ? activeClass
+            : inActiveClass}>Registrations</a
+        >
       </li>
     </ul>
   </nav>

@@ -3,6 +3,8 @@ import type { EventID } from "../services/eventService"
 import type { Registration } from "../services/registrationService"
 import { getDetailValue } from "../utils/registrationUtils"
 import Button from "./Button.astro"
+import TD from "./table/TD.astro"
+import TR from "./table/TR.astro"
 
 interface Props {
   registration: Registration
@@ -12,20 +14,20 @@ interface Props {
 const { registration, eventId } = Astro.props
 ---
 
-<tr id={`row-${registration.id}`}>
-  <td>{registration.user_details.name}</td>
-  <td>{registration.is_paid ? "Yes" : "No"}</td>
-  <td>{registration.user_details.special_needs}</td>
-  {registration.details.map((detail) => <td>{getDetailValue(detail)}</td>)}
-  <td>
+<TR id={`row-${registration.id}`}>
+  <TD>{registration.user_details.name}</TD>
+  <TD>{registration.is_paid ? "Yes" : "No"}</TD>
+  <TD>{registration.user_details.special_needs}</TD>
+  {registration.details.map((detail) => <TD>{getDetailValue(detail)}</TD>)}
+  <TD>
     <Button
       hx-delete={`/api/event/${eventId}/registration/${registration.id}`}
       hx-target="#registrationsTable"
     >
       Delete
     </Button>
-  </td>
-  <td>
+  </TD>
+  <TD>
     <Button
       hx-patch={`/api/event/${eventId}/registration/${registration.id}`}
       hx-vals=`{"isPaid": ${!registration.is_paid}, "userId": "${registration.user_id}"}`
@@ -33,5 +35,5 @@ const { registration, eventId } = Astro.props
       hx-swap="outerHTML"
       >{registration.is_paid ? "Mark unpaid" : " Mark paid"}</Button
     >
-  </td>
-</tr>
+  </TD>
+</TR>

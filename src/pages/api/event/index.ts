@@ -24,6 +24,7 @@ export const POST: APIRoute = async ({ request }) => {
   const tags = formData.getAll("tags")?.toString()
   const beginnerFriendly = formData.get("beginnerFriendly")?.toString()
   const ageRestriction = formData.get("ageRestriction")?.toString()
+  const maximumParticipants = formData.get("maximumParticipants")?.toString()
 
   if (
     !name ||
@@ -31,7 +32,8 @@ export const POST: APIRoute = async ({ request }) => {
     !endDate ||
     !location ||
     !description ||
-    !descriptionShort
+    !descriptionShort ||
+    !maximumParticipants
   )
     return new Response()
 
@@ -62,6 +64,7 @@ export const POST: APIRoute = async ({ request }) => {
     tags: tags.split(","),
     is_beginner_friendly: !!beginnerFriendly,
     minimum_age: Number(ageRestriction),
+    maximum_participants: Number(maximumParticipants),
   })
 
   if (createEventError) return errorResponse(createEventError.message, 500)

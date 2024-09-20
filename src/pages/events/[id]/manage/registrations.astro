@@ -25,7 +25,6 @@ const registrations = await getRegistrations(event.id)
 ---
 
 <ManageEvent eventId={event.id}>
-  <h2>Registrations</h2>
   {
     registrations === null || registrations.length === 0 ? (
       <p>No registrations</p>

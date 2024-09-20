@@ -5,6 +5,12 @@ import { errorResponse } from "../../utils/responseUtils"
 import type { LARPEvent } from "../../types/types"
 import { log } from "../../lib/logger"
 import { getUpcomingEvents } from "../../services/eventService"
+import Table from "../../components/table/Table.astro"
+import TableHead from "../../components/table/TableHead.astro"
+import TH from "../../components/table/TH.astro"
+import TR from "../../components/table/TR.astro"
+import TD from "../../components/table/TD.astro"
+import Link from "../../components/Link.astro"
 
 const userId = Astro.locals.user.id
 
@@ -26,29 +32,31 @@ if (!events) {
 <SignedInPage>
   <h2 class="text-4xl text-orange-500 font-display mb-8">My events</h2>
 
-  <table>
-    <thead>
-      <th>Event</th>
-      <th>Start at</th>
-    </thead>
+  <Table>
+    <TableHead>
+      <TH>Event</TH>
+      <TH>Start at</TH>
+      <TH>Manage</TH>
+    </TableHead>
 
     <tbody>
       {
         events.map((event) => (
-          <tr>
-            <td>
-              <a
-                href={`/events/${event.id}/manage`}
+          <TR>
+            <TD>{event.name}</TD>
+            <TD>{event.date_start}</TD>
+            <TD>
+              <Link
+                href={`/events/${event.id}/manage/overview`}
                 hx-target="#main"
                 hx-boost="true"
               >
-                {event.name}
-              </a>
-            </td>
-            <td>{event.date_start}</td>
-          </tr>
+                Manage
+              </Link>
+            </TD>
+          </TR>
         ))
       }
     </tbody>
-  </table>
+  </Table>
 </SignedInPage>

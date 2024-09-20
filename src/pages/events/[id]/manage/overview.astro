@@ -1,6 +1,8 @@
 ---
+import Card from "../../../../components/Card.astro"
 import ManageEvent from "../../../../layouts/ManageEvent.astro"
 import { getEvent } from "../../../../services/eventService"
+import { getRegistrations } from "../../../../services/registrationService"
 import type { LARPEvent } from "../../../../types/types"
 
 const { id } = Astro.params
@@ -17,8 +19,12 @@ try {
 }
 
 if (event.owner_id !== userId) Astro.redirect("/events")
+
+const registrations = await getRegistrations(event.id)
 ---
 
 <ManageEvent eventId={event.id}>
-  <h2>Here be them stats</h2>
+  <Card>
+    {registrations.length} / {event.maximum_participants}
+  </Card>
 </ManageEvent>
