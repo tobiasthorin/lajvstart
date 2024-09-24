@@ -6,6 +6,8 @@ import { errorResponse as _errorResponse } from "../../utils/responseUtils"
 import type { LARPEvent } from "../../types/types"
 import { log } from "../../lib/logger"
 import { getUpcomingEvents } from "../../services/eventService"
+import Link from "../../components/Link.astro"
+import Plus from "../../components/icons/Plus.astro"
 
 const eventsCache = useNamespace<LARPEvent[]>(EVENT_COLLECTIONS_CACHE)
 let events = eventsCache.get("upcoming")
@@ -23,7 +25,16 @@ if (!events) {
 ---
 
 <SignedInPage>
-  <h2 class="text-4xl text-orange-500 font-display mb-8">Upcoming events</h2>
+  <div class="flex justify-between items-baseline">
+    <h2 class="text-4xl text-orange-500 font-display mb-8">Upcoming events</h2>
+    <Link
+      appearance="button"
+      href="/events/new"
+      hx-boost="true"
+      hx-target="#main"
+      ><Plus class="text-white" /> <span>Create event</span></Link
+    >
+  </div>
 
   {events === null && <p>No upcoming events</p>}
 
@@ -38,6 +49,4 @@ if (!events) {
       </ul>
     )
   }
-
-  <a href="/events/new" hx-boost="true" hx-target="#main">Create event</a>
 </SignedInPage>

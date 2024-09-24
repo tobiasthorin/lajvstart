@@ -9,7 +9,7 @@ interface Props extends HTMLAttributes<"input"> {
 const { class: className, label, id, ...rest } = Astro.props
 ---
 
-<div class={className}>
+<div class={`w-fit ${className}`}>
   <label
     for={id}
     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"

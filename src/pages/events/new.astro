@@ -1,5 +1,6 @@
 ---
 import Button from "../../components/Button.astro"
+import Checkbox from "../../components/Checkbox.astro"
 import Input from "../../components/Input.astro"
 import Select from "../../components/Select.astro"
 import TextArea from "../../components/TextArea.astro"
@@ -10,6 +11,7 @@ import SignedInPage from "../../layouts/SignedInPage.astro"
   <h2>Create new event</h2>
 
   <form
+    class="flex flex-col gap-4 mb-12"
     method="post"
     action="/api/event"
     hx-boost="true"
@@ -87,11 +89,12 @@ import SignedInPage from "../../layouts/SignedInPage.astro"
       <option value="pirate">Pirate</option>
       <option value="historical">Historical</option>
       <option value="horror">Horror</option>
+      <option value="sci-fi">Sci-fi</option>
+      <option value="nordic-larp">Nordic LARP</option>
     </Select>
 
-    <Input
+    <Checkbox
       id="eventBeginnerFriendly"
-      type="checkbox"
       label="Beginner friendly"
       name="beginnerFriendly"
     />
@@ -110,7 +113,7 @@ import SignedInPage from "../../layouts/SignedInPage.astro"
       name="maximumParticipants"
     />
 
-    <Button type="submit">Create</Button>
+    <Button class="self-end" type="submit">Create!</Button>
 
     <div id="error-message"></div>
   </form>

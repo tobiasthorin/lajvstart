@@ -5,6 +5,7 @@ import { getEvent } from "../../../services/eventService"
 import FavButton from "../../../components/FavButton.astro"
 import { getFavourite } from "../../../services/favouritesService"
 import { getRegistration } from "../../../services/registrationService"
+import { errorResponse as _errorResponse } from "../../../utils/responseUtils"
 
 const { id } = Astro.params
 const userId = Astro.locals.user.id
@@ -16,7 +17,7 @@ let event: LARPEvent
 try {
   event = await getEvent(id)
 } catch (error) {
-  return errorResponse(error)
+  return _errorResponse(error)
 }
 
 const favourite = await getFavourite(userId, event.id)
