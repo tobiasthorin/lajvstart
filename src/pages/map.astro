@@ -17,17 +17,11 @@ const locationScripts = events.map(
 ---
 
 <SignedInPage>
-  <script
-    is:inline
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
-
   <h2 class="text-4xl text-orange-500 font-display mb-8">
     Find events near you
   </h2>
 
-  <div id="map" style="height: calc(100vh - 190px);"></div>
+  <div id="map" class="rounded" style="height: calc(100vh - 190px);"></div>
 
   <script is:inline>
     var map = L.map("map").setView([61, 14], 6)

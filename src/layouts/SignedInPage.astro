@@ -137,14 +137,21 @@ const userEvents = await getMyEvents(userId)
               class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
               id="navbar-user"
             >
-              <ul class="flex flex-col text-xl mt-4 border md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+              <ul
+                class="flex flex-col text-xl mt-4 border md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
+                x-data="{
+                  activePage: document.location.pathname.split('/')[1],
+                  activeClass: 'block py-2 px-3 text-white font-bold underline underline-offset-8 decoration-4',
+                  inactiveClass: 'block py-2 px-3 text-white'
+                }"
+              >
                 <li>
-                  {/* TODO: current */}
                   <a
                     href="/events"
                     hx-boost="true"
                     hx-target="#main"
-                    class={`block py-2 px-3 text-white rounded}`}
+                    x-bind:class="activePage === 'events' ? activeClass : inactiveClass"
+                    x-on:click="activePage = 'events'"
                     aria-current="page"
                   >
                     Events
@@ -156,7 +163,8 @@ const userEvents = await getMyEvents(userId)
                     href="/map"
                     hx-boost="true"
                     hx-target="#main"
-                    class={`block py-2 px-3 text-white rounded}`}
+                    x-bind:class="activePage === 'map' ? activeClass : inactiveClass"
+                    x-on:click="activePage = 'map'"
                     aria-current="page"
                   >
                     Map

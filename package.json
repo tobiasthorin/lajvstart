@@ -13,10 +13,13 @@
     "types": "npx supabase gen types typescript --project-id \"wgynzdvpnljfdbwevvuq\" --schema public > src/types/supabase.ts"
   },
   "dependencies": {
+    "@astrojs/alpinejs": "^0.4.0",
     "@astrojs/check": "^0.5.6",
     "@astrojs/netlify": "^5.1.3",
     "@astrojs/tailwind": "^5.1.0",
     "@supabase/supabase-js": "^2.39.7",
+    "@types/alpinejs": "^3.13.10",
+    "alpinejs": "^3.14.1",
     "astro": "^4.15.4",
     "flowbite": "^2.2.1",
     "micromatch": "^4.0.5",
