@@ -2,7 +2,7 @@
 import SignedInPage from "../../layouts/SignedInPage.astro"
 import EventCard from "../../components/EventCard.astro"
 import { EVENT_COLLECTIONS_CACHE, useNamespace } from "../../lib/cache"
-import { errorResponse } from "../../utils/responseUtils"
+import { errorResponse as _errorResponse } from "../../utils/responseUtils"
 import type { LARPEvent } from "../../types/types"
 import { log } from "../../lib/logger"
 import { getFavouriteEvents } from "../../services/eventService"
@@ -18,7 +18,7 @@ if (!events) {
   const { data, error: getEventsError } = await getFavouriteEvents(userId)
 
   if (getEventsError || !data)
-    return errorResponse("Error while fetching events")
+    return _errorResponse("Error while fetching events")
 
   events = data
 }

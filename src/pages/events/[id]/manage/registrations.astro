@@ -4,7 +4,7 @@ import ManageEvent from "../../../../layouts/ManageEvent.astro"
 import { getEvent } from "../../../../services/eventService"
 import { getRegistrations } from "../../../../services/registrationService"
 import type { LARPEvent } from "../../../../types/types"
-import { errorResponse } from "../../../../utils/responseUtils"
+import { errorResponse as _errorResponse } from "../../../../utils/responseUtils"
 
 const { id } = Astro.params
 const userId = Astro.locals.user.id
@@ -16,7 +16,7 @@ let event: LARPEvent
 try {
   event = await getEvent(id)
 } catch (error) {
-  return errorResponse(error)
+  return _errorResponse(error)
 }
 
 if (event.owner_id !== userId) Astro.redirect("/events")

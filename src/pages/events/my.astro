@@ -1,7 +1,7 @@
 ---
 import SignedInPage from "../../layouts/SignedInPage.astro"
 import { useNamespace, USER_EVENTS_CACHE } from "../../lib/cache"
-import { errorResponse } from "../../utils/responseUtils"
+import { errorResponse as _errorResponse } from "../../utils/responseUtils"
 import type { LARPEvent } from "../../types/types"
 import { log } from "../../lib/logger"
 import { getUpcomingEvents } from "../../services/eventService"
@@ -23,7 +23,7 @@ if (!events) {
   const { data, error: getEventsError } = await getUpcomingEvents()
 
   if (getEventsError || !data)
-    return errorResponse("Error while fetching user events")
+    return _errorResponse("Error while fetching user events")
 
   events = data
 }

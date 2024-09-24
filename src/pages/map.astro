@@ -1,11 +1,11 @@
 ---
 import SignedInPage from "../layouts/SignedInPage.astro"
 import { getUpcomingEvents } from "../services/eventService"
-import { errorResponse } from "../utils/responseUtils"
+import { errorResponse as _errorResponse } from "../utils/responseUtils"
 
 const { data: events } = await getUpcomingEvents()
 if (!events) {
-  return errorResponse("Could not get upcoming events")
+  return _errorResponse("Could not get upcoming events")
 }
 
 const locationScripts = events.map(
