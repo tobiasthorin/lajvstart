@@ -12,6 +12,7 @@ export type Database = {
       event_groups: {
         Row: {
           created_at: string
+          deleted: boolean
           description: string | null
           event_id: string | null
           id: string
@@ -19,6 +20,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deleted?: boolean
           description?: string | null
           event_id?: string | null
           id?: string
@@ -26,6 +28,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deleted?: boolean
           description?: string | null
           event_id?: string | null
           id?: string
@@ -174,6 +177,7 @@ export type Database = {
           created_at: string
           deleted: boolean | null
           details: Json | null
+          event_group: string | null
           event_id: string
           id: string
           is_paid: boolean
@@ -184,6 +188,7 @@ export type Database = {
           created_at?: string
           deleted?: boolean | null
           details?: Json | null
+          event_group?: string | null
           event_id: string
           id?: string
           is_paid?: boolean
@@ -194,6 +199,7 @@ export type Database = {
           created_at?: string
           deleted?: boolean | null
           details?: Json | null
+          event_group?: string | null
           event_id?: string
           id?: string
           is_paid?: boolean
@@ -213,6 +219,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registrations_event_group_fkey"
+            columns: ["event_group"]
+            isOneToOne: false
+            referencedRelation: "event_groups"
             referencedColumns: ["id"]
           },
           {

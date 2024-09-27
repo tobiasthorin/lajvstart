@@ -1,0 +1,33 @@
+---
+import type { EventGroup } from "../../services/eventGroupsService"
+import type { EventID } from "../../services/eventService"
+import type { Registration } from "../../services/registrationService"
+import Table from "../table/Table.astro"
+import TableHead from "../table/TableHead.astro"
+import TH from "../table/TH.astro"
+import GroupsRow from "./groupsRow.astro"
+
+interface Props {
+  registrations: Registration[]
+  eventId: EventID
+  groupId: EventGroup["id"]
+  class?: string
+}
+const { registrations, eventId, groupId, class: className } = Astro.props
+---
+
+{
+  (
+    <Table id={`groupTable-${groupId}`} class={className}>
+      <TableHead>
+        <TH>Name</TH>
+      </TableHead>
+
+      <tbody>
+        {registrations.map((registration) => (
+          <GroupsRow registration={registration} eventId={eventId} />
+        ))}
+      </tbody>
+    </Table>
+  )
+}

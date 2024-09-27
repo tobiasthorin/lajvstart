@@ -1,0 +1,100 @@
+---
+import Button from "../../../../components/Button.astro"
+import GroupsTable from "../../../../components/groupsTable/groupsTable.astro"
+import Input from "../../../../components/Input.astro"
+import ManageEvent from "../../../../layouts/ManageEvent.astro"
+import { getEventGroups } from "../../../../services/eventGroupsService"
+import { getEvent } from "../../../../services/eventService"
+import { getRegistrations } from "../../../../services/registrationService"
+import type { LARPEvent } from "../../../../types/types"
+import { errorResponse as _errorResponse } from "../../../../utils/responseUtils"
+
+const { id } = Astro.params
+const userId = Astro.locals.user.id
+
+if (!id) throw new Error("Missing id url param")
+
+let event: LARPEvent
+
+try {
+  event = await getEvent(id)
+} catch (error) {
+  return _errorResponse(error)
+}
+
+if (event.owner_id !== userId) Astro.redirect("/events")
+
+const registrations = await getRegistrations(event.id)
+const groups = await getEventGroups(event.id)
+
+const ungroupedRegistrations = registrations.filter(
+  (registration) => !registration.event_group
+)
+---
+
+<ManageEvent eventId={event.id}>
+  {
+    groups === null || groups.length === 0 ? (
+      <p>No groups</p>
+    ) : (
+      <>
+        {groups?.map((group) => {
+          const groupRegistrations = registrations.filter(
+            (registration) => registration.event_group?.id === group.id
+          )
+
+          return (
+            <>
+              <h3 class="text-lg font-bold">{group.name}</h3>
+              <p class="text-sm text-gray-700">{group.description}</p>
+              <GroupsTable
+                registrations={groupRegistrations}
+                eventId={event.id}
+                groupId={group.id}
+                class="mb-10"
+              />
+            </>
+          )
+        })}
+
+        <h3 class="text-lg font-bold">Ungrouped</h3>
+        <p class="text-sm text-gray-700">Registrations with no group</p>
+        <GroupsTable
+          registrations={ungroupedRegistrations}
+          eventId={event.id}
+          groupId="ungrouped"
+          class="mb-10"
+        />
+      </>
+    )
+  }
+
+  <form
+    method={"post"}
+    action={`/api/event/${event.id}/group`}
+    hx-boost="true"
+    enctype="multipart/form-data"
+    hx-target="#main"
+    hx-target-500="#error-message"
+    class="flex justify-end items-end gap-4"
+  >
+    <Input
+      id="groupName"
+      type="text"
+      label="Group name"
+      name="groupName"
+      required
+    />
+
+    <Input
+      id="groupDescription"
+      type="text"
+      label="Description"
+      name="groupDescription"
+    />
+
+    <Button type="submit">Create group</Button>
+
+    <div id="error-message"></div>
+  </form>
+</ManageEvent>

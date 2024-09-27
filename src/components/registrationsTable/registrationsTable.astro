@@ -1,10 +1,10 @@
 ---
-import type { EventID } from "../services/eventService"
-import type { Registration } from "../services/registrationService"
+import type { EventID } from "../../services/eventService"
+import type { Registration } from "../../services/registrationService"
+import Table from "../table/Table.astro"
+import TableHead from "../table/TableHead.astro"
+import TH from "../table/TH.astro"
 import RegistrationRow from "./registrationRow.astro"
-import Table from "./table/Table.astro"
-import TableHead from "./table/TableHead.astro"
-import TH from "./table/TH.astro"
 
 interface Props {
   registrations: Registration[]

@@ -1,0 +1,17 @@
+---
+import type { EventID } from "../../services/eventService"
+import type { Registration } from "../../services/registrationService"
+import TD from "../table/TD.astro"
+import TR from "../table/TR.astro"
+
+interface Props {
+  registration: Registration
+  eventId: EventID
+}
+
+const { registration } = Astro.props
+---
+
+<TR id={`row-${registration.id}`}>
+  <TD>{registration.user_details.name}</TD>
+</TR>

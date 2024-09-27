@@ -37,6 +37,7 @@ const inActiveClass =
             : inActiveClass}>Overview</a
         >
       </li>
+
       <li class="me-2">
         <a
           href={`/events/${eventId}/manage/registrations`}
@@ -45,6 +46,17 @@ const inActiveClass =
           class={url.pathname.includes("registrations")
             ? activeClass
             : inActiveClass}>Registrations</a
+        >
+      </li>
+
+      <li class="me-2">
+        <a
+          href={`/events/${eventId}/manage/groups`}
+          hx-boost="true"
+          hx-target="#main"
+          class={url.pathname.includes("groups")
+            ? activeClass
+            : inActiveClass}>Groups</a
         >
       </li>
     </ul>

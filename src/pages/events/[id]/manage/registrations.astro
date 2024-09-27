@@ -1,5 +1,5 @@
 ---
-import RegistrationsTable from "../../../../components/registrationsTable.astro"
+import RegistrationsTable from "../../../../components/registrationsTable/registrationsTable.astro"
 import ManageEvent from "../../../../layouts/ManageEvent.astro"
 import { getEvent } from "../../../../services/eventService"
 import { getRegistrations } from "../../../../services/registrationService"
@@ -22,6 +22,7 @@ try {
 if (event.owner_id !== userId) Astro.redirect("/events")
 
 const registrations = await getRegistrations(event.id)
+console.log(registrations[0])
 ---
 
 <ManageEvent eventId={event.id}>

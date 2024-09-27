@@ -20,6 +20,13 @@ const registrationSchema = z.object({
     name: z.string(),
     special_needs: z.string().nullable(),
   }),
+  event_group: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+      description: z.string().nullable(),
+    })
+    .nullable(),
 })
 
 const registrationsSchema = z.array(registrationSchema)
@@ -69,6 +76,11 @@ export async function getRegistration(userId: UserID, eventId: EventID) {
       user_details (
         name,
         special_needs
+      ),
+      event_group (
+        id,
+        name,
+        description
       )
       `
     )
@@ -91,6 +103,11 @@ export async function getRegistrations(eventId: EventID) {
       user_details (
         name,
         special_needs
+      ),
+      event_group (
+        id,
+        name,
+        description
       )
       `
     )
