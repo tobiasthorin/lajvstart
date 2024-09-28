@@ -4,7 +4,7 @@ import type { LARPEvent } from "../../../types/types"
 import { getEvent } from "../../../services/eventService"
 import FavButton from "../../../components/FavButton.astro"
 import { getFavourite } from "../../../services/favouritesService"
-import { getRegistration } from "../../../services/registrationService"
+import { findRegistration } from "../../../services/registrationService"
 import { errorResponse as _errorResponse } from "../../../utils/responseUtils"
 
 const { id } = Astro.params
@@ -21,7 +21,7 @@ try {
 }
 
 const favourite = await getFavourite(userId, event.id)
-const registration = await getRegistration(userId, event.id)
+const registration = await findRegistration(userId, event.id)
 ---
 
 <SignedInPage>

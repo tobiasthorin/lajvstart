@@ -2,7 +2,7 @@ import type { APIRoute } from "astro"
 import { errorResponse } from "../../../../../utils/responseUtils"
 import {
   createRegistration,
-  getRegistration,
+  findRegistration,
   replaceRegistration,
   type RegistrationDetails,
 } from "../../../../../services/registrationService"
@@ -22,7 +22,7 @@ export const PUT: APIRoute = async ({ request, params, locals }) => {
     return errorResponse("Missing form data")
   }
 
-  const registration = await getRegistration(locals.user.id, eventId)
+  const registration = await findRegistration(locals.user.id, eventId)
 
   const details: RegistrationDetails[] = [
     { name: "characterName", value: characterName, type: "textShort" },

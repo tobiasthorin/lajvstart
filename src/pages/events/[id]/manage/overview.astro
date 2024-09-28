@@ -2,7 +2,7 @@
 import Card from "../../../../components/Card.astro"
 import ManageEvent from "../../../../layouts/ManageEvent.astro"
 import { getEvent } from "../../../../services/eventService"
-import { getRegistrations } from "../../../../services/registrationService"
+import { getRegistrationsForEvent } from "../../../../services/registrationService"
 import type { LARPEvent } from "../../../../types/types"
 
 const { id } = Astro.params
@@ -20,7 +20,7 @@ try {
 
 if (event.owner_id !== userId) Astro.redirect("/events")
 
-const registrations = await getRegistrations(event.id)
+const registrations = await getRegistrationsForEvent(event.id)
 ---
 
 <ManageEvent eventId={event.id}>

@@ -1,6 +1,10 @@
 ---
+import { getEventGroups } from "../../services/eventGroupsService"
 import type { EventID } from "../../services/eventService"
 import type { Registration } from "../../services/registrationService"
+import Button from "../Button.astro"
+import Modal from "../Modal.astro"
+import Select from "../Select.astro"
 import TD from "../table/TD.astro"
 import TR from "../table/TR.astro"
 
@@ -9,9 +13,48 @@ interface Props {
   eventId: EventID
 }
 
-const { registration } = Astro.props
+const { registration, eventId } = Astro.props
+const eventGroups = await getEventGroups(eventId)
 ---
 
 <TR id={`row-${registration.id}`}>
   <TD>{registration.user_details.name}</TD>
+  <TD
+    ><Button
+      data-modal-target={`modal-${registration.id}`}
+      data-modal-toggle={`modal-${registration.id}`}>Move to...</Button
+    >
+
+    <Modal id={`modal-${registration.id}`} title="Move to group">
+      <form
+        hx-put={`/api/event/${eventId}/registration/${registration.id}/group`}
+        hx-boost="true"
+        enctype="multipart/form-data"
+        hx-target="#main"
+        hx-target-5*="#error-message"
+      >
+        <Select
+          id={`select-${registration.id}`}
+          label="New group"
+          name="newGroupId"
+        >
+          {
+            eventGroups?.map((group) => (
+              <option value={group.id}>{group.name}</option>
+            ))
+          }
+
+          <hr />
+
+          <option value="ungrouped">No group</option>
+        </Select>
+
+        <Button type="submit" data-modal-hide={`modal-${registration.id}`}
+          >Move</Button
+        >
+
+        <div id="error-message"></div>
+      </form>
+    </Modal>
+  </TD>
 </TR>

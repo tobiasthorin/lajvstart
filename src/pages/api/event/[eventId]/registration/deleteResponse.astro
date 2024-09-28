@@ -2,13 +2,13 @@
 export const partial = true
 
 import RegistrationsTable from "../../../../../components/registrationsTable/registrationsTable.astro"
-import { getRegistrations } from "../../../../../services/registrationService"
+import { getRegistrationsForEvent } from "../../../../../services/registrationService"
 
 const { eventId } = Astro.params
 
 if (!eventId) throw new Error("Missing eventId url param")
 
-const registrations = await getRegistrations(eventId)
+const registrations = await getRegistrationsForEvent(eventId)
 ---
 
 <RegistrationsTable eventId={eventId} registrations={registrations} />

@@ -6,7 +6,7 @@ import { errorResponse as _errorResponse } from "../../../utils/responseUtils"
 import Input from "../../../components/Input.astro"
 import TextArea from "../../../components/TextArea.astro"
 import Button from "../../../components/Button.astro"
-import { getRegistration } from "../../../services/registrationService"
+import { findRegistration } from "../../../services/registrationService"
 import Select from "../../../components/Select.astro"
 
 const { id } = Astro.params
@@ -22,7 +22,7 @@ try {
   return _errorResponse(error)
 }
 
-const registration = await getRegistration(userId, event.id)
+const registration = await findRegistration(userId, event.id)
 
 let characterName = registration?.details.find(
   (detail) => detail.name === "characterName"

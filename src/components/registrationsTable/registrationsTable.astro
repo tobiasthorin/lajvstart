@@ -17,6 +17,7 @@ const details = registrations[0]?.details || []
 <Table id="registrationsTable">
   <TableHead>
     <TH>Name</TH>
+    <TH>Group</TH>
     <TH>Paid</TH>
     <TH>Special needs</TH>
     {details && details.map((detail) => <TH>{detail.name}</TH>)}

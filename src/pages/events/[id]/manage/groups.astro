@@ -5,7 +5,7 @@ import Input from "../../../../components/Input.astro"
 import ManageEvent from "../../../../layouts/ManageEvent.astro"
 import { getEventGroups } from "../../../../services/eventGroupsService"
 import { getEvent } from "../../../../services/eventService"
-import { getRegistrations } from "../../../../services/registrationService"
+import { getRegistrationsForEvent } from "../../../../services/registrationService"
 import type { LARPEvent } from "../../../../types/types"
 import { errorResponse as _errorResponse } from "../../../../utils/responseUtils"
 
@@ -24,7 +24,7 @@ try {
 
 if (event.owner_id !== userId) Astro.redirect("/events")
 
-const registrations = await getRegistrations(event.id)
+const registrations = await getRegistrationsForEvent(event.id)
 const groups = await getEventGroups(event.id)
 
 const ungroupedRegistrations = registrations.filter(

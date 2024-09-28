@@ -16,6 +16,7 @@ const { registration, eventId } = Astro.props
 
 <TR id={`row-${registration.id}`}>
   <TD>{registration.user_details.name}</TD>
+  <TD>{registration.event_group?.name}</TD>
   <TD>{registration.is_paid ? "Yes" : "No"}</TD>
   <TD>{registration.user_details.special_needs}</TD>
   {registration.details.map((detail) => <TD>{getDetailValue(detail)}</TD>)}

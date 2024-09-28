@@ -67,7 +67,7 @@ export async function replaceRegistration(
   if (updateRegistrationError) throw new Error(updateRegistrationError.message)
 }
 
-export async function getRegistration(userId: UserID, eventId: EventID) {
+export async function findRegistration(userId: UserID, eventId: EventID) {
   const { data: registration } = await supabase
     .from("registrations")
     .select(
@@ -94,7 +94,33 @@ export async function getRegistration(userId: UserID, eventId: EventID) {
   return registrationSchema.parse(registration)
 }
 
-export async function getRegistrations(eventId: EventID) {
+export async function getRegistration(registrationID: Registration["id"]) {
+  const { data: registration } = await supabase
+    .from("registrations")
+    .select(
+      `
+      *,
+      user_details (
+        name,
+        special_needs
+      ),
+      event_group (
+        id,
+        name,
+        description
+      )
+      `
+    )
+    .eq("id", registrationID)
+    .eq("deleted", false)
+    .single()
+
+  if (registration === null) return null
+
+  return registrationSchema.parse(registration)
+}
+
+export async function getRegistrationsForEvent(eventId: EventID) {
   const { data: registrations } = await supabase
     .from("registrations")
     .select(
@@ -131,25 +157,25 @@ export async function deleteRegistration(
 }
 
 export async function updateRegistration(
-  userId: UserID,
-  eventId: EventID,
-  fields: { isPaid: boolean | undefined }
+  registrationId: UserID,
+  {
+    isPaid,
+    groupId,
+  }: { isPaid?: boolean | undefined; groupId?: string | null | undefined }
 ) {
-  const registration = await getRegistration(userId, eventId)
+  const registration = await getRegistration(registrationId)
 
   if (!registration)
-    throw new Error(
-      `Could not find registration for user ${userId}, event ${eventId}`
-    )
-  console.log(fields.isPaid !== undefined, fields.isPaid, registration.is_paid)
+    throw new Error(`Could not find registration with id ${registrationId}`)
+
   const { error: updateRegistrationError } = await supabase
     .from("registrations")
     .update({
-      is_paid:
-        fields.isPaid !== undefined ? fields.isPaid : registration.is_paid,
+      is_paid: isPaid !== undefined ? isPaid : registration.is_paid,
+      event_group:
+        groupId !== undefined ? groupId : registration.event_group?.id || null,
     })
     .eq("id", registration.id)
-    .eq("event_id", eventId)
 
   if (updateRegistrationError) throw new Error(updateRegistrationError.message)
 }
