@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro"
 import { errorResponse } from "../../../../../utils/responseUtils"
-import { createGroup } from "../../../../../services/eventGroupsService"
+import { createEventGroup } from "../../../../../services/eventGroupsService"
 
 export const POST: APIRoute = async ({ request, params, rewrite }) => {
   const eventId = params.eventId
@@ -17,7 +17,7 @@ export const POST: APIRoute = async ({ request, params, rewrite }) => {
   }
 
   try {
-    createGroup(eventId, groupName, groupDescription)
+    createEventGroup(eventId, groupName, groupDescription)
   } catch (error) {
     console.error(error)
     if (error instanceof Error) {

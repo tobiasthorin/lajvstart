@@ -14,18 +14,22 @@ export async function getEventGroups(eventId: EventID) {
   return groups
 }
 
-export async function createGroup(
+export async function createEventGroup(
   eventId: EventID,
   groupName: EventGroup["name"],
   description: EventGroup["description"] | undefined
 ) {
-  const { error: createGroupError } = await supabase
+  const { data, error: createGroupError } = await supabase
     .from("event_groups")
     .insert({
       event_id: eventId,
       name: groupName,
       description: description || null,
     })
+    .select()
+    .single()
 
   if (createGroupError) throw new Error(createGroupError.message)
+
+  return data
 }

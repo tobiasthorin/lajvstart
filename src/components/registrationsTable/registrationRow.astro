@@ -22,6 +22,7 @@ const { registration, eventId } = Astro.props
   {registration.details.map((detail) => <TD>{getDetailValue(detail)}</TD>)}
   <TD>
     <Button
+      size="small"
       hx-delete={`/api/event/${eventId}/registration/${registration.id}`}
       hx-target="#registrationsTable"
     >
@@ -30,6 +31,7 @@ const { registration, eventId } = Astro.props
   </TD>
   <TD>
     <Button
+      size="small"
       hx-patch={`/api/event/${eventId}/registration/${registration.id}`}
       hx-vals=`{"isPaid": ${!registration.is_paid}, "userId": "${registration.user_id}"}`
       hx-target={`#row-${registration.id}`}

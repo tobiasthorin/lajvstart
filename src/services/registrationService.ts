@@ -2,6 +2,7 @@ import { z } from "zod"
 import { supabase } from "../lib/supabase"
 import type { EventID } from "./eventService"
 import type { UserDetails, UserID } from "./userService"
+import type { EventGroup } from "./eventGroupsService"
 
 const registrationDetailsSchema = z.object({
   name: z.string(),
@@ -38,6 +39,7 @@ export async function createRegistration(
   eventId: EventID,
   userId: UserID,
   userDetailsId: UserDetails["user_id"],
+  eventGroupId: EventGroup["id"] | null,
   details: RegistrationDetails[]
 ) {
   const { error: createRegistrationError } = await supabase
@@ -46,6 +48,7 @@ export async function createRegistration(
       event_id: eventId,
       user_id: userId,
       is_paid: false,
+      event_group: eventGroupId,
       details,
       user_details: userDetailsId,
     })
@@ -55,11 +58,13 @@ export async function createRegistration(
 
 export async function replaceRegistration(
   registrationId: Registration["id"],
+  eventGroupId: EventGroup["id"] | null,
   details: RegistrationDetails[]
 ) {
   const { error: updateRegistrationError } = await supabase
     .from("registrations")
     .update({
+      event_group: eventGroupId,
       details,
     })
     .eq("id", registrationId)

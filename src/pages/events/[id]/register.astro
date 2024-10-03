@@ -8,6 +8,7 @@ import TextArea from "../../../components/TextArea.astro"
 import Button from "../../../components/Button.astro"
 import { findRegistration } from "../../../services/registrationService"
 import Select from "../../../components/Select.astro"
+import { getEventGroups } from "../../../services/eventGroupsService"
 
 const { id } = Astro.params
 const userId = Astro.locals.user.id
@@ -30,6 +31,9 @@ let characterName = registration?.details.find(
 let characterDescription = registration?.details.find(
   (detail) => detail.name === "characterDescription"
 )?.value
+
+const eventGroups = await getEventGroups(event.id)
+const selectedGroupId = registration?.event_group?.id
 ---
 
 <SignedInPage
@@ -41,9 +45,9 @@ let characterDescription = registration?.details.find(
     hx-boost="true"
     enctype="multipart/form-data"
     hx-target-5*="#error-message"
+    x-data="{ groupId: 'ungrouped' }"
+    class="flex flex-col gap-4"
   >
-    <Select id="groupSelect" label="Group" />
-
     <Input
       id="characterName"
       type="text"
@@ -62,7 +66,48 @@ let characterDescription = registration?.details.find(
       value={characterDescription}
     />
 
-    <Button type="submit">{registration ? "Update" : "Register"}</Button>
+    <Select
+      id="select-group"
+      label="Group"
+      name="groupId"
+      x-on:change="groupId = $event.target.value"
+    >
+      <option value="ungrouped">No group</option>
+
+      {eventGroups && eventGroups.length > 0 && <hr />}
+
+      {
+        eventGroups?.map((group) => (
+          <option value={group.id} selected={group.id === selectedGroupId}>
+            {group.name}
+          </option>
+        ))
+      }
+
+      <hr />
+
+      <option value="new">New group</option>
+    </Select>
+
+    <div x-show="groupId === 'new'">
+      <Input
+        id="newGroupName"
+        type="text"
+        label="New group name"
+        name="newGroupName"
+      />
+
+      <Input
+        id="newGroupDescription"
+        type="text"
+        label="New group description"
+        name="newGroupDescription"
+      />
+    </div>
+
+    <Button type="submit" class="self-end"
+      >{registration ? "Update" : "Register"}</Button
+    >
 
     <div id="error-message"></div>
   </form>

@@ -6,6 +6,7 @@ import {
   replaceRegistration,
   type RegistrationDetails,
 } from "../../../../../services/registrationService"
+import { createEventGroup } from "../../../../../services/eventGroupsService"
 
 // TODO: separate into post and patch/put?
 export const PUT: APIRoute = async ({ request, params, locals }) => {
@@ -15,10 +16,14 @@ export const PUT: APIRoute = async ({ request, params, locals }) => {
 
   const formData = await request.formData()
 
+  const groupId = formData.get("groupId")?.toString()
+  const newGroupName = formData.get("newGroupName")?.toString()
+  const newGroupDescription = formData.get("newGroupDescription")?.toString()
+  // TODO: dynamic
   const characterName = formData.get("characterName")?.toString()
   const characterDescription = formData.get("characterDescription")?.toString()
 
-  if (!characterName || !characterDescription) {
+  if (!characterName || !characterDescription || !groupId) {
     return errorResponse("Missing form data")
   }
 
@@ -32,14 +37,27 @@ export const PUT: APIRoute = async ({ request, params, locals }) => {
       type: "textLong",
     },
   ]
+
+  let eventGroupId = groupId === "ungrouped" ? null : groupId
+
+  if (groupId === "new") {
+    const newEventGroup = await createEventGroup(
+      eventId,
+      newGroupName || "",
+      newGroupDescription || ""
+    )
+    eventGroupId = newEventGroup.id
+  }
+
   try {
     if (registration) {
-      replaceRegistration(registration.id, details)
+      replaceRegistration(registration.id, eventGroupId, details)
     } else {
       createRegistration(
         eventId,
         locals.user.id,
         locals.user.details.user_id,
+        eventGroupId,
         details
       )
     }

@@ -21,6 +21,7 @@ const eventGroups = await getEventGroups(eventId)
   <TD>{registration.user_details.name}</TD>
   <TD
     ><Button
+      size="small"
       data-modal-target={`modal-${registration.id}`}
       data-modal-toggle={`modal-${registration.id}`}>Move to...</Button
     >
