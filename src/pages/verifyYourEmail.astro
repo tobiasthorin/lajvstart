@@ -1,5 +1,5 @@
 ---
-import BaseHtml from "./Html.astro"
+import BaseHtml from "../layouts/BaseHtml.astro"
 ---
 
 <BaseHtml>
@@ -11,5 +11,10 @@ import BaseHtml from "./Html.astro"
     </h1>
   </header>
 
-  <slot />
+  <main class="flex-1 p-4 flex flex-col items-center">
+    <p>
+      Thanks for signing up! Please check your inbox and confirm your email to
+      complete registration.
+    </p>
+  </main>
 </BaseHtml>

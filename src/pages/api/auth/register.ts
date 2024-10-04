@@ -45,6 +45,6 @@ export const POST: APIRoute = async ({ request }) => {
 
   return new Response(null, {
     status: 302,
-    headers: { "HX-Redirect": "/signin?registered=true" },
+    headers: { "HX-Redirect": "/verifyYourEmail" },
   })
 }

@@ -1,5 +1,5 @@
 ---
-import SignedInPage from "../../layouts/SignedInPage.astro"
+import TopLevelPage from "../../layouts/TopLevelPage.astro"
 import { useNamespace, USER_EVENTS_CACHE } from "../../lib/cache"
 import { errorResponse as _errorResponse } from "../../utils/responseUtils"
 import type { LARPEvent } from "../../types/types"
@@ -29,7 +29,7 @@ if (!events) {
 }
 ---
 
-<SignedInPage>
+<TopLevelPage>
   <h2 class="text-4xl text-orange-500 font-display mb-8">My events</h2>
 
   <Table id="myEventsTable">
@@ -59,4 +59,4 @@ if (!events) {
       }
     </tbody>
   </Table>
-</SignedInPage>
+</TopLevelPage>

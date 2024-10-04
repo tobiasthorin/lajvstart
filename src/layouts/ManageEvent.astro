@@ -1,6 +1,6 @@
 ---
 import { getEvent, type EventID } from "../services/eventService"
-import SignedInPage from "./SignedInPage.astro"
+import TopLevelPage from "./TopLevelPage.astro"
 
 interface Props {
   eventId: EventID
@@ -19,7 +19,7 @@ const inActiveClass =
   "inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
 ---
 
-<SignedInPage>
+<TopLevelPage>
   <h2 class="text-5xl font-extrabold dark:text-white font-display">
     {event.name}
   </h2>
@@ -54,13 +54,12 @@ const inActiveClass =
           href={`/events/${eventId}/manage/groups`}
           hx-boost="true"
           hx-target="#main"
-          class={url.pathname.includes("groups")
-            ? activeClass
-            : inActiveClass}>Groups</a
+          class={url.pathname.includes("groups") ? activeClass : inActiveClass}
+          >Groups</a
         >
       </li>
     </ul>
   </nav>
 
   <slot />
-</SignedInPage>
+</TopLevelPage>

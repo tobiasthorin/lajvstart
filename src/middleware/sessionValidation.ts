@@ -5,14 +5,8 @@ import { log } from "../lib/logger"
 import { useNamespace, USERS_CACHE } from "../lib/cache"
 import type { APIContext, MiddlewareNext } from "astro"
 
-const protectedRoutes = [
-  "/events/**",
-  "/profile/**",
-  "/api/favourite/**",
-  "/api/event/**",
-  "/map",
-]
-const redirectRoutes = ["/", "/signin(|/)", "/register(|/)"]
+const protectedRoutes = ["/profile/**", "/api/favourite/**", "/api/event/**"]
+// const publicRoutes = ["/events/**", "/map", "/register(|/)"]
 
 const usersCache = useNamespace<UserDetails>(USERS_CACHE)
 
@@ -21,6 +15,7 @@ export async function sessionValidation(
   next: MiddlewareNext
 ) {
   const { locals, url, cookies, redirect } = context
+
   if (micromatch.isMatch(url.pathname, protectedRoutes)) {
     log(`Accessing protected route: ${url.pathname}`)
   } else {
@@ -34,7 +29,10 @@ export async function sessionValidation(
     const isSignedOut = !accessToken || !refreshToken
 
     if (isSignedOut) {
-      return redirect("/signin")
+      locals.isSignedIn = false
+      return redirect("/events")
+    } else {
+      locals.isSignedIn = true
     }
 
     const { data: sessionData, error } = await supabase.auth.setSession({
@@ -58,7 +56,7 @@ export async function sessionValidation(
         cookies.delete("sb-refresh-token", {
           path: "/",
         })
-        return redirect("/signin")
+        return redirect("/events")
       }
 
       userDetails = userData!
@@ -80,18 +78,6 @@ export async function sessionValidation(
       path: "/",
       secure: true,
     })
-  }
-
-  if (micromatch.isMatch(url.pathname, redirectRoutes)) {
-    const accessToken = cookies.get("sb-access-token")
-    const refreshToken = cookies.get("sb-refresh-token")
-
-    const isSignedIn = accessToken && refreshToken
-
-    if (isSignedIn) {
-      log(`Logged in user redirectinng to '/events'`)
-      return redirect("/events")
-    }
   }
 
   return next()

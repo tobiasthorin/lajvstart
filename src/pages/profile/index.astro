@@ -1,5 +1,5 @@
 ---
-import SignedInPage from "../../layouts/SignedInPage.astro"
+import TopLevelPage from "../../layouts/TopLevelPage.astro"
 
 const {
   name,
@@ -15,7 +15,7 @@ const joinDate = new Date(created_at).toLocaleDateString()
 const birthDate = new Date(birth_date).toLocaleDateString()
 ---
 
-<SignedInPage>
+<TopLevelPage>
   <div class="h-24 md:h-32 mb-4 flex items-center gap-2">
     {
       publicUrl ? (
@@ -61,4 +61,4 @@ const birthDate = new Date(birth_date).toLocaleDateString()
   <p>{biography}</p>
 
   <a href="/profile/edit" hx-boost="true" hx-target="#main">Edit profile</a>
-</SignedInPage>
+</TopLevelPage>

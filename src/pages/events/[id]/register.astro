@@ -1,5 +1,5 @@
 ---
-import SignedInPage from "../../../layouts/SignedInPage.astro"
+import TopLevelPage from "../../../layouts/TopLevelPage.astro"
 import type { LARPEvent } from "../../../types/types"
 import { getEvent } from "../../../services/eventService"
 import { errorResponse as _errorResponse } from "../../../utils/responseUtils"
@@ -36,7 +36,7 @@ const eventGroups = await getEventGroups(event.id)
 const selectedGroupId = registration?.event_group?.id
 ---
 
-<SignedInPage
+<TopLevelPage
   >{registration ? "Edit details" : "Register"} for {event.name}
 
   <form
@@ -111,4 +111,4 @@ const selectedGroupId = registration?.event_group?.id
 
     <div id="error-message"></div>
   </form>
-</SignedInPage>
+</TopLevelPage>

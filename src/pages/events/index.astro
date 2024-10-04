@@ -1,5 +1,5 @@
 ---
-import SignedInPage from "../../layouts/SignedInPage.astro"
+import TopLevelPage from "../../layouts/TopLevelPage.astro"
 import EventCard from "../../components/EventCard.astro"
 import { EVENT_COLLECTIONS_CACHE, useNamespace } from "../../lib/cache"
 import { errorResponse as _errorResponse } from "../../utils/responseUtils"
@@ -8,6 +8,8 @@ import { log } from "../../lib/logger"
 import { getUpcomingEvents } from "../../services/eventService"
 import Link from "../../components/Link.astro"
 import Plus from "../../components/icons/Plus.astro"
+
+const { isSignedIn } = Astro.locals
 
 const eventsCache = useNamespace<LARPEvent[]>(EVENT_COLLECTIONS_CACHE)
 let events = eventsCache.get("upcoming")
@@ -24,16 +26,21 @@ if (!events) {
 }
 ---
 
-<SignedInPage>
+<TopLevelPage>
   <div class="flex justify-between items-baseline">
     <h2 class="text-4xl text-orange-500 font-display mb-8">Upcoming events</h2>
-    <Link
-      appearance="button"
-      href="/events/new"
-      hx-boost="true"
-      hx-target="#main"
-      ><Plus class="text-white" /> <span>Create event</span></Link
-    >
+    {
+      isSignedIn && (
+        <Link
+          appearance="button"
+          href="/events/new"
+          hx-boost="true"
+          hx-target="#main"
+        >
+          <Plus class="text-white" /> <span>Create event</span>
+        </Link>
+      )
+    }
   </div>
 
   {events === null && <p>No upcoming events</p>}
@@ -49,4 +56,4 @@ if (!events) {
       </ul>
     )
   }
-</SignedInPage>
+</TopLevelPage>

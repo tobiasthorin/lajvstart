@@ -1,5 +1,5 @@
 ---
-import SignedInPage from "../layouts/SignedInPage.astro"
+import TopLevelPage from "../layouts/TopLevelPage.astro"
 import { getUpcomingEvents } from "../services/eventService"
 import { errorResponse as _errorResponse } from "../utils/responseUtils"
 
@@ -16,7 +16,7 @@ const locationScripts = events.map(
 )
 ---
 
-<SignedInPage>
+<TopLevelPage>
   <h2 class="text-4xl text-orange-500 font-display mb-8">
     Find events near you
   </h2>
@@ -34,4 +34,4 @@ const locationScripts = events.map(
   </script>
 
   {locationScripts.map((script) => <script is:inline set:html={script} />)}
-</SignedInPage>
+</TopLevelPage>

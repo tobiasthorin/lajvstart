@@ -2,13 +2,20 @@
 import Button from "../components/Button.astro"
 import Input from "../components/Input.astro"
 import Link from "../components/Link.astro"
-import SignedOutPage from "../layouts/SignedOutPage.astro"
+import BaseHtml from "../layouts/BaseHtml.astro"
 
 const justRegistered = Astro.url.searchParams.get("registered")
 ---
 
-<SignedOutPage>
+<BaseHtml>
   <main class="flex-1 p-4 flex flex-col items-center">
+    <header class="p-4 flex justify-center text-5xl font-display">
+      <h1
+        class="mt-48 text-transparent bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 bg-clip-text"
+      >
+        Lajvstart
+      </h1>
+    </header>
     <form
       hx-post="/api/auth/signin"
       hx-target-4*="#error-message"
@@ -39,4 +46,4 @@ const justRegistered = Astro.url.searchParams.get("registered")
       )
     }
   </main>
-</SignedOutPage>
+</BaseHtml>
