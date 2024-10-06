@@ -5,6 +5,7 @@ import Input from "../../components/Input.astro"
 import Select from "../../components/Select.astro"
 import TextArea from "../../components/TextArea.astro"
 import TopLevelPage from "../../layouts/TopLevelPage.astro"
+import { eventTags } from "../../utils/constants"
 ---
 
 <TopLevelPage>
@@ -85,12 +86,7 @@ import TopLevelPage from "../../layouts/TopLevelPage.astro"
     />
 
     <Select multiple id="eventTagsInput" label="Tags" name="tags">
-      <option value="fantasy">Fantasy</option>
-      <option value="pirate">Pirate</option>
-      <option value="historical">Historical</option>
-      <option value="horror">Horror</option>
-      <option value="sci-fi">Sci-fi</option>
-      <option value="nordic-larp">Nordic LARP</option>
+      {eventTags.map((tag) => <option value={tag}>{tag}</option>)}
     </Select>
 
     <Checkbox

@@ -1,49 +1,119 @@
 ---
 import TopLevelPage from "../../layouts/TopLevelPage.astro"
 import EventCard from "../../components/EventCard.astro"
-import { EVENT_COLLECTIONS_CACHE, useNamespace } from "../../lib/cache"
 import { errorResponse as _errorResponse } from "../../utils/responseUtils"
 import type { LARPEvent } from "../../types/types"
-import { log } from "../../lib/logger"
-import { getUpcomingEvents } from "../../services/eventService"
+import {
+  getUpcomingEvents,
+  getFilteredEvents,
+} from "../../services/eventService"
 import Link from "../../components/Link.astro"
 import Plus from "../../components/icons/Plus.astro"
+import Button from "../../components/Button.astro"
+import Filter from "../../components/icons/Filter.astro"
+import Select from "../../components/Select.astro"
+import { eventTags } from "../../utils/constants"
+import Input from "../../components/Input.astro"
 
 const { isSignedIn } = Astro.locals
 
-const eventsCache = useNamespace<LARPEvent[]>(EVENT_COLLECTIONS_CACHE)
-let events = eventsCache.get("upcoming")
+let events: LARPEvent[] = []
 
-if (!events) {
-  log("Getting events from DB")
+const searchParams = Astro.url.searchParams
+const tags = searchParams.getAll("tags")
+const minAge = Number(searchParams.get("minAge"))
 
-  const { data, error: getEventsError } = await getUpcomingEvents()
-
-  if (getEventsError || !data)
-    return _errorResponse("Error while fetching events")
-
-  events = data
+// If there are search params, filter events accordingly
+if (Astro.url.search) {
+  try {
+    events = await getFilteredEvents({ tags, minAge })
+  } catch (error) {
+    console.error(error)
+    if (error instanceof Error) {
+      return _errorResponse(error.message, 500)
+    }
+  }
+} else {
+  // Default to upcoming events
+  try {
+    events = await getUpcomingEvents()
+  } catch (error) {
+    console.error(error)
+    if (error instanceof Error) {
+      return _errorResponse(error.message, 500)
+    }
+  }
 }
 ---
 
 <TopLevelPage>
-  <div class="flex justify-between items-baseline">
-    <h2 class="text-4xl text-orange-500 font-display mb-8">Upcoming events</h2>
-    {
-      isSignedIn && (
-        <Link
-          appearance="button"
-          href="/events/new"
-          hx-boost="true"
-          hx-target="#main"
+  <div x-data="{ filtersOpen: false }">
+    <div class="flex justify-between items-baseline gap-4">
+      <h2 class="text-4xl text-orange-500 font-display mb-8">
+        Upcoming events
+      </h2>
+
+      <Button
+        size="small"
+        class="flex gap-2 ml-auto"
+        x-on:click="filtersOpen = !filtersOpen"
+        ><Filter class="text-white" />Filter
+      </Button>
+
+      {
+        isSignedIn && (
+          <Link
+            appearance="button"
+            href="/events/new"
+            hx-boost="true"
+            hx-target="#main"
+          >
+            <Plus class="text-white" /> <span>Create event</span>
+          </Link>
+        )
+      }
+    </div>
+
+    <form
+      hx-get="/events"
+      hx-target="#main"
+      hx-push-url="true"
+      hx-boost
+      x-show="filtersOpen"
+      class="bg-white rounded-lg p-4 mb-8 border grid grid-cols-2 gap-4 font-bold"
+    >
+      <h3 class="col-span-2">Filter</h3>
+
+      <Select multiple label="Tags" id="tagsFilter" name="tags">
+        {
+          eventTags.map((tag) => (
+            <option value={tag} selected={tags.includes(tag)}>
+              {tag}
+            </option>
+          ))
+        }
+      </Select>
+
+      <Input
+        label="Participant age"
+        id="minAgeFilter"
+        name="minAge"
+        type="number"
+        value={minAge}
+      />
+
+      <div class="col-span-2 place-self-end">
+        <Button hx-get="/events" hx-target="#main" hx-push-url="true"
+          >Clear</Button
         >
-          <Plus class="text-white" /> <span>Create event</span>
-        </Link>
-      )
-    }
+        <Button type="submit" class="ml-4">Filter events</Button>
+      </div>
+    </form>
   </div>
 
   {events === null && <p>No upcoming events</p>}
+
+  {events.length === 0 && <p>No events matches the current filters</p>}
 
   {
     events !== null && (

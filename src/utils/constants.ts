@@ -1,0 +1,16 @@
+export const eventTags = [
+  "Boffer combat",
+  "Fantasy",
+  "Historical",
+  "Horror",
+  "Misery",
+  "Nordic LARP",
+  "Pirate",
+  "Post-apocalyptic",
+  "Sandbox",
+  "Sci-fi",
+  "Steel weapons",
+  "Viking",
+  "War",
+  "Zombie",
+] as const

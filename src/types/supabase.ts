@@ -44,30 +44,6 @@ export type Database = {
           },
         ]
       }
-      event_tags: {
-        Row: {
-          created_at: string
-          description: string | null
-          display_name: string
-          id: string
-          value: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          display_name: string
-          id?: string
-          value: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          display_name?: string
-          id?: string
-          value?: string
-        }
-        Relationships: []
-      }
       events: {
         Row: {
           created_at: string
@@ -76,6 +52,7 @@ export type Database = {
           date_start: string
           description: string
           description_short: string | null
+          display_mode: boolean
           event_image_url: string | null
           id: string
           is_beginner_friendly: boolean
@@ -95,6 +72,7 @@ export type Database = {
           date_start: string
           description?: string
           description_short?: string | null
+          display_mode?: boolean
           event_image_url?: string | null
           id?: string
           is_beginner_friendly?: boolean
@@ -114,6 +92,7 @@ export type Database = {
           date_start?: string
           description?: string
           description_short?: string | null
+          display_mode?: boolean
           event_image_url?: string | null
           id?: string
           is_beginner_friendly?: boolean

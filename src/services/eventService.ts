@@ -16,15 +16,51 @@ const eventsCache = useNamespace<LARPEvent>(EVENTS_CACHE)
 const userEventsCache = useNamespace<LARPEvent[]>(USER_EVENTS_CACHE)
 
 export async function getUpcomingEvents() {
-  const { data, error } = await supabase
-    .from("events")
-    .select()
+  const eventsCache = useNamespace<LARPEvent[]>(EVENT_COLLECTIONS_CACHE)
+  let events = eventsCache.get("upcoming")
+
+  if (!events) {
+    log("Getting events from DB")
+
+    const { data, error } = await supabase
+      .from("events")
+      .select()
+      .gte("date_start", new Date().toISOString())
+      .order("date_start")
+
+    if (error) throw new Error(error.message)
+
+    eventCollectionsCache.set("upcoming", data, 1000 * 60 * 5)
+    return data
+  }
+
+  return events
+}
+
+export async function getFilteredEvents({
+  tags,
+  minAge,
+}: {
+  tags?: string[]
+  minAge?: number
+}) {
+  let query = supabase.from("events").select()
+
+  if (tags && tags.length > 0) {
+    query = query.overlaps("tags", tags)
+  }
+
+  if (minAge) {
+    query = query.lte("minimum_age", minAge)
+  }
+
+  const { data, error } = await query
     .gte("date_start", new Date().toISOString())
     .order("date_start")
 
-  if (!error) eventCollectionsCache.set("upcoming", data, 1000 * 60 * 5)
+  if (error) throw new Error(error.message)
 
-  return { data, error }
+  return data
 }
 
 export async function getFavouriteEvents(userId: UserID) {
