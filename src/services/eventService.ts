@@ -125,3 +125,93 @@ export async function getMyEvents(userId: UserID) {
     return data
   }
 }
+
+export async function createEvent({
+  id,
+  name,
+  description,
+  description_short,
+  date_start,
+  date_end,
+  date_signup,
+  location_name,
+  event_image_url,
+  tags,
+  is_beginner_friendly,
+  minimum_age,
+  maximum_participants,
+  location_latitude,
+  location_longitude,
+  display_mode,
+}: Omit<LARPEvent, "owner_id" | "created_at">) {
+  const { error: createEventError } = await supabase.from("events").insert({
+    id,
+    name,
+    description,
+    description_short,
+    date_start,
+    date_end,
+    date_signup,
+    location_name,
+    event_image_url,
+    tags: tags,
+    is_beginner_friendly,
+    minimum_age,
+    maximum_participants,
+    location_latitude,
+    location_longitude,
+    display_mode,
+  })
+
+  if (createEventError) throw new Error(createEventError.message)
+
+  eventsCache.clear()
+  userEventsCache.clear()
+}
+
+export async function updateEvent({
+  id,
+  name,
+  description,
+  description_short,
+  date_start,
+  date_end,
+  date_signup,
+  location_name,
+  event_image_url,
+  tags,
+  is_beginner_friendly,
+  minimum_age,
+  maximum_participants,
+  location_latitude,
+  location_longitude,
+  display_mode,
+}: { id: EventID } & Partial<LARPEvent>) {
+  const event = await getEvent(id)
+
+  const { error: updateEventError } = await supabase
+    .from("events")
+    .update({
+      name: name ?? event.name,
+      description: description ?? event.description,
+      description_short: description_short ?? event.description_short,
+      date_start: date_start ?? event.date_start,
+      date_end: date_end ?? event.date_end,
+      date_signup: date_signup ?? event.date_signup,
+      location_name: location_name ?? event.location_name,
+      event_image_url: event_image_url ?? event.event_image_url,
+      tags: tags ?? event.tags,
+      is_beginner_friendly: is_beginner_friendly ?? event.is_beginner_friendly,
+      minimum_age: minimum_age ?? event.minimum_age,
+      maximum_participants: maximum_participants ?? event.maximum_participants,
+      location_latitude: location_latitude ?? event.location_latitude,
+      location_longitude: location_longitude ?? event.location_longitude,
+      display_mode: display_mode ?? event.display_mode,
+    })
+    .eq("id", id)
+
+  if (updateEventError) throw new Error(updateEventError.message)
+
+  eventsCache.clear()
+  userEventsCache.clear()
+}

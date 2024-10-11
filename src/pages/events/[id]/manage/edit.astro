@@ -1,22 +1,37 @@
 ---
-import Button from "../../components/Button.astro"
-import Checkbox from "../../components/Checkbox.astro"
-import Input from "../../components/Input.astro"
-import Select from "../../components/Select.astro"
-import TextArea from "../../components/TextArea.astro"
-import TopLevelPage from "../../layouts/TopLevelPage.astro"
-import { eventTags } from "../../utils/constants"
+import Button from "../../../../components/Button.astro"
+import Checkbox from "../../../../components/Checkbox.astro"
+import Input from "../../../../components/Input.astro"
+import Select from "../../../../components/Select.astro"
+import TextArea from "../../../../components/TextArea.astro"
+import ManageEvent from "../../../../layouts/ManageEvent.astro"
+import { getEvent } from "../../../../services/eventService"
+import type { LARPEvent } from "../../../../types/types"
+import { eventTags } from "../../../../utils/constants"
+
+const { id } = Astro.params
+const userId = Astro.locals.user.id
+
+if (!id) throw new Error("Missing id url param")
+
+let event: LARPEvent
+
+try {
+  event = await getEvent(id)
+} catch (error) {
+  return errorResponse(error)
+}
+
+if (event.owner_id !== userId) Astro.redirect("/events")
 ---
 
-<TopLevelPage>
-  <h2>Create new event</h2>
-
+<ManageEvent eventId={event.id}>
   <form
     class="flex flex-col gap-4 mb-12"
-    method="post"
-    action="/api/event"
+    hx-put={`/api/event/${event.id}`}
     hx-boost="true"
     enctype="multipart/form-data"
+    hx-target="#error-message"
     hx-target-5*="#error-message"
   >
     <Input
@@ -26,6 +41,7 @@ import { eventTags } from "../../utils/constants"
       name="name"
       required
       maxlength="100"
+      value={event.name}
     />
 
     <Checkbox
@@ -33,6 +49,7 @@ import { eventTags } from "../../utils/constants"
       label="Presentational event"
       name="isDisplay"
       caption="This will disable registrations, allowing you to use the event to link to your own registration system and/or website."
+      inputProps={{ checked: event.display_mode }}
     />
 
     <Input
@@ -41,6 +58,7 @@ import { eventTags } from "../../utils/constants"
       label="Start date"
       name="startDate"
       required
+      value={event.date_start}
     />
 
     <Input
@@ -49,6 +67,7 @@ import { eventTags } from "../../utils/constants"
       label="End date"
       name="endDate"
       required
+      value={event.date_end}
     />
 
     <Input
@@ -58,6 +77,7 @@ import { eventTags } from "../../utils/constants"
       caption="After this date registration will be disabled"
       name="finalSignupDate"
       required
+      value={event.date_signup}
     />
 
     <Input
@@ -66,6 +86,7 @@ import { eventTags } from "../../utils/constants"
       label="Location"
       name="location"
       required
+      value={event.location_name}
     />
 
     <Input
@@ -74,6 +95,7 @@ import { eventTags } from "../../utils/constants"
       label="Latitude"
       name="latitude"
       required
+      value={event.location_latitude}
     />
 
     <Input
@@ -82,6 +104,7 @@ import { eventTags } from "../../utils/constants"
       label="Longitude"
       name="longitude"
       required
+      value={event.location_longitude}
     />
 
     <TextArea
@@ -89,9 +112,15 @@ import { eventTags } from "../../utils/constants"
       label="Short description"
       name="descriptionShort"
       maxlength="200"
+      value={event.description_short}
     />
 
-    <TextArea id="eventDescription" label="Description" name="description" />
+    <TextArea
+      id="eventDescription"
+      label="Description"
+      name="description"
+      value={event.description}
+    />
 
     <Input
       id="eventPicInput"
@@ -102,13 +131,20 @@ import { eventTags } from "../../utils/constants"
     />
 
     <Select multiple id="eventTagsInput" label="Tags" name="tags">
-      {eventTags.map((tag) => <option value={tag}>{tag}</option>)}
+      {
+        eventTags.map((tag) => (
+          <option value={tag} selected={event.tags?.includes(tag)}>
+            {tag}
+          </option>
+        ))
+      }
     </Select>
 
     <Checkbox
       id="eventBeginnerFriendly"
       label="Beginner friendly"
       name="beginnerFriendly"
+      inputProps={{ checked: event.is_beginner_friendly }}
     />
 
     <Input
@@ -116,6 +152,7 @@ import { eventTags } from "../../utils/constants"
       type="number"
       label="Lowest age allowed"
       name="ageRestriction"
+      value={event.minimum_age}
     />
 
     <Input
@@ -123,12 +160,14 @@ import { eventTags } from "../../utils/constants"
       type="number"
       label="Maximum participants"
       name="maximumParticipants"
+      value={event.maximum_participants}
     />
+
     <div class="self-end">
       <Button class="mr-4" type="reset">Clear</Button>
-      <Button type="submit">Create!</Button>
+      <Button type="submit">Update</Button>
     </div>
 
     <div id="error-message"></div>
   </form>
-</TopLevelPage>
+</ManageEvent>

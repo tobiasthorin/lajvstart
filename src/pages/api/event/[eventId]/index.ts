@@ -1,13 +1,16 @@
 import type { APIRoute } from "astro"
-import { uploadEventPicture } from "../../../utils/storageUtils"
-import { BadRequestError, InternalError } from "../../../utils/errorUtils"
-import { errorResponse } from "../../../utils/responseUtils"
-import { v4 as uuidv4 } from "uuid"
-import { createEvent } from "../../../services/eventService"
-import { extractEventFormData } from "../../../utils/eventUtils"
+import { updateEvent } from "../../../../services/eventService"
+import { BadRequestError, InternalError } from "../../../../utils/errorUtils"
+import { errorResponse } from "../../../../utils/responseUtils"
+import { uploadEventPicture } from "../../../../utils/storageUtils"
+import { extractEventFormData } from "../../../../utils/eventUtils"
 
-export const POST: APIRoute = async ({ request }) => {
-  const formData = await request.formData()
+export const PUT: APIRoute = async ({ request, rewrite, params }) => {
+  const eventId = params.eventId
+
+  if (!eventId) return errorResponse("Missing event id")
+
+  const formData = await request.clone().formData()
 
   const {
     name,
@@ -29,7 +32,6 @@ export const POST: APIRoute = async ({ request }) => {
   const eventFile = formData.get("eventPicture") as File | null
 
   let filePath: string | null = null
-  let eventId = uuidv4()
 
   if (eventFile) {
     try {
@@ -42,14 +44,13 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
-    createEvent({
+    updateEvent({
       id: eventId,
       name,
       description,
       description_short: descriptionShort,
       date_start: startDate,
       date_end: endDate,
-      date_signup: finalSignupDate,
       location_name: location,
       event_image_url: filePath,
       tags: tags.split(","),
@@ -59,14 +60,11 @@ export const POST: APIRoute = async ({ request }) => {
       location_latitude: Number(latitude),
       location_longitude: Number(longitude),
       display_mode: !!isDisplay,
+      date_signup: finalSignupDate,
     })
   } catch (error) {
     if (error instanceof Error) return errorResponse(error.message, 500)
   }
 
-  return new Response(null, {
-    headers: new Headers({
-      "HX-Location": '{"path":"/events", "target":"#main"}',
-    }),
-  })
+  return rewrite(`/api/event/updateResponse`)
 }

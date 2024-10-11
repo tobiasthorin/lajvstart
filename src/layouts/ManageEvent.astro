@@ -40,6 +40,16 @@ const inActiveClass =
 
       <li class="me-2">
         <a
+          href={`/events/${eventId}/manage/edit`}
+          hx-boost="true"
+          hx-target="#main"
+          class={url.pathname.includes("edit") ? activeClass : inActiveClass}
+          >Event details</a
+        >
+      </li>
+
+      <li class="me-2">
+        <a
           href={`/events/${eventId}/manage/registrations`}
           hx-boost="true"
           hx-target="#main"

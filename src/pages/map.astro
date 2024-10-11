@@ -3,7 +3,7 @@ import TopLevelPage from "../layouts/TopLevelPage.astro"
 import { getUpcomingEvents } from "../services/eventService"
 import { errorResponse as _errorResponse } from "../utils/responseUtils"
 
-const { data: events } = await getUpcomingEvents()
+const events = await getUpcomingEvents()
 if (!events) {
   return _errorResponse("Could not get upcoming events")
 }
