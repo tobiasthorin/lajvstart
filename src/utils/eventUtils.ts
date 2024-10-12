@@ -26,8 +26,6 @@ export function extractEventFormData(formData: FormData) {
     !longitude ||
     !tags ||
     !ageRestriction ||
-    isDisplay === undefined ||
-    beginnerFriendly === undefined ||
     !finalSignupDate
   ) {
     throw new Error("Missing form data")
