@@ -20,12 +20,7 @@ let events = userEventsCache.get(userId)
 if (!events) {
   log("Getting events from DB")
 
-  const { data, error: getEventsError } = await getUpcomingEvents()
-
-  if (getEventsError || !data)
-    return _errorResponse("Error while fetching user events")
-
-  events = data
+  events = await getUpcomingEvents()
 }
 ---
 
