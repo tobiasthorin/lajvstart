@@ -18,11 +18,13 @@
     "@astrojs/netlify": "^5.5.3",
     "@astrojs/tailwind": "^5.1.1",
     "@supabase/supabase-js": "^2.39.7",
-    "@types/alpinejs": "^3.13.10",
     "alpinejs": "^3.14.1",
     "astro": "^4.15.11",
+    "dompurify": "^3.1.7",
     "flowbite": "^2.2.1",
+    "jsdom": "^25.0.1",
     "micromatch": "^4.0.5",
+    "showdown": "^2.1.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
     "uuid": "^9.0.1",
@@ -32,7 +34,12 @@
     "semi": false
   },
   "devDependencies": {
+    "@types/alpinejs": "^3.13.10",
+    "@types/dompurify": "^3.0.5",
+    "@types/jsdom": "^21.1.7",
     "@types/micromatch": "^4.0.6",
+    "@types/showdown": "^2.0.6",
+    "@types/simplemde": "^1.11.11",
     "@types/uuid": "^9.0.8"
   }
 }

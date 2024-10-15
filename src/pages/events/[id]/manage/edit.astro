@@ -122,6 +122,29 @@ if (event.owner_id !== userId) Astro.redirect("/events")
       value={event.description}
     />
 
+    <script is:inline>
+      const descriptionInput = document.getElementById("eventDescription")
+      const simplemde = new SimpleMDE({
+        element: descriptionInput,
+        spellChecker: false,
+        forceSync: true,
+        toolbar: [
+          "bold",
+          "italic",
+          "|",
+          "heading-1",
+          "heading-2",
+          "|",
+          "unordered-list",
+          "ordered-list",
+          "link",
+          "horizontal-rule",
+          "|",
+          "guide",
+        ],
+      })
+    </script>
+
     <Input
       id="eventPicInput"
       type="file"

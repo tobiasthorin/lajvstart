@@ -13,6 +13,10 @@ import {
 } from "../../../services/registrationService"
 import { errorResponse as _errorResponse } from "../../../utils/responseUtils"
 import type { UserID } from "../../../services/userService"
+import showdown from "showdown"
+import { JSDOM } from "jsdom"
+import DOMPurify from "dompurify"
+import { showdownTailwindExtentions } from "../../../utils/markdownUtils"
 
 const { isSignedIn } = Astro.locals
 const { id } = Astro.params
@@ -45,6 +49,16 @@ const endDate = new Intl.DateTimeFormat("en-GB", {
   month: "short",
   year: "numeric",
 }).format(new Date(event.date_end))
+
+const window = new JSDOM("").window
+const purify = DOMPurify(window)
+const cleanDescription = purify.sanitize(event.description)
+
+const converter = new showdown.Converter({
+  headerLevelStart: 3,
+  extensions: [...showdownTailwindExtentions],
+})
+const descriptionHTML = converter.makeHtml(cleanDescription)
 ---
 
 <TopLevelPage>
@@ -62,7 +76,7 @@ const endDate = new Intl.DateTimeFormat("en-GB", {
   />
 
   <div class="flex flex-col-reverse md:flex-row gap-8">
-    <p class="flex-[2]">{event.description}</p>
+    <article class="flex-[2]" set:html={descriptionHTML} />
 
     <aside class="flex-[1]">
       <ul

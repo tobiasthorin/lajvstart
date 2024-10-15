@@ -91,7 +91,30 @@ import { eventTags } from "../../utils/constants"
       maxlength="200"
     />
 
-    <TextArea id="eventDescription" label="Description" name="description" />
+    <TextArea id="newEventDescription" label="Description" name="description" />
+
+    <script is:inline>
+      const descriptionInput = document.getElementById("newEventDescription")
+      const simplemde = new SimpleMDE({
+        element: descriptionInput,
+        spellChecker: false,
+        forceSync: true,
+        toolbar: [
+          "bold",
+          "italic",
+          "|",
+          "heading-1",
+          "heading-2",
+          "|",
+          "unordered-list",
+          "ordered-list",
+          "link",
+          "horizontal-rule",
+          "|",
+          "guide",
+        ],
+      })
+    </script>
 
     <Input
       id="eventPicInput"
