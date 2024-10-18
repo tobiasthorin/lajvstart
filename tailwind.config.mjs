@@ -18,5 +18,5 @@ export default {
     },
     fontFamily: { display: ["Londrina Solid", "serif"] },
   },
-  plugins: [require("flowbite/plugin")],
+  plugins: [require("flowbite/plugin"), require("tailwindcss-opentype")],
 }

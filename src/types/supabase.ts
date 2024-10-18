@@ -47,6 +47,7 @@ export type Database = {
       events: {
         Row: {
           created_at: string
+          currency: string
           date_end: string
           date_signup: string | null
           date_start: string
@@ -56,6 +57,7 @@ export type Database = {
           event_image_url: string | null
           id: string
           is_beginner_friendly: boolean
+          is_published: boolean
           location_latitude: number | null
           location_longitude: number | null
           location_name: string | null
@@ -63,10 +65,12 @@ export type Database = {
           minimum_age: number | null
           name: string
           owner_id: string
+          price: number
           tags: string[] | null
         }
         Insert: {
           created_at?: string
+          currency?: string
           date_end: string
           date_signup?: string | null
           date_start: string
@@ -76,6 +80,7 @@ export type Database = {
           event_image_url?: string | null
           id?: string
           is_beginner_friendly?: boolean
+          is_published?: boolean
           location_latitude?: number | null
           location_longitude?: number | null
           location_name?: string | null
@@ -83,10 +88,12 @@ export type Database = {
           minimum_age?: number | null
           name?: string
           owner_id?: string
+          price?: number
           tags?: string[] | null
         }
         Update: {
           created_at?: string
+          currency?: string
           date_end?: string
           date_signup?: string | null
           date_start?: string
@@ -96,6 +103,7 @@ export type Database = {
           event_image_url?: string | null
           id?: string
           is_beginner_friendly?: boolean
+          is_published?: boolean
           location_latitude?: number | null
           location_longitude?: number | null
           location_name?: string | null
@@ -103,17 +111,10 @@ export type Database = {
           minimum_age?: number | null
           name?: string
           owner_id?: string
+          price?: number
           tags?: string[] | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "public_events_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       favourites: {
         Row: {
@@ -140,13 +141,6 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "favourites_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -191,13 +185,6 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_registrations_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
@@ -250,15 +237,7 @@ export type Database = {
           special_needs?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "userDetails_userId_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
@@ -382,4 +361,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

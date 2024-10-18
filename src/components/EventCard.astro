@@ -12,57 +12,69 @@ const { class: className, event, ...rest } = Astro.props
 const eventImage =
   event.event_image_url ||
   `${import.meta.env.SUPABASE_URL}/storage/v1/object/public/system-files/placeholders/event-placeholder.jpg`
+
+const startDate = new Intl.DateTimeFormat("sv", { dateStyle: "medium" }).format(
+  new Date(event.date_start)
+)
 ---
 
 <article
-  class={"relative h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col " +
+  class={"group relative h-full bg-white hover:bg-gray-50 border border-gray-200 rounded-lg shadow-lg  dark:bg-gray-800 dark:border-gray-700 flex flex-col " +
     className}
   {...rest}
 >
-  <img
-    class="rounded-t-lg h-64 w-full object-cover"
-    src={eventImage}
-    alt={`Event image for ${event.name}`}
-  />
-  <h3
-    class="absolute text-3xl text-white font-display top-4 left-4 drop-shadow-hard"
-  >
-    {event.name}
-  </h3>
+  <a href={`/events/${event.id}`} hx-boost="true" hx-target="#main">
+    <div class="rounded-t-lg h-64 w-full relative overflow-hidden">
+      <img
+        class="rounded-t-lg object-cover h-full w-full group-hover:scale-105 transition-all"
+        src={eventImage}
+        alt={`Event image for ${event.name}`}
+      />
 
-  <div class="p-5 flex flex-col gap-2 grow">
-    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-      {event.description_short}
-    </p>
+      {
+        event.price === 0 && (
+          <p class="absolute -right-6 bottom-4 -rotate-45 shadow bg-orange-600 text-white text-sm text-center w-[100px]">
+            FREE
+          </p>
+        )
+      }
+    </div>
 
-    <div class="flex justify-between grow">
-      <div class="flex flex-col gap-2">
+    <div class="absolute top-2 left-2 bg-gray-950/25 px-2 py-1 rounded">
+      <h3 class="text-3xl text-white font-display drop-shadow-hard">
+        {event.name}
+      </h3>
+
+      <time datetime={event.date_start} class="text-l text-white"
+        >{startDate}</time
+      >
+    </div>
+
+    <div class="p-5 flex flex-col gap-2 grow">
+      <div class="flex justify-between">
+        <span
+          class="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 self-start"
+        >
+          {event.minimum_age ? `${event.minimum_age}+` : "All ages"}
+        </span>
+
+        <span class="text-sm text-gray-600 small-caps"
+          >{event.location_name}</span
+        >
+      </div>
+      <p class="font-normal text-gray-700 dark:text-gray-400">
+        {event.description_short}
+      </p>
+
+      <ul>
         {
           (event.tags || []).map((tag) => (
-            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 capitalize self-start">
+            <li class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 capitalize self-start inline-block">
               {tag}
-            </span>
+            </li>
           ))
         }
-
-        {
-          event.minimum_age && (
-            <span class="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 self-start">
-              {event.minimum_age}+
-            </span>
-          )
-        }
-      </div>
-
-      <a
-        href={`/events/${event.id}`}
-        hx-boost="true"
-        hx-target="#main"
-        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-cyan-600 rounded-lg hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800 self-end mt-auto"
-      >
-        Learn more
-        <ArrowRight />
-      </a>
+      </ul>
     </div>
-  </div>
+  </a>
 </article>

@@ -71,7 +71,7 @@ export async function getFavouriteEvents(userId: UserID) {
 
   // TODO: do this in query
   const filteredData = data?.filter((event) =>
-    event.favourites.some((fav) => fav.user_id === userId)
+    event.favourites.some((fav) => fav.user_id === userId),
   )
 
   // TODO: cache?
@@ -143,6 +143,7 @@ export async function createEvent({
   location_latitude,
   location_longitude,
   display_mode,
+  price,
 }: Omit<LARPEvent, "owner_id" | "created_at">) {
   const { error: createEventError } = await supabase.from("events").insert({
     id,
@@ -161,6 +162,7 @@ export async function createEvent({
     location_latitude,
     location_longitude,
     display_mode,
+    price,
   })
 
   if (createEventError) throw new Error(createEventError.message)
@@ -186,6 +188,7 @@ export async function updateEvent({
   location_latitude,
   location_longitude,
   display_mode,
+  price,
 }: { id: EventID } & Partial<LARPEvent>) {
   const event = await getEvent(id)
 
@@ -207,6 +210,7 @@ export async function updateEvent({
       location_latitude: location_latitude ?? event.location_latitude,
       location_longitude: location_longitude ?? event.location_longitude,
       display_mode: display_mode ?? event.display_mode,
+      price: price ?? event.price,
     })
     .eq("id", id)
 

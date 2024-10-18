@@ -26,6 +26,7 @@
     "micromatch": "^4.0.5",
     "showdown": "^2.1.0",
     "tailwindcss": "^3.4.1",
+    "tailwindcss-opentype": "^1.1.0",
     "typescript": "^5.3.3",
     "uuid": "^9.0.1",
     "zod": "^3.23.8"

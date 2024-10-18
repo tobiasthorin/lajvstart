@@ -1,0 +1,197 @@
+---
+import type { HTMLAttributes } from "astro/types"
+import { eventTags } from "../utils/constants"
+import Button from "./Button.astro"
+import Checkbox from "./Checkbox.astro"
+import Input from "./Input.astro"
+import Select from "./Select.astro"
+import TextArea from "./TextArea.astro"
+import type { LARPEvent } from "../types/types"
+
+interface Props {
+  method: HTMLAttributes<"form">["method"]
+  action: HTMLAttributes<"form">["action"]
+  event?: LARPEvent
+}
+
+const { method, action, event } = Astro.props
+console.log(event?.price)
+console.log(event?.price ?? 0)
+---
+
+<form
+  class="flex flex-col gap-4 mb-12"
+  method={method}
+  action={action}
+  hx-boost="true"
+  enctype="multipart/form-data"
+  hx-target-5*="#error-message"
+>
+  <Input
+    id="eventName"
+    type="text"
+    label="Name"
+    name="name"
+    required
+    maxlength="100"
+    value={event?.name}
+  />
+
+  <Checkbox
+    id="isDisplayInput"
+    label="Presentational event"
+    name="isDisplay"
+    caption="This will disable registrations, allowing you to use the event to link to your own registration system and/or website."
+    inputProps={{ checked: event?.display_mode }}
+  />
+
+  <Input
+    id="priceInput"
+    type="number"
+    label="Price (SEK)"
+    name="price"
+    value={event?.price ?? 0}
+    required
+  />
+
+  <Input
+    id="eventStartDateInput"
+    type="date"
+    label="Start date"
+    name="startDate"
+    required
+    value={event?.date_start}
+  />
+
+  <Input
+    id="eventEndDateInput"
+    type="date"
+    label="End date"
+    name="endDate"
+    required
+    value={event?.date_end}
+  />
+
+  <Input
+    id="finalSignupDateInput"
+    type="date"
+    label="Final signup date"
+    caption="After this date registration will be disabled"
+    name="finalSignupDate"
+    required
+    value={event?.date_signup}
+  />
+
+  <Input
+    id="eventLocation"
+    type="text"
+    label="Location"
+    name="location"
+    required
+    value={event?.location_name}
+  />
+
+  <Input
+    id="eventLatitude"
+    type="text"
+    label="Latitude"
+    name="latitude"
+    required
+    value={event?.location_latitude}
+  />
+
+  <Input
+    id="eventLongitude"
+    type="text"
+    label="Longitude"
+    name="longitude"
+    required
+    value={event?.location_longitude}
+  />
+
+  <TextArea
+    id="eventDescriptionShort"
+    label="Short description"
+    name="descriptionShort"
+    maxlength="200"
+    value={event?.description_short}
+  />
+
+  <TextArea
+    id="eventDescription"
+    label="Description"
+    name="description"
+    value={event?.description}
+  />
+
+  <script is:inline>
+    var descriptionInput = document.getElementById("eventDescription")
+    var simplemde = new SimpleMDE({
+      element: descriptionInput,
+      spellChecker: false,
+      forceSync: true,
+      toolbar: [
+        "bold",
+        "italic",
+        "|",
+        "heading-1",
+        "heading-2",
+        "|",
+        "unordered-list",
+        "ordered-list",
+        "link",
+        "horizontal-rule",
+        "|",
+        "guide",
+      ],
+    })
+  </script>
+
+  <Input
+    id="eventPicInput"
+    type="file"
+    label="Event picture"
+    name="eventPicture"
+    accept=".jpg,.jpeg,.png,.bmp,.webp"
+  />
+
+  <Select multiple id="eventTagsInput" label="Tags" name="tags">
+    {
+      eventTags.map((tag) => (
+        <option value={tag} selected={event?.tags?.includes(tag)}>
+          {tag}
+        </option>
+      ))
+    }
+  </Select>
+
+  <Checkbox
+    id="eventBeginnerFriendly"
+    label="Beginner friendly"
+    name="beginnerFriendly"
+    inputProps={{ checked: event?.is_beginner_friendly }}
+  />
+
+  <Input
+    id="ageRestriction"
+    type="number"
+    label="Lowest age allowed"
+    name="ageRestriction"
+    value={event?.minimum_age}
+  />
+
+  <Input
+    id="maximumParticipants"
+    type="number"
+    label="Maximum participants"
+    name="maximumParticipants"
+    value={event?.maximum_participants}
+  />
+
+  <div class="self-end">
+    <Button class="mr-4" type="reset">Clear</Button>
+    <Button type="submit">Update</Button>
+  </div>
+
+  <div id="error-message"></div>
+</form>

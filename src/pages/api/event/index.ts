@@ -24,6 +24,7 @@ export const POST: APIRoute = async ({ request }) => {
     longitude,
     isDisplay,
     finalSignupDate,
+    price,
   } = extractEventFormData(formData)
 
   const eventFile = formData.get("eventPicture") as File | null
@@ -59,6 +60,9 @@ export const POST: APIRoute = async ({ request }) => {
       location_latitude: Number(latitude),
       location_longitude: Number(longitude),
       display_mode: !!isDisplay,
+      price: Number(price),
+      currency: "SEK",
+      is_published: false,
     })
   } catch (error) {
     if (error instanceof Error) return errorResponse(error.message, 500)

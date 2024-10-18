@@ -27,6 +27,7 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
     longitude,
     isDisplay,
     finalSignupDate,
+    price,
   } = extractEventFormData(formData)
 
   const eventFile = formData.get("eventPicture") as File | null
@@ -61,6 +62,7 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
       location_longitude: Number(longitude),
       display_mode: !!isDisplay,
       date_signup: finalSignupDate,
+      price: Number(price),
     })
   } catch (error) {
     if (error instanceof Error) return errorResponse(error.message, 500)
