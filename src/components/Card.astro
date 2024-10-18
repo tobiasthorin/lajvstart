@@ -1,10 +1,21 @@
+---
+interface Props {
+  title: string
+  backgroundColor?: string
+  id?: string
+}
+
+const { id, title, backgroundColor = "bg-white" } = Astro.props
+---
+
 <div
-  class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+  id={id}
+  class={`max-w-sm p-6 ${backgroundColor} border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700`}
 >
   <h3
     class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
   >
-    Participants
+    {title}
   </h3>
 
   <slot />

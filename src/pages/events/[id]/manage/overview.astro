@@ -1,5 +1,6 @@
 ---
 import Card from "../../../../components/Card.astro"
+import PublishCard from "../../../../components/publishCard.astro"
 import ManageEvent from "../../../../layouts/ManageEvent.astro"
 import { getEvent } from "../../../../services/eventService"
 import { getRegistrationsForEvent } from "../../../../services/registrationService"
@@ -7,7 +8,6 @@ import type { LARPEvent } from "../../../../types/types"
 
 const { id } = Astro.params
 const userId = Astro.locals.user.id
-
 if (!id) throw new Error("Missing id url param")
 
 let event: LARPEvent
@@ -24,7 +24,11 @@ const registrations = await getRegistrationsForEvent(event.id)
 ---
 
 <ManageEvent eventId={event.id}>
-  <Card>
-    {registrations.length} / {event.maximum_participants}
-  </Card>
+  <div class="flex gap-4 flex-wrap">
+    <Card title="Participants">
+      {registrations.length} / {event.maximum_participants}
+    </Card>
+
+    <PublishCard eventId={event.id} published={event.is_published} />
+  </div>
 </ManageEvent>

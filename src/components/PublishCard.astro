@@ -1,0 +1,32 @@
+---
+import type { EventID } from "../services/eventService"
+import Button from "./Button.astro"
+import Card from "./Card.astro"
+
+interface Props {
+  published: boolean
+  eventId: EventID
+}
+
+const { published, eventId } = Astro.props
+---
+
+<Card
+  id="publishCard"
+  title={published ? "Published" : "Not published"}
+  backgroundColor={published ? "bg-green-100" : "bg-red-100"}
+>
+  <div class="mb-2">
+    {
+      published
+        ? "Your event is published and will appear in lists and searches"
+        : "Your event is not published yet and cannot be found in lists or searches."
+    }
+  </div>
+
+  <Button
+    hx-put={`/api/event/${eventId}/publish`}
+    hx-target="#publishCard"
+    hx-swap="outerHTML">{published ? "Unpublish" : "Publish now!"}</Button
+  >
+</Card>

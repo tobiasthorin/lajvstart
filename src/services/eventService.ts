@@ -26,6 +26,7 @@ export async function getUpcomingEvents() {
       .from("events")
       .select()
       .gte("date_start", new Date().toISOString())
+      .eq("is_published", true)
       .order("date_start")
 
     if (error) throw new Error(error.message)
@@ -56,6 +57,7 @@ export async function getFilteredEvents({
 
   const { data, error } = await query
     .gte("date_start", new Date().toISOString())
+    .eq("is_published", true)
     .order("date_start")
 
   if (error) throw new Error(error.message)
@@ -67,6 +69,7 @@ export async function getFavouriteEvents(userId: UserID) {
   const { data, error } = await supabase
     .from("events")
     .select("*, favourites!inner(event_id, user_id)")
+    .eq("is_published", true)
     .order("date_start")
 
   // TODO: do this in query
@@ -189,10 +192,11 @@ export async function updateEvent({
   location_longitude,
   display_mode,
   price,
+  is_published,
 }: { id: EventID } & Partial<LARPEvent>) {
   const event = await getEvent(id)
 
-  const { error: updateEventError } = await supabase
+  const { error: updateEventError, data } = await supabase
     .from("events")
     .update({
       name: name ?? event.name,
@@ -211,11 +215,17 @@ export async function updateEvent({
       location_longitude: location_longitude ?? event.location_longitude,
       display_mode: display_mode ?? event.display_mode,
       price: price ?? event.price,
+      is_published: is_published ?? event.is_published,
     })
     .eq("id", id)
+    .select()
+    .single()
 
-  if (updateEventError) throw new Error(updateEventError.message)
+  if (updateEventError || data === null)
+    throw new Error(updateEventError?.message ?? "Data is null")
 
   eventsCache.clear()
   userEventsCache.clear()
+
+  return data
 }

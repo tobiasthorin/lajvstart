@@ -1,0 +1,11 @@
+---
+import PublishCard from "../../../../components/PublishCard.astro"
+
+const published = Astro.url.searchParams.get("published") === "true"
+
+const { eventId } = Astro.params
+
+if (!eventId) throw new Error("Missing eventId url param")
+---
+
+<PublishCard eventId={eventId} published={published} />
