@@ -153,6 +153,7 @@ export type Database = {
           event_group: string | null
           event_id: string
           id: string
+          is_approved: boolean
           is_paid: boolean
           user_details: string | null
           user_id: string
@@ -164,6 +165,7 @@ export type Database = {
           event_group?: string | null
           event_id: string
           id?: string
+          is_approved?: boolean
           is_paid?: boolean
           user_details?: string | null
           user_id: string
@@ -175,6 +177,7 @@ export type Database = {
           event_group?: string | null
           event_id?: string
           id?: string
+          is_approved?: boolean
           is_paid?: boolean
           user_details?: string | null
           user_id?: string
