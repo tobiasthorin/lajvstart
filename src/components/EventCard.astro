@@ -1,7 +1,7 @@
 ---
 import type { HTMLAttributes } from "astro/types"
 import type { LARPEvent } from "../types/types"
-import ArrowRight from "./icons/ArrowRight.astro"
+import { getRegistrationsForEvent } from "../services/registrationService"
 
 interface Props extends HTMLAttributes<"article"> {
   event: LARPEvent
@@ -16,6 +16,11 @@ const eventImage =
 const startDate = new Intl.DateTimeFormat("sv", { dateStyle: "medium" }).format(
   new Date(event.date_start)
 )
+
+const registrations = await getRegistrationsForEvent(event.id)
+const spotsRemaining = event.maximum_participants - registrations.length
+const fewSpotsRemaining =
+  registrations.length / event.maximum_participants > 0.8
 ---
 
 <article
@@ -75,6 +80,26 @@ const startDate = new Intl.DateTimeFormat("sv", { dateStyle: "medium" }).format(
           ))
         }
       </ul>
+
+      {
+        !event.display_mode && spotsRemaining < 1 && (
+          <span class="font-bold text-red-900 text-right">Sold out</span>
+        )
+      }
+      {
+        !event.display_mode && spotsRemaining > 0 && fewSpotsRemaining && (
+          <span class="font-bold text-yellow-600 text-right">
+            {spotsRemaining} spots left
+          </span>
+        )
+      }
+      {
+        !event.display_mode && spotsRemaining > 0 && (
+          <span class="font-bold text-green-700 text-right">
+            {spotsRemaining} spots left
+          </span>
+        )
+      }
     </div>
   </a>
 </article>
