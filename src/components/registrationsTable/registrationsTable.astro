@@ -19,10 +19,12 @@ const details = registrations[0]?.details || []
     <TH>Name</TH>
     <TH>Group</TH>
     <TH>Paid</TH>
+    <TH>Approved</TH>
     <TH>Special needs</TH>
     {details && details.map((detail) => <TH>{detail.name}</TH>)}
     <TH>Delete</TH>
     <TH>Toggle paid</TH>
+    <TH>Toggle approved</TH>
   </TableHead>
 
   <tbody>

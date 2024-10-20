@@ -34,6 +34,7 @@ export const PATCH: APIRoute = async ({ request, params, rewrite }) => {
   const body = await request.clone().formData()
   const userId = body.get("userId")
   const isPaid = body.get("isPaid")
+  const isApproved = body.get("isApproved")
 
   if (!userId) {
     return errorResponse("Missing userId")
@@ -42,12 +43,18 @@ export const PATCH: APIRoute = async ({ request, params, rewrite }) => {
   try {
     await updateRegistration(registrationId, {
       isPaid: isPaid !== null ? (isPaid === "true" ? true : false) : undefined,
+      isApproved:
+        isApproved !== null
+          ? isApproved === "true"
+            ? true
+            : false
+          : undefined,
     })
   } catch (error) {
     return handleServiceError(error)
   }
 
   return rewrite(
-    `/api/event/${eventId}/registration/patchResponse?userId=${userId}`
+    `/api/event/${eventId}/registration/patchResponse?userId=${userId}`,
   )
 }

@@ -16,6 +16,7 @@ const registrationSchema = z.object({
   event_id: z.string(),
   id: z.string(),
   is_paid: z.boolean(),
+  is_approved: z.boolean(),
   user_id: z.string(),
   user_details: z.object({
     name: z.string(),
@@ -40,7 +41,7 @@ export async function createRegistration(
   userId: UserID,
   userDetailsId: UserDetails["user_id"],
   eventGroupId: EventGroup["id"] | null,
-  details: RegistrationDetails[]
+  details: RegistrationDetails[],
 ) {
   const { error: createRegistrationError } = await supabase
     .from("registrations")
@@ -59,7 +60,7 @@ export async function createRegistration(
 export async function replaceRegistration(
   registrationId: Registration["id"],
   eventGroupId: EventGroup["id"] | null,
-  details: RegistrationDetails[]
+  details: RegistrationDetails[],
 ) {
   const { error: updateRegistrationError } = await supabase
     .from("registrations")
@@ -87,7 +88,7 @@ export async function findRegistration(userId: UserID, eventId: EventID) {
         name,
         description
       )
-      `
+      `,
     )
     .eq("user_id", userId)
     .eq("event_id", eventId)
@@ -114,7 +115,7 @@ export async function getRegistration(registrationID: Registration["id"]) {
         name,
         description
       )
-      `
+      `,
     )
     .eq("id", registrationID)
     .eq("deleted", false)
@@ -126,7 +127,7 @@ export async function getRegistration(registrationID: Registration["id"]) {
 }
 
 export async function getRegistrationsForEvent(eventId: EventID) {
-  const { data: registrations } = await supabase
+  const { data } = await supabase
     .from("registrations")
     .select(
       `
@@ -140,17 +141,26 @@ export async function getRegistrationsForEvent(eventId: EventID) {
         name,
         description
       )
-      `
+      `,
     )
     .eq("event_id", eventId)
     .eq("deleted", false)
 
-  return registrationsSchema.parse(registrations)
+  if (!data) return []
+
+  const parsedData = registrationsSchema.parse(data)
+  const sortedData = parsedData.sort((a, b) => {
+    if (a.user_details?.name > b.user_details?.name) return 1
+    if (a.user_details?.name < b.user_details?.name) return -1
+    return 0
+  })
+
+  return sortedData
 }
 
 export async function deleteRegistration(
   eventId: EventID,
-  registrationId: Registration["id"]
+  registrationId: Registration["id"],
 ) {
   const { error: updateRegistrationError } = await supabase
     .from("registrations")
@@ -165,8 +175,13 @@ export async function updateRegistration(
   registrationId: UserID,
   {
     isPaid,
+    isApproved,
     groupId,
-  }: { isPaid?: boolean | undefined; groupId?: string | null | undefined }
+  }: {
+    isPaid?: boolean | undefined
+    isApproved?: boolean | undefined
+    groupId?: string | null | undefined
+  },
 ) {
   const registration = await getRegistration(registrationId)
 
@@ -177,6 +192,8 @@ export async function updateRegistration(
     .from("registrations")
     .update({
       is_paid: isPaid !== undefined ? isPaid : registration.is_paid,
+      is_approved:
+        isApproved !== undefined ? isApproved : registration.is_approved,
       event_group:
         groupId !== undefined ? groupId : registration.event_group?.id || null,
     })

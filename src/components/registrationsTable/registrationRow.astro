@@ -11,19 +11,38 @@ interface Props {
   eventId: EventID
 }
 
-const { registration, eventId } = Astro.props
+const {
+  registration: {
+    id,
+    user_details,
+    event_group,
+    is_paid,
+    is_approved,
+    details,
+    user_id,
+  },
+  eventId,
+} = Astro.props
 ---
 
-<TR id={`row-${registration.id}`}>
-  <TD>{registration.user_details.name}</TD>
-  <TD>{registration.event_group?.name}</TD>
-  <TD>{registration.is_paid ? "Yes" : "No"}</TD>
-  <TD>{registration.user_details.special_needs}</TD>
-  {registration.details.map((detail) => <TD>{getDetailValue(detail)}</TD>)}
+<TR
+  id={`row-${id}`}
+  status={is_paid && is_approved
+    ? "green"
+    : is_paid || is_approved
+      ? "yellow"
+      : "none"}
+>
+  <TD>{user_details.name}</TD>
+  <TD>{event_group?.name}</TD>
+  <TD>{is_paid ? "Yes" : "No"}</TD>
+  <TD>{is_approved ? "Yes" : "No"}</TD>
+  <TD>{user_details.special_needs}</TD>
+  {details.map((detail) => <TD>{getDetailValue(detail)}</TD>)}
   <TD>
     <Button
       size="small"
-      hx-delete={`/api/event/${eventId}/registration/${registration.id}`}
+      hx-delete={`/api/event/${eventId}/registration/${id}`}
       hx-target="#registrationsTable"
     >
       Delete
@@ -31,12 +50,22 @@ const { registration, eventId } = Astro.props
   </TD>
   <TD>
     <Button
+      class="whitespace-nowrap"
       size="small"
-      hx-patch={`/api/event/${eventId}/registration/${registration.id}`}
-      hx-vals=`{"isPaid": ${!registration.is_paid}, "userId": "${registration.user_id}"}`
-      hx-target={`#row-${registration.id}`}
-      hx-swap="outerHTML"
-      >{registration.is_paid ? "Mark unpaid" : " Mark paid"}</Button
+      hx-patch={`/api/event/${eventId}/registration/${id}`}
+      hx-vals=`{"isPaid": ${!is_paid}, "userId": "${user_id}"}`
+      hx-target={`#row-${id}`}
+      hx-swap="outerHTML">{is_paid ? "Mark unpaid" : "Mark paid"}</Button
+    >
+  </TD>
+  <TD>
+    <Button
+      class="whitespace-nowrap"
+      size="small"
+      hx-patch={`/api/event/${eventId}/registration/${id}`}
+      hx-vals=`{"isApproved": ${!is_approved}, "userId": "${user_id}"}`
+      hx-target={`#row-${id}`}
+      hx-swap="outerHTML">{is_approved ? "Unapprove" : "Approve"}</Button
     >
   </TD>
 </TR>
