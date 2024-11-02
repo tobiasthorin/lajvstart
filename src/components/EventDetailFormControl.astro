@@ -79,6 +79,7 @@ const { detail, eventId } = Astro.props
             <li class="flex justify-between items-center">
               <span>{option}</span>
               <Button
+                variant="dangerOutline"
                 size="xs"
                 hx-delete={`/api/event/${eventId}/detail/${detail.id}/option/${option}`}
                 hx-target={`#item-${detail.id}`}
@@ -108,7 +109,7 @@ const { detail, eventId } = Astro.props
             id={`new-option-${detail.label}`}
             name="newOptionName"
           />
-          <Button type="submit" size="xs">
+          <Button type="submit" size="xs" variant="secondary">
             Add option
           </Button>
         </form>
@@ -132,6 +133,7 @@ const { detail, eventId } = Astro.props
   }
 
   <Button
+    variant="dangerOutline"
     size="xs"
     class="ml-auto"
     hx-delete={`/api/event/${eventId}/detail/${detail.id}`}

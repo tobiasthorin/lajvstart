@@ -3,18 +3,19 @@ import type { HTMLAttributes } from "astro/types"
 
 interface Props extends HTMLAttributes<"button"> {
   size?: "regular" | "small" | "xs"
+  variant?: "primary" | "secondary" | "dangerOutline"
 }
 
-const { class: className, size = "regular", ...rest } = Astro.props
+const {
+  class: className,
+  size = "regular",
+  variant = "primary",
+  ...rest
+} = Astro.props
 ---
 
 <button
   class:list={[
-    "text-white",
-    "bg-gradient-to-r",
-    "from-orange-400",
-    "via-orange-500",
-    "to-orange-600",
     "hover:bg-gradient-to-br",
     "focus:ring-4",
     "focus:outline-none",
@@ -27,6 +28,18 @@ const { class: className, size = "regular", ...rest } = Astro.props
     { "px-5 py-2.5 text-sm": size === "regular" },
     { "px-3 py-2 text-sm": size === "small" },
     { "px-3 py-2 text-xs": size === "xs" },
+    {
+      "text-white bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600":
+        variant === "primary",
+    },
+    {
+      "text-gray-900  bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700":
+        variant === "secondary",
+    },
+    {
+      "text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4  focus:ring-red-300 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900":
+        variant === "dangerOutline",
+    },
     className,
   ]}
   {...rest}
