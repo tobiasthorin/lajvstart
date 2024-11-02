@@ -44,7 +44,18 @@ const inActiveClass =
           hx-boost="true"
           hx-target="#main"
           class={url.pathname.includes("edit") ? activeClass : inActiveClass}
-          >Event details</a
+          >Event information</a
+        >
+      </li>
+
+      <li class="me-2">
+        <a
+          href={`/events/${eventId}/manage/sign-up-form`}
+          hx-boost="true"
+          hx-target="#main"
+          class={url.pathname.includes("sign-up-form")
+            ? activeClass
+            : inActiveClass}>Sign up form</a
         >
       </li>
 

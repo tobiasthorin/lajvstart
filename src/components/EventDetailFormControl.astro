@@ -1,0 +1,146 @@
+---
+import type { EventDetail, EventID } from "../services/eventService"
+import Button from "./Button.astro"
+import Checkbox from "./Checkbox.astro"
+import Input from "./Input.astro"
+import Select from "./Select.astro"
+import TextArea from "./TextArea.astro"
+
+interface Props {
+  eventId: EventID
+  detail: EventDetail
+}
+
+const { detail, eventId } = Astro.props
+---
+
+<li
+  id={`item-${detail.id}`}
+  class="flex gap-4 items-center border rounded-md p-4 mb-4"
+>
+  {
+    detail.type === "textShort" && (
+      <Input
+        type="text"
+        label={detail.label}
+        name={detail.label}
+        id={detail.label}
+        caption={detail.description}
+      />
+    )
+  }
+  {
+    detail.type === "textLong" && (
+      <TextArea
+        label={detail.label}
+        name={detail.label}
+        id={detail.label}
+        caption={detail.description}
+      />
+    )
+  }
+  {
+    detail.type === "number" && (
+      <Input
+        type="number"
+        label={detail.label}
+        name={detail.label}
+        id={detail.label}
+        caption={detail.description}
+      />
+    )
+  }
+  {
+    detail.type === "checkbox" && (
+      <Checkbox
+        label={detail.label}
+        name={detail.label}
+        id={detail.label}
+        caption={detail.description}
+      />
+    )
+  }
+  {
+    detail.type === "multiChoice" && (
+      <div class="flex flex-col">
+        <Select
+          label={detail.label}
+          name={detail.label}
+          id={detail.label}
+          caption={detail.description}
+        >
+          {detail.options?.map((option) => (
+            <option>{option}</option>
+          ))}
+        </Select>
+
+        <ul class="flex flex-col gap-2">
+          {detail.options?.map((option) => (
+            <li class="flex justify-between items-center">
+              <span>{option}</span>
+              <Button
+                size="xs"
+                hx-delete={`/api/event/${eventId}/detail/${detail.id}/option/${option}`}
+                hx-target={`#item-${detail.id}`}
+                hx-swap="outerHTML"
+                hx-replace-url="false"
+                hx-target-500="#error-message"
+              >
+                Remove
+              </Button>
+            </li>
+          ))}
+        </ul>
+
+        <form
+          class="flex gap-2 items-end"
+          method="post"
+          action={`/api/event/${eventId}/detail/${detail.id}/option`}
+          hx-boost="true"
+          enctype="multipart/form-data"
+          hx-target={`#item-${detail.id}`}
+          hx-swap="outerHTML"
+          hx-replace-url="false"
+        >
+          <Input
+            size="small"
+            label="New option"
+            id={`new-option-${detail.label}`}
+            name="newOptionName"
+          />
+          <Button type="submit" size="xs">
+            Add option
+          </Button>
+        </form>
+      </div>
+    )
+  }
+  {
+    detail.type === "multiChoiceMultiValue" && (
+      <Select
+        multiple
+        label={detail.label}
+        name={detail.label}
+        id={detail.label}
+        caption={detail.description}
+      >
+        {detail.options?.map((option) => (
+          <option>{option}</option>
+        ))}
+      </Select>
+    )
+  }
+
+  <Button
+    size="xs"
+    class="ml-auto"
+    hx-delete={`/api/event/${eventId}/detail/${detail.id}`}
+    hx-target="#main"
+    hx-replace-url="false"
+    hx-target-500="#error-message"
+  >
+    Remove
+  </Button>
+
+  <div id="error-message"></div>
+</li>

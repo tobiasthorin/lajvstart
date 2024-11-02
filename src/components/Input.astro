@@ -4,21 +4,53 @@ import type { HTMLAttributes } from "astro/types"
 interface Props extends HTMLAttributes<"input"> {
   label: string
   id: string
-  caption?: string
+  caption?: string | undefined
+  size?: "regular" | "small"
 }
 
-const { class: className, label, id, caption, ...rest } = Astro.props
+const {
+  class: className,
+  label,
+  id,
+  caption,
+  size = "regular",
+  ...rest
+} = Astro.props
 ---
 
-<div class={`w-fit ${className}`}>
+<div class={`w-full ${className}`}>
   <label
     for={id}
-    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-    >{label}</label
+    class:list={[
+      "block",
+      "mb-2",
+      "text-sm",
+      "font-medium",
+      "text-gray-900",
+      "dark:text-white",
+    ]}>{label}</label
   >
   <input
     id={id}
-    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    class:list={[
+      "bg-gray-50 border",
+      "border-gray-300",
+      "text-gray-900",
+      ,
+      "rounded-lg",
+      "focus:ring-blue-500",
+      "focus:border-blue-500",
+      "block",
+      "w-full",
+      "dark:bg-gray-700",
+      "dark:border-gray-600",
+      "dark:placeholder-gray-400",
+      "dark:text-white",
+      "dark:focus:ring-blue-500",
+      "dark:focus:border-blue-500",
+      { "p-2.5 text-sm": size === "regular" },
+      { "p-2 text-xs": size === "small" },
+    ]}
     aria-describedby={`${id}-caption`}
     {...rest}
   />

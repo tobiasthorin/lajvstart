@@ -1,0 +1,107 @@
+---
+import Button from "../../../../components/Button.astro"
+import EventDetailFormControl from "../../../../components/EventDetailFormControl.astro"
+import Plus from "../../../../components/icons/Plus.astro"
+import Input from "../../../../components/Input.astro"
+import Modal from "../../../../components/Modal.astro"
+import Select from "../../../../components/Select.astro"
+import ManageEvent from "../../../../layouts/ManageEvent.astro"
+import {
+  detailsTypeEnum,
+  getEvent,
+  type EventDetailsType,
+} from "../../../../services/eventService"
+import type { LARPEvent } from "../../../../types/types"
+
+const { id } = Astro.params
+const userId = Astro.locals.user.id
+
+if (!id) throw new Error("Missing id url param")
+
+let event: LARPEvent
+
+try {
+  event = await getEvent(id)
+} catch (error) {
+  return errorResponse(error)
+}
+
+if (event.owner_id !== userId) Astro.redirect("/events")
+
+function getLabelFromType(type: EventDetailsType) {
+  switch (type) {
+    case "textShort":
+      return "Short text"
+    case "textLong":
+      return "Long text"
+    case "checkbox":
+      return "Yes or no"
+    case "number":
+      return "Number"
+    case "multiChoice":
+      return "List of options"
+    case "multiChoiceMultiValue":
+      return "List of options, multiple choice"
+  }
+}
+---
+
+<ManageEvent eventId={event.id}>
+  <div class="flex flex-col gap-4">
+    <ul>
+      {
+        event.details.map((detail) => (
+          <EventDetailFormControl detail={detail} eventId={event.id} />
+        ))
+      }
+    </ul>
+
+    <Button
+      class="self-start"
+      data-modal-target="newControlModal"
+      data-modal-toggle="newControlModal"
+    >
+      <Plus class="inline-block w-4 fill-white mr-2" />
+      New field
+    </Button>
+  </div>
+
+  <Modal id="newControlModal" title="New control">
+    <form
+      class="p-4 md:p-5"
+      method="post"
+      action={`/api/event/${event.id}/detail`}
+      hx-boost="true"
+      enctype="multipart/form-data"
+      hx-target="#main"
+      hx-replace-url="false"
+      hx-target-500="#error-message"
+    >
+      <Select label="Type" id="controlTypeInput" name="controlType">
+        {
+          detailsTypeEnum.options.map((type) => (
+            <option value={type}>{getLabelFromType(type)}</option>
+          ))
+        }
+      </Select>
+
+      <Input
+        label="Name"
+        id="controlNameInput"
+        name="controlName"
+        type="text"
+      />
+
+      <Input
+        label="Description"
+        id="controlDescriptionInput"
+        name="controlDescription"
+        type="text"
+      />
+
+      <Button type="submit" data-modal-toggle="newControlModal">Add</Button>
+
+      <div id="error-message"></div>
+    </form>
+  </Modal>
+</ManageEvent>

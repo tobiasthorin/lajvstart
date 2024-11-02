@@ -17,6 +17,7 @@ export type Database = {
           event_id: string | null
           id: string
           name: string | null
+          updated_at: string | null
         }
         Insert: {
           created_at?: string
@@ -25,6 +26,7 @@ export type Database = {
           event_id?: string | null
           id?: string
           name?: string | null
+          updated_at?: string | null
         }
         Update: {
           created_at?: string
@@ -33,6 +35,7 @@ export type Database = {
           event_id?: string | null
           id?: string
           name?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -53,6 +56,7 @@ export type Database = {
           date_start: string
           description: string
           description_short: string | null
+          details: Json
           display_mode: boolean
           event_image_url: string | null
           id: string
@@ -67,6 +71,7 @@ export type Database = {
           owner_id: string
           price: number
           tags: string[] | null
+          updated_at: string | null
         }
         Insert: {
           created_at?: string
@@ -76,6 +81,7 @@ export type Database = {
           date_start: string
           description?: string
           description_short?: string | null
+          details?: Json
           display_mode?: boolean
           event_image_url?: string | null
           id?: string
@@ -90,6 +96,7 @@ export type Database = {
           owner_id?: string
           price?: number
           tags?: string[] | null
+          updated_at?: string | null
         }
         Update: {
           created_at?: string
@@ -99,6 +106,7 @@ export type Database = {
           date_start?: string
           description?: string
           description_short?: string | null
+          details?: Json
           display_mode?: boolean
           event_image_url?: string | null
           id?: string
@@ -113,6 +121,7 @@ export type Database = {
           owner_id?: string
           price?: number
           tags?: string[] | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -121,18 +130,21 @@ export type Database = {
           created_at: string
           event_id: string | null
           id: string
+          updated_at: string | null
           user_id: string | null
         }
         Insert: {
           created_at?: string
           event_id?: string | null
           id?: string
+          updated_at?: string | null
           user_id?: string | null
         }
         Update: {
           created_at?: string
           event_id?: string | null
           id?: string
+          updated_at?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -155,6 +167,7 @@ export type Database = {
           id: string
           is_approved: boolean
           is_paid: boolean
+          updated_at: string | null
           user_details: string | null
           user_id: string
         }
@@ -167,6 +180,7 @@ export type Database = {
           id?: string
           is_approved?: boolean
           is_paid?: boolean
+          updated_at?: string | null
           user_details?: string | null
           user_id: string
         }
@@ -179,6 +193,7 @@ export type Database = {
           id?: string
           is_approved?: boolean
           is_paid?: boolean
+          updated_at?: string | null
           user_details?: string | null
           user_id?: string
         }
@@ -216,6 +231,7 @@ export type Database = {
           name: string | null
           profile_picture_url: string | null
           special_needs: string | null
+          updated_at: string | null
           user_id: string
         }
         Insert: {
@@ -227,6 +243,7 @@ export type Database = {
           name?: string | null
           profile_picture_url?: string | null
           special_needs?: string | null
+          updated_at?: string | null
           user_id: string
         }
         Update: {
@@ -238,6 +255,7 @@ export type Database = {
           name?: string | null
           profile_picture_url?: string | null
           special_needs?: string | null
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []

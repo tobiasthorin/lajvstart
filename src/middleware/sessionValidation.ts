@@ -12,7 +12,7 @@ const usersCache = useNamespace<UserDetails>(USERS_CACHE)
 
 export async function sessionValidation(
   context: APIContext,
-  next: MiddlewareNext
+  next: MiddlewareNext,
 ) {
   const { locals, url, cookies, redirect } = context
 
@@ -47,7 +47,7 @@ export async function sessionValidation(
         log(`Getting user details for ${sessionData.user?.id!} from DB.`)
 
         const { data: userData, error: userError } = await getUserDetails(
-          sessionData.user?.id!
+          sessionData.user?.id!,
         )
 
         if (error || userError) {
@@ -69,11 +69,13 @@ export async function sessionValidation(
         sameSite: "lax",
         path: "/",
         secure: true,
+        maxAge: 60 * 30, // 30 minutes
       })
       cookies.set("sb-refresh-token", sessionData?.session?.refresh_token!, {
         sameSite: "lax",
         path: "/",
         secure: true,
+        maxAge: 60 * 60 * 24 * 30, // 30 days
       })
     }
   }

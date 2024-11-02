@@ -1,0 +1,16 @@
+---
+import EventDetailFormControl from "../../../../../../components/EventDetailFormControl.astro"
+import { getEvent } from "../../../../../../services/eventService"
+
+const { eventId, detailId } = Astro.params
+
+if (!eventId) throw new Error("Missing eventId url param")
+if (!detailId) throw new Error("Missing detailId url param")
+
+const event = await getEvent(eventId)
+const detail = event.details.find((detail) => detail.id === detailId)
+
+if (!detail) throw new Error("Could not find detail to update")
+---
+
+<EventDetailFormControl detail={detail} eventId={event.id} />

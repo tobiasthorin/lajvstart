@@ -4,9 +4,10 @@ import type { HTMLAttributes } from "astro/types"
 interface Props extends HTMLAttributes<"select"> {
   label: string
   id: string
+  caption?: string | undefined
 }
 
-const { class: className, label, id, ...rest } = Astro.props
+const { class: className, label, id, caption, ...rest } = Astro.props
 ---
 
 <div class={className}>
@@ -22,4 +23,14 @@ const { class: className, label, id, ...rest } = Astro.props
   >
     <slot />
   </select>
+  {
+    caption && (
+      <p
+        id={`${id}-caption`}
+        class="mt-2 text-sm text-gray-500 dark:text-gray-400"
+      >
+        {caption}
+      </p>
+    )
+  }
 </div>

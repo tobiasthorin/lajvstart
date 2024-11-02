@@ -8,12 +8,36 @@ import {
 import type { LARPEvent } from "../types/types"
 import { log } from "../lib/logger"
 import type { UserID } from "./userService"
+import { z } from "zod"
 
 export type EventID = LARPEvent["id"]
 
 const eventCollectionsCache = useNamespace<LARPEvent[]>(EVENT_COLLECTIONS_CACHE)
 const eventsCache = useNamespace<LARPEvent>(EVENTS_CACHE)
 const userEventsCache = useNamespace<LARPEvent[]>(USER_EVENTS_CACHE)
+
+export const detailsTypeEnum = z.enum([
+  "textShort",
+  "textLong",
+  "number",
+  "checkbox",
+  "multiChoice",
+  "multiChoiceMultiValue",
+])
+
+const eventDetailSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  description: z.string().optional(),
+  type: detailsTypeEnum,
+  options: z.array(z.string()).optional(),
+})
+
+export const eventDetailsSchema = z.array(eventDetailSchema)
+
+export type EventDetailsSchema = z.infer<typeof eventDetailsSchema>
+export type EventDetailsType = z.infer<typeof detailsTypeEnum>
+export type EventDetail = z.infer<typeof eventDetailSchema>
 
 export async function getUpcomingEvents() {
   const eventsCache = useNamespace<LARPEvent[]>(EVENT_COLLECTIONS_CACHE)
@@ -31,8 +55,13 @@ export async function getUpcomingEvents() {
 
     if (error) throw new Error(error.message)
 
-    eventCollectionsCache.set("upcoming", data, 1000 * 60 * 5)
-    return data
+    const parsedData = data.map((d) => ({
+      ...d,
+      details: eventDetailsSchema.parse(d.details),
+    }))
+
+    eventCollectionsCache.set("upcoming", parsedData, 1000 * 60 * 5)
+    return parsedData
   }
 
   return events
@@ -86,7 +115,11 @@ export async function getEvent(eventId: LARPEvent["id"]) {
   let event = eventsCache.get(eventId)
 
   if (event) {
-    return event
+    const parsedData = {
+      ...event,
+      details: eventDetailsSchema.parse(event.details),
+    }
+    return parsedData
   } else {
     log(`Getting event ${eventId} from DB`)
 
@@ -99,10 +132,14 @@ export async function getEvent(eventId: LARPEvent["id"]) {
     if (error) {
       throw new Error(error.message)
     } else {
-      eventsCache.set(eventId, data, 1000 * 60 * 5)
-    }
+      const parsedData = {
+        ...data,
+        details: eventDetailsSchema.parse(data.details),
+      }
 
-    return data
+      eventsCache.set(eventId, parsedData, 1000 * 60 * 5)
+      return parsedData
+    }
   }
 }
 
@@ -122,10 +159,14 @@ export async function getMyEvents(userId: UserID) {
     if (error) {
       throw new Error(error.message)
     } else {
-      userEventsCache.set(userId, data, 1000 * 60 * 5)
-    }
+      const parsedData = data.map((d) => ({
+        ...d,
+        details: eventDetailsSchema.parse(d.details),
+      }))
 
-    return data
+      userEventsCache.set(userId, parsedData, 1000 * 60 * 5)
+      return parsedData
+    }
   }
 }
 
