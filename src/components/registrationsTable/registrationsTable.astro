@@ -1,7 +1,6 @@
 ---
 import type { Registration } from "../../services/registrationService"
 import type { LARPEvent } from "../../types/types"
-import { getGroupedDetails } from "../../utils/registrationUtils"
 import Table from "../table/Table.astro"
 import TableHead from "../table/TableHead.astro"
 import TH from "../table/TH.astro"
@@ -12,9 +11,6 @@ interface Props {
   event: LARPEvent
 }
 const { registrations, event } = Astro.props
-const details = registrations[0]?.details || []
-
-const groupedDetails = getGroupedDetails(details)
 ---
 
 <Table
@@ -36,11 +32,7 @@ const groupedDetails = getGroupedDetails(details)
   <tbody>
     {
       registrations.map((registration) => (
-        <RegistrationRow
-          registration={registration}
-          event={event}
-          groupedDetails={groupedDetails}
-        />
+        <RegistrationRow registration={registration} event={event} />
       ))
     }
   </tbody>

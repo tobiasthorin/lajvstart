@@ -14,13 +14,11 @@ let events = eventsCache.get(`favourites-${userId}`)
 
 if (!events) {
   log("Getting events from DB")
-
-  const { data, error: getEventsError } = await getFavouriteEvents(userId)
-
-  if (getEventsError || !data)
+  try {
+    events = await getFavouriteEvents(userId)
+  } catch (error) {
     return _errorResponse("Error while fetching events")
-
-  events = data
+  }
 }
 ---
 

@@ -16,7 +16,7 @@ export const PUT: APIRoute = async ({ request, params, locals }) => {
 
   const formData = await request.formData()
 
-  const groupId = formData.get("groupId")?.toString()
+  const groupId = formData.get("groupId")?.toString() || null
   const newGroupName = formData.get("newGroupName")?.toString()
   const newGroupDescription = formData.get("newGroupDescription")?.toString()
 

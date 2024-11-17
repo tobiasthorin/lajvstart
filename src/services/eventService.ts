@@ -91,7 +91,12 @@ export async function getFilteredEvents({
 
   if (error) throw new Error(error.message)
 
-  return data
+  const parsedData = data.map((d) => ({
+    ...d,
+    details: eventDetailsSchema.parse(d.details),
+  }))
+
+  return parsedData
 }
 
 export async function getFavouriteEvents(userId: UserID) {
@@ -101,14 +106,20 @@ export async function getFavouriteEvents(userId: UserID) {
     .eq("is_published", true)
     .order("date_start")
 
+    if (error) throw new Error(error.message)
+
   // TODO: do this in query
-  const filteredData = data?.filter((event) =>
+  const filteredData = (data || []).filter((event) =>
     event.favourites.some((fav) => fav.user_id === userId),
   )
 
   // TODO: cache?
+  const parsedData = filteredData.map((d) => ({
+    ...d,
+    details: eventDetailsSchema.parse(d.details),
+  }))
 
-  return { data: filteredData, error }
+  return parsedData
 }
 
 export async function getEvent(eventId: LARPEvent["id"]) {
@@ -188,7 +199,7 @@ export async function createEvent({
   location_longitude,
   display_mode,
   price,
-}: Omit<LARPEvent, "owner_id" | "created_at">) {
+}: Omit<LARPEvent, "owner_id" | 'details' | "created_at" |'updated_at'>) {
   const { error: createEventError } = await supabase.from("events").insert({
     id,
     name,
@@ -265,8 +276,13 @@ export async function updateEvent({
   if (updateEventError || data === null)
     throw new Error(updateEventError?.message ?? "Data is null")
 
+  const parsedData = {
+    ...data,
+    details: eventDetailsSchema.parse(data.details),
+  }
+
   eventsCache.clear()
   userEventsCache.clear()
 
-  return data
+  return parsedData
 }
