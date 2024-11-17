@@ -1,13 +1,12 @@
 import { z } from "zod"
 import { supabase } from "../lib/supabase"
-import { detailsTypeEnum, type EventID } from "./eventService"
+import { type EventID } from "./eventService"
 import type { UserDetails, UserID } from "./userService"
 import type { EventGroup } from "./eventGroupsService"
 
 const registrationDetailsSchema = z.object({
   name: z.string(),
   value: z.string(),
-  type: detailsTypeEnum,
 })
 
 const registrationSchema = z.object({

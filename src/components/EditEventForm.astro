@@ -15,8 +15,6 @@ interface Props {
 }
 
 const { method, action, event } = Astro.props
-console.log(event?.price)
-console.log(event?.price ?? 0)
 ---
 
 <form
@@ -189,7 +187,7 @@ console.log(event?.price ?? 0)
   />
 
   <div class="self-end">
-    <Button class="mr-4" type="reset">Clear</Button>
+    <Button variant="secondary" class="mr-4" type="reset">Clear</Button>
     <Button type="submit">Update</Button>
   </div>
 

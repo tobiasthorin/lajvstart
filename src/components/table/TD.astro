@@ -1,3 +1,13 @@
-<td class="px-6 py-4">
+---
+import type { HTMLAttributes } from "astro/types"
+
+interface Props extends HTMLAttributes<"td"> {
+  class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<td class={`px-6 py-4 ${className}`}>
   <slot />
 </td>

@@ -19,24 +19,15 @@ export const PUT: APIRoute = async ({ request, params, locals }) => {
   const groupId = formData.get("groupId")?.toString()
   const newGroupName = formData.get("newGroupName")?.toString()
   const newGroupDescription = formData.get("newGroupDescription")?.toString()
-  // TODO: dynamic
-  const characterName = formData.get("characterName")?.toString()
-  const characterDescription = formData.get("characterDescription")?.toString()
 
-  if (!characterName || !characterDescription || !groupId) {
-    return errorResponse("Missing form data")
+  const details: RegistrationDetails[] = []
+
+  for (const pair of formData.entries()) {
+    if (pair[0].startsWith("detail-")) {
+      const detailName = pair[0].substring(7)
+      details.push({ name: detailName, value: pair[1].toString() })
+    }
   }
-
-  const registration = await findRegistration(locals.user.id, eventId)
-
-  const details: RegistrationDetails[] = [
-    { name: "characterName", value: characterName, type: "textShort" },
-    {
-      name: "characterDescription",
-      value: characterDescription,
-      type: "textLong",
-    },
-  ]
 
   let eventGroupId = groupId === "ungrouped" ? null : groupId
 
@@ -44,10 +35,12 @@ export const PUT: APIRoute = async ({ request, params, locals }) => {
     const newEventGroup = await createEventGroup(
       eventId,
       newGroupName || "",
-      newGroupDescription || ""
+      newGroupDescription || "",
     )
     eventGroupId = newEventGroup.id
   }
+
+  const registration = await findRegistration(locals.user.id, eventId)
 
   try {
     if (registration) {
@@ -58,7 +51,7 @@ export const PUT: APIRoute = async ({ request, params, locals }) => {
         locals.user.id,
         locals.user.details.user_id,
         eventGroupId,
-        details
+        details,
       )
     }
   } catch (error) {

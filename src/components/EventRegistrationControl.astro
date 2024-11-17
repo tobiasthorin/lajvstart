@@ -1,0 +1,90 @@
+---
+import type { EventDetail } from "../services/eventService"
+import Checkbox from "./Checkbox.astro"
+import Input from "./Input.astro"
+import Select from "./Select.astro"
+import TextArea from "./TextArea.astro"
+
+interface Props {
+  detail: EventDetail
+}
+
+const { detail } = Astro.props
+---
+
+{
+  detail.type === "textShort" && (
+    <Input
+      type="text"
+      label={detail.label}
+      name={`detail-${detail.label}`}
+      id={detail.id}
+      caption={detail.description}
+    />
+  )
+}
+
+{
+  detail.type === "textLong" && (
+    <TextArea
+      label={detail.label}
+      name={`detail-${detail.label}`}
+      id={detail.id}
+      caption={detail.description}
+    />
+  )
+}
+
+{
+  detail.type === "number" && (
+    <Input
+      type="number"
+      label={detail.label}
+      name={`detail-${detail.label}`}
+      id={detail.id}
+      caption={detail.description}
+    />
+  )
+}
+
+{
+  detail.type === "checkbox" && (
+    <Checkbox
+      label={detail.label}
+      name={`detail-${detail.label}`}
+      id={detail.id}
+      caption={detail.description}
+    />
+  )
+}
+
+{
+  detail.type === "multiChoice" && (
+    <Select
+      label={detail.label}
+      name={`detail-${detail.label}`}
+      id={detail.id}
+      caption={detail.description}
+    >
+      {detail.options?.map((option) => (
+        <option>{option}</option>
+      ))}
+    </Select>
+  )
+}
+
+{
+  detail.type === "multiChoiceMultiValue" && (
+    <Select
+      multiple
+      label={detail.label}
+      name={`detail-${detail.label}`}
+      id={detail.id}
+      caption={detail.description}
+    >
+      {detail.options?.map((option) => (
+        <option>{option}</option>
+      ))}
+    </Select>
+  )
+}

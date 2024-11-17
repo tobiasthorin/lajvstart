@@ -1,14 +1,14 @@
 ---
-import type { EventID } from "../../services/eventService"
 import type { Registration } from "../../services/registrationService"
-import { getDetailValue } from "../../utils/registrationUtils"
+import type { LARPEvent } from "../../types/types"
+import { getGroupedDetails } from "../../utils/registrationUtils"
 import Button from "../Button.astro"
 import TD from "../table/TD.astro"
 import TR from "../table/TR.astro"
 
 interface Props {
   registration: Registration
-  eventId: EventID
+  event: LARPEvent
 }
 
 const {
@@ -18,11 +18,13 @@ const {
     event_group,
     is_paid,
     is_approved,
-    details,
     user_id,
+    details,
   },
-  eventId,
+  event,
 } = Astro.props
+
+const groupedDetails = getGroupedDetails(details)
 ---
 
 <TR
@@ -33,16 +35,28 @@ const {
       ? "yellow"
       : "none"}
 >
-  <TD>{user_details.name}</TD>
-  <TD>{event_group?.name}</TD>
+  <TD class="min-w-56">{user_details.name}</TD>
+  <TD class="min-w-56">{event_group?.name}</TD>
   <TD>{is_paid ? "Yes" : "No"}</TD>
   <TD>{is_approved ? "Yes" : "No"}</TD>
-  <TD>{user_details.special_needs}</TD>
-  {details.map((detail) => <TD>{getDetailValue(detail)}</TD>)}
+  <TD class="min-w-56">{user_details.special_needs}</TD>
+  {
+    groupedDetails &&
+      event.details.map((detail) => (
+        <TD class="min-w-56">
+          {(groupedDetails[detail.label] || [])
+            .map((value) => {
+              if (value === "on") return "✓"
+              return value
+            })
+            .join(", ")}
+        </TD>
+      ))
+  }
   <TD>
     <Button
       size="small"
-      hx-delete={`/api/event/${eventId}/registration/${id}`}
+      hx-delete={`/api/event/${event.id}/registration/${id}`}
       hx-target="#registrationsTable"
     >
       Delete
@@ -52,7 +66,7 @@ const {
     <Button
       class="whitespace-nowrap"
       size="small"
-      hx-patch={`/api/event/${eventId}/registration/${id}`}
+      hx-patch={`/api/event/${event.id}/registration/${id}`}
       hx-vals=`{"isPaid": ${!is_paid}, "userId": "${user_id}"}`
       hx-target={`#row-${id}`}
       hx-swap="outerHTML">{is_paid ? "Mark unpaid" : "Mark paid"}</Button
@@ -62,7 +76,7 @@ const {
     <Button
       class="whitespace-nowrap"
       size="small"
-      hx-patch={`/api/event/${eventId}/registration/${id}`}
+      hx-patch={`/api/event/${event.id}/registration/${id}`}
       hx-vals=`{"isApproved": ${!is_approved}, "userId": "${user_id}"}`
       hx-target={`#row-${id}`}
       hx-swap="outerHTML">{is_approved ? "Unapprove" : "Approve"}</Button

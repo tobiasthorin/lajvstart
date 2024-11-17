@@ -9,6 +9,7 @@ import Button from "../../../components/Button.astro"
 import { findRegistration } from "../../../services/registrationService"
 import Select from "../../../components/Select.astro"
 import { getEventGroups } from "../../../services/eventGroupsService"
+import EventRegistrationControl from "../../../components/EventRegistrationControl.astro"
 
 const { id } = Astro.params
 const userId = Astro.locals.user.id
@@ -25,19 +26,14 @@ try {
 
 const registration = await findRegistration(userId, event.id)
 
-let characterName = registration?.details.find(
-  (detail) => detail.name === "characterName"
-)?.value
-let characterDescription = registration?.details.find(
-  (detail) => detail.name === "characterDescription"
-)?.value
-
 const eventGroups = await getEventGroups(event.id)
 const selectedGroupId = registration?.event_group?.id
 ---
 
 <TopLevelPage
-  >{registration ? "Edit details" : "Register"} for {event.name}
+  ><h2 class="font-display text-2xl mb-4">
+    {registration ? "Edit details" : "Register"} for {event.name}
+  </h2>
 
   <form
     method={"put"}
@@ -48,23 +44,13 @@ const selectedGroupId = registration?.event_group?.id
     x-data="{ groupId: 'ungrouped' }"
     class="flex flex-col gap-4"
   >
-    <Input
-      id="characterName"
-      type="text"
-      label="Character name"
-      name="characterName"
-      required
-      value={characterName}
-    />
+    {
+      event.details.map((detail) => (
+        <EventRegistrationControl detail={detail} />
+      ))
+    }
 
-    <TextArea
-      id="characterDescription"
-      label="Character description"
-      name="characterDescription"
-      maxlength="1000"
-      required
-      value={characterDescription}
-    />
+    <hr />
 
     <Select
       id="select-group"

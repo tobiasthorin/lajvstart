@@ -1,6 +1,7 @@
 ---
-import type { EventID } from "../../services/eventService"
 import type { Registration } from "../../services/registrationService"
+import type { LARPEvent } from "../../types/types"
+import { getGroupedDetails } from "../../utils/registrationUtils"
 import Table from "../table/Table.astro"
 import TableHead from "../table/TableHead.astro"
 import TH from "../table/TH.astro"
@@ -8,20 +9,25 @@ import RegistrationRow from "./registrationRow.astro"
 
 interface Props {
   registrations: Registration[]
-  eventId: EventID
+  event: LARPEvent
 }
-const { registrations, eventId } = Astro.props
+const { registrations, event } = Astro.props
 const details = registrations[0]?.details || []
+
+const groupedDetails = getGroupedDetails(details)
 ---
 
-<Table id="registrationsTable">
+<Table
+  id="registrationsTable"
+  class="ml-[calc(-100vw/2+1280px/2)] mr-[calc(-100vw/2+1280px/2)]"
+>
   <TableHead>
     <TH>Name</TH>
     <TH>Group</TH>
     <TH>Paid</TH>
     <TH>Approved</TH>
     <TH>Special needs</TH>
-    {details && details.map((detail) => <TH>{detail.name}</TH>)}
+    {event.details.map((detail) => <TH>{detail.label}</TH>)}
     <TH>Delete</TH>
     <TH>Toggle paid</TH>
     <TH>Toggle approved</TH>
@@ -30,7 +36,11 @@ const details = registrations[0]?.details || []
   <tbody>
     {
       registrations.map((registration) => (
-        <RegistrationRow registration={registration} eventId={eventId} />
+        <RegistrationRow
+          registration={registration}
+          event={event}
+          groupedDetails={groupedDetails}
+        />
       ))
     }
   </tbody>
