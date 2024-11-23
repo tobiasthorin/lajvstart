@@ -10,7 +10,8 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "types": "npx supabase gen types typescript --project-id \"wgynzdvpnljfdbwevvuq\" --schema public > src/types/supabase.ts"
+    "types": "npx supabase gen types typescript --project-id \"wgynzdvpnljfdbwevvuq\" --schema public > src/types/supabase.ts",
+    "supabase" :"supabase"
   },
   "dependencies": {
     "@astrojs/alpinejs": "^0.4.0",
@@ -41,6 +42,7 @@
     "@types/micromatch": "^4.0.6",
     "@types/showdown": "^2.0.6",
     "@types/simplemde": "^1.11.11",
-    "@types/uuid": "^9.0.8"
+    "@types/uuid": "^9.0.8",
+    "supabase": "^1.223.10"
   }
 }
