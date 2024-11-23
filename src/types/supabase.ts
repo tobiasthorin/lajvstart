@@ -7,8 +7,60 @@ export type Json =
   | Json[]
 
 export type Database = {
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          operationName?: string
+          query?: string
+          variables?: Json
+          extensions?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
+      characters: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          image_url: string | null
+          name: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          image_url?: string | null
+          name?: string | null
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          image_url?: string | null
+          name?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       event_groups: {
         Row: {
           created_at: string
@@ -398,3 +450,4 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
     ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
+

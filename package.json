@@ -10,7 +10,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "types": "npx supabase gen types typescript --project-id \"wgynzdvpnljfdbwevvuq\" --schema public > src/types/supabase.ts",
+    "types": "npx supabase gen types typescript --local > src/types/supabase.ts",
     "supabase" :"supabase"
   },
   "dependencies": {
