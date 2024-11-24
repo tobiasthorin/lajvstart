@@ -1,6 +1,9 @@
 import type { APIContext, MiddlewareNext } from "astro"
+import { isLocal, isProd } from "../utils/constants"
 
 export function basicAuth(context: APIContext, next: MiddlewareNext) {
+  if(isProd || isLocal) return next()
+
   // If a basic auth header is present, it wil take the string form: "Basic authValue"
   const basicAuth = context.request.headers.get("authorization")
 

@@ -15,6 +15,6 @@ export const eventTags = [
   "Zombie",
 ] as const
 
-export const isProd = import.meta.env.PROD;
 export const isDev = import.meta.env.DEV_BUILD
+export const isProd = !isDev && import.meta.env.PROD;
 export const isLocal = import.meta.env.DEV;
