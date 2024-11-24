@@ -1,7 +1,7 @@
 ---
 import Link from "../components/Link.astro"
 import { getMyEvents } from "../services/eventService"
-import { isDev } from "../utils/constants"
+import { isDev, isProd } from "../utils/constants"
 import { isLocal } from "../utils/constants"
 import BaseHtml from "./BaseHtml.astro"
 
@@ -31,6 +31,15 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Alpha"
     <slot />
   ) : (
     <BaseHtml>
+      {isProd && (
+        <div class="bg-sky-900 text-white text-center p-4">
+          Lajvstart.se är en plats för arrangörer och deltagare att hitta,
+          arrangera, och delta i lajv över hela Sverige. En öppen betaperiod
+          planeras att hållas under 2025 och kommer börja i Februari. Om du vill
+          involvera dig, spana in discord-servern:{" "}
+          <a href="https://discord.gg/JBCbmnk2">https://discord.gg/JBCbmnk2</a>.
+        </div>
+      )}
       <header class="p-4 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600">
         <nav class="md:max-w-screen-xl w-full mx-auto px-4">
           <div class="flex flex-wrap items-center justify-between mx-auto">
