@@ -8,6 +8,7 @@ declare global {
     readonly SUPABASE_ANON_KEY: string
     readonly DEBUG: "true" | undefined
     readonly DEBUG_LOGS: "true" | undefined
+    readonly DEV_BUILD: boolean
   }
 
   interface ImportMeta {
