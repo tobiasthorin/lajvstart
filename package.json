@@ -8,6 +8,7 @@
     "start": "astro dev",
     "start:debug": "DEBUG_LOGS=true astro dev",
     "build": "astro check && astro build",
+    "build:dev": "astro check && DEV_BUILD=true astro build",
     "preview": "astro preview",
     "astro": "astro",
     "types": "npx supabase gen types typescript --local > src/types/supabase.ts",

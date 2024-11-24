@@ -1,6 +1,8 @@
 ---
 import Link from "../components/Link.astro"
 import { getMyEvents } from "../services/eventService"
+import { isDev } from "../utils/constants"
+import { isLocal } from "../utils/constants"
 import BaseHtml from "./BaseHtml.astro"
 
 let userName
@@ -20,6 +22,8 @@ if (isSignedIn) {
 const headers = Astro.request.headers
 
 const isHtmxRequest = headers.get("HX-Request") === "true"
+
+const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Alpha"
 ---
 
 {
@@ -37,7 +41,7 @@ const isHtmxRequest = headers.get("HX-Request") === "true"
               class="flex items-center space-x-3 rtl:space-x-reverse"
             >
               <h1 class="text-4xl text-white font-display">
-                Lajvstart <span class="text-xs uppercase">alpha</span>
+                Lajvstart <span class="text-xs uppercase">{badge}</span>
               </h1>
             </a>
 
