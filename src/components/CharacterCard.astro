@@ -1,0 +1,20 @@
+---
+import type { Character } from "../services/characterService"
+
+interface Props {
+  character: Character
+}
+
+const { character } = Astro.props
+---
+
+<article
+  class="p-6 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+>
+  <header class="flex justify-between mb-4">
+    <h3 class="text-3xl font-display">{character.name}</h3>
+    <img src={character.image_url} alt="Character portrait" class="w-32" />
+  </header>
+
+  <p>{character.description}</p>
+</article>

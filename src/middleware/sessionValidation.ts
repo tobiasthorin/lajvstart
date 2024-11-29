@@ -5,7 +5,12 @@ import { log } from "../lib/logger"
 import { useNamespace, USERS_CACHE } from "../lib/cache"
 import type { APIContext, MiddlewareNext } from "astro"
 
-const protectedRoutes = ["/profile/**", "/api/favourite/**", "/api/event/**"]
+const protectedRoutes = [
+  "/profile/**",
+  "/characters/**",
+  "/api/favourite/**",
+  "/api/event/**",
+]
 const publicRoutes = ["/events/**", "/map"]
 
 const usersCache = useNamespace<UserDetails>(USERS_CACHE)
