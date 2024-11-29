@@ -1,0 +1,82 @@
+---
+import TopLevelPage from "../../layouts/TopLevelPage.astro"
+import { errorResponse as _errorResponse } from "../../utils/responseUtils"
+import {
+  getCharactersForUser,
+  type Character,
+} from "../../services/characterService"
+import Button from "../../components/Button.astro"
+import Input from "../../components/Input.astro"
+import Modal from "../../components/Modal.astro"
+import Plus from "../../components/icons/Plus.astro"
+import TextArea from "../../components/TextArea.astro"
+import CharacterCard from "../../components/CharacterCard.astro"
+
+const userId = Astro.locals.user.id
+
+let characters: Character[] | null
+
+try {
+  characters = await getCharactersForUser(userId)
+} catch (error) {
+  return _errorResponse("Error while fetching characters")
+}
+---
+
+<TopLevelPage>
+  <h2 class="flex justify-between mb-8">
+    <span class="text-4xl text-orange-500 font-display">Characters</span>
+    <Button
+      variant="secondary"
+      data-modal-target="newCharacterModal"
+      data-modal-toggle="newCharacterModal"
+    >
+      <Plus class="inline-block w-4 fill-white mr-2" />
+      New character
+    </Button>
+  </h2>
+
+  {characters === null || (characters.length === 0 && <p>No characters</p>)}
+
+  {characters.map((character) => <CharacterCard character={character} />)}
+
+  <Modal id="newCharacterModal" title="New character">
+    <form
+      class="p-4 md:p-5 flex flex-col gap-4"
+      method="post"
+      action={`/api/users/${userId}/characters`}
+      hx-boost="true"
+      enctype="multipart/form-data"
+      hx-target="#main"
+      hx-replace-url="false"
+      hx-target-500="#error-message"
+    >
+      <Input
+        label="Name"
+        id="characterNameInput"
+        name="characterName"
+        type="text"
+        required
+      />
+
+      <TextArea
+        label="Description"
+        id="characterDescriptionInput"
+        name="characterDescription"
+        required
+      />
+
+      <Input
+        id="picInput"
+        type="file"
+        label="Character picture"
+        name="characterPicture"
+        accept=".jpg,.jpeg,.png,.bmp,.webp"
+      />
+
+      <Button class="self-end" type="submit">Create</Button>
+
+      <div id="error-message"></div>
+    </form>
+  </Modal>
+</TopLevelPage>
