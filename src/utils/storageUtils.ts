@@ -1,8 +1,8 @@
-import { supabase } from "../lib/supabase"
+import { uploadFile } from "../services/fileService"
 import type { UserID } from "../services/userService"
 import { BadRequestError, InternalError } from "./errorUtils"
 
-function getExtention(file: File) {
+export function getExtention(file: File) {
   const fileNameParts = file.name.split(".")
   return fileNameParts[fileNameParts.length - 1]
 }
@@ -14,24 +14,25 @@ export async function uploadAvatar(avatarFile: File, userId: UserID) {
 
   const fileExtention = getExtention(avatarFile)
 
-  const { data: fileUploadData, error: fileUploadError } =
-    await supabase.storage
-      .from("user-files")
-      .upload(`avatars/${userId}.${fileExtention}`, avatarFile, {
-        cacheControl: "3600",
-        upsert: true,
-      })
-
-  if (fileUploadError) throw new InternalError(fileUploadError.message)
+  let fileData: { path: string }
+  try {
+    fileData = await uploadFile(
+      `avatars/${userId}.${fileExtention}`,
+      avatarFile,
+    )
+  } catch (error) {
+    if (error instanceof Error) throw new InternalError(error.message)
+    return null
+  }
 
   return `${import.meta.env.SUPABASE_URL}/storage/v1/object/public/user-files/${
-    fileUploadData.path
+    fileData.path
   }`
 }
 
 export async function uploadEventPicture(
   eventPictureFile: File,
-  eventId: UserID
+  eventId: UserID,
 ) {
   if (!eventPictureFile.type.includes("image/"))
     // TODO: file size
@@ -39,17 +40,18 @@ export async function uploadEventPicture(
 
   const fileExtention = getExtention(eventPictureFile)
 
-  const { data: fileUploadData, error: fileUploadError } =
-    await supabase.storage
-      .from("user-files")
-      .upload(`events/${eventId}.${fileExtention}`, eventPictureFile, {
-        cacheControl: "3600",
-        upsert: true,
-      })
-
-  if (fileUploadError) throw new InternalError(fileUploadError.message)
+  let fileData: { path: string }
+  try {
+    fileData = await uploadFile(
+      `events/${eventId}.${fileExtention}`,
+      eventPictureFile,
+    )
+  } catch (error) {
+    if (error instanceof Error) throw new InternalError(error.message)
+    return null
+  }
 
   return `${import.meta.env.SUPABASE_URL}/storage/v1/object/public/user-files/${
-    fileUploadData.path
+    fileData.path
   }`
 }
