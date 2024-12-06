@@ -31,6 +31,10 @@ const eventDetailSchema = z.object({
   description: z.string().optional(),
   type: detailsTypeEnum,
   options: z.array(z.string()).optional(),
+  autofillWith: z.enum(["characterName", "characterDescription"]).optional(),
+  autofillWithName: z
+    .enum(["Character name", "Character description"])
+    .optional(),
 })
 
 export const eventDetailsSchema = z.array(eventDetailSchema)
@@ -106,7 +110,7 @@ export async function getFavouriteEvents(userId: UserID) {
     .eq("is_published", true)
     .order("date_start")
 
-    if (error) throw new Error(error.message)
+  if (error) throw new Error(error.message)
 
   // TODO: do this in query
   const filteredData = (data || []).filter((event) =>
@@ -199,7 +203,7 @@ export async function createEvent({
   location_longitude,
   display_mode,
   price,
-}: Omit<LARPEvent, "owner_id" | 'details' | "created_at" |'updated_at'>) {
+}: Omit<LARPEvent, "owner_id" | "details" | "created_at" | "updated_at">) {
   const { error: createEventError } = await supabase.from("events").insert({
     id,
     name,
