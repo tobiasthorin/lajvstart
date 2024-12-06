@@ -68,7 +68,7 @@ function getLabelFromType(type: EventDetailsType) {
 
   <Modal id="newControlModal" title="New control">
     <form
-      class="p-4 md:p-5"
+      class="p-4 md:p-5 flex flex-col gap-4"
       method="post"
       action={`/api/event/${event.id}/detail`}
       hx-boost="true"
@@ -76,8 +76,14 @@ function getLabelFromType(type: EventDetailsType) {
       hx-target="#main"
       hx-replace-url="false"
       hx-target-500="#error-message"
+      x-data="{ controlType: 'textShort' }"
     >
-      <Select label="Type" id="controlTypeInput" name="controlType">
+      <Select
+        label="Type"
+        id="controlTypeInput"
+        name="controlType"
+        @change="controlType = $event.target.value"
+      >
         {
           detailsTypeEnum.options.map((type) => (
             <option value={type}>{getLabelFromType(type)}</option>
@@ -98,6 +104,19 @@ function getLabelFromType(type: EventDetailsType) {
         name="controlDescription"
         type="text"
       />
+      <div x-show="controlType === 'textShort' || controlType === 'textLong'">
+        <Select
+          label="Autofill with"
+          id="autofillWithInput"
+          name="autofillWith"
+          caption="Allow users to quickly fill this field with information from their character or profile when signing up."
+        >
+          <option selected value="">No autofill</option>
+          <hr />
+          <option value="characterName">Character name</option>
+          <option value="characterDescription">Character description</option>
+        </Select>
+      </div>
 
       <Button type="submit" data-modal-toggle="newControlModal">Add</Button>
 
