@@ -1,7 +1,7 @@
 ---
 import TopLevelPage from "../../../layouts/TopLevelPage.astro"
 import type { LARPEvent } from "../../../types/types"
-import { getEvent } from "../../../services/eventService"
+import { getEvent, type EventDetail } from "../../../services/eventService"
 import { errorResponse as _errorResponse } from "../../../utils/responseUtils"
 import Input from "../../../components/Input.astro"
 import Button from "../../../components/Button.astro"
@@ -9,6 +9,7 @@ import { findRegistration } from "../../../services/registrationService"
 import Select from "../../../components/Select.astro"
 import { getEventGroups } from "../../../services/eventGroupsService"
 import EventRegistrationControl from "../../../components/EventRegistrationControl.astro"
+import { getCharactersForUser } from "../../../services/characterService"
 
 const { id } = Astro.params
 const userId = Astro.locals.user.id
@@ -25,6 +26,8 @@ try {
 
 const registration = await findRegistration(userId, event.id)
 
+const characters = await getCharactersForUser(userId)
+
 const eventGroups = await getEventGroups(event.id)
 const selectedGroupId = registration?.event_group?.id
 ---
@@ -33,67 +36,87 @@ const selectedGroupId = registration?.event_group?.id
   ><h2 class="font-display text-2xl mb-4">
     {registration ? "Edit details" : "Register"} for {event.name}
   </h2>
-
-  <form
-    method={"put"}
-    action={`/api/event/${event.id}/registration`}
-    hx-boost="true"
-    enctype="multipart/form-data"
-    hx-target-5*="#error-message"
-    x-data="{ groupId: 'ungrouped' }"
-    class="flex flex-col gap-4"
-  >
+  <div x-data="{selectedCharacter: {name: '', description: ''}}">
     {
-      event.details.map((detail) => (
-        <EventRegistrationControl detail={detail} />
-      ))
+      event.details.some((detail: EventDetail) => !!detail.autofillWith) &&
+        characters.length > 0 && (
+          <Select
+            id="character-select"
+            label="Autofill with character"
+            x-on:change="selectedCharacter = JSON.parse($event.target.value)"
+            class="ml-auto max-w-sm"
+          >
+            <option value="" />
+            {characters.map((character) => (
+              <option value={JSON.stringify(character)}>
+                {character.name}
+              </option>
+            ))}
+          </Select>
+        )
     }
 
-    <hr />
-
-    <Select
-      id="select-group"
-      label="Group"
-      name="groupId"
-      x-on:change="groupId = $event.target.value"
+    <form
+      method={"put"}
+      action={`/api/event/${event.id}/registration`}
+      hx-boost="true"
+      enctype="multipart/form-data"
+      hx-target-5*="#error-message"
+      x-data="{ groupId: 'ungrouped' }"
+      class="flex flex-col gap-4"
     >
-      <option value="ungrouped">No group</option>
-
-      {eventGroups && eventGroups.length > 0 && <hr />}
-
       {
-        eventGroups?.map((group) => (
-          <option value={group.id} selected={group.id === selectedGroupId}>
-            {group.name}
-          </option>
+        event.details.map((detail) => (
+          <EventRegistrationControl detail={detail} />
         ))
       }
 
       <hr />
 
-      <option value="new">New group</option>
-    </Select>
+      <Select
+        id="select-group"
+        label="Group"
+        name="groupId"
+        x-on:change="groupId = $event.target.value"
+      >
+        <option value="ungrouped">No group</option>
 
-    <div x-show="groupId === 'new'">
-      <Input
-        id="newGroupName"
-        type="text"
-        label="New group name"
-        name="newGroupName"
-      />
+        {eventGroups && eventGroups.length > 0 && <hr />}
 
-      <Input
-        id="newGroupDescription"
-        type="text"
-        label="New group description"
-        name="newGroupDescription"
-      />
-    </div>
+        {
+          eventGroups?.map((group) => (
+            <option value={group.id} selected={group.id === selectedGroupId}>
+              {group.name}
+            </option>
+          ))
+        }
 
-    <Button type="submit" class="self-end"
-      >{registration ? "Update" : "Register"}</Button
-    >
+        <hr />
 
-    <div id="error-message"></div>
-  </form>
+        <option value="new">New group</option>
+      </Select>
+
+      <div x-show="groupId === 'new'">
+        <Input
+          id="newGroupName"
+          type="text"
+          label="New group name"
+          name="newGroupName"
+        />
+
+        <Input
+          id="newGroupDescription"
+          type="text"
+          label="New group description"
+          name="newGroupDescription"
+        />
+      </div>
+
+      <Button type="submit" class="self-end"
+        >{registration ? "Update" : "Register"}</Button
+      >
+
+      <div id="error-message"></div>
+    </form>
+  </div>
 </TopLevelPage>

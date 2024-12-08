@@ -37,26 +37,32 @@ export type Database = {
       characters: {
         Row: {
           created_at: string
+          deleted: boolean
           description: string | null
           id: number
           image_url: string | null
           name: string | null
+          updated_at: string | null
           user_id: string
         }
         Insert: {
           created_at?: string
+          deleted?: boolean
           description?: string | null
           id?: number
           image_url?: string | null
           name?: string | null
+          updated_at?: string | null
           user_id?: string
         }
         Update: {
           created_at?: string
+          deleted?: boolean
           description?: string | null
           id?: number
           image_url?: string | null
           name?: string | null
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []
