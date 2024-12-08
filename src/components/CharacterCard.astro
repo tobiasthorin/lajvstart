@@ -1,5 +1,6 @@
 ---
 import type { Character } from "../services/characterService"
+import Button from "./Button.astro"
 
 interface Props {
   character: Character
@@ -9,6 +10,7 @@ const { character } = Astro.props
 ---
 
 <article
+  id={`character-${character.id}`}
   class="p-6 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
 >
   <header class="flex justify-between mb-4">
@@ -17,4 +19,13 @@ const { character } = Astro.props
   </header>
 
   <p>{character.description}</p>
+
+  <Button
+    hx-delete={`/api/users/${character.user_id}/characters/${character.id}`}
+    hx-target={`#character-${character.id}`}
+    hx-swap="delete"
+    hx-replace-url="false"
+    hx-target-500={`error-${character.id}`}>Delete</Button
+  >
+  <div id={`error-${character.id}`}></div>
 </article>

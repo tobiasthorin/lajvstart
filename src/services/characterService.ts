@@ -29,3 +29,12 @@ export async function getCharactersForUser(userId: UserID) {
 
   return data
 }
+
+export async function deleteCharacter(characterId: Character["id"]) {
+  const { error } = await supabase
+    .from("characters")
+    .update({ deleted: true })
+    .eq("id", characterId)
+
+  if (error) throw new Error(error.message)
+}

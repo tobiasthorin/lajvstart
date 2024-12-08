@@ -10,6 +10,17 @@ interface Props {
 }
 
 const { detail } = Astro.props
+
+function getAutofillAccessor(autofillWith: EventDetail["autofillWith"]) {
+  switch (autofillWith) {
+    case "characterDescription":
+      return "selectedCharacter.description"
+    case "characterName":
+      return "selectedCharacter.name"
+    default:
+      return undefined
+  }
+}
 ---
 
 {
@@ -20,6 +31,7 @@ const { detail } = Astro.props
       name={`detail-${detail.label}`}
       id={detail.id}
       caption={detail.description}
+      x-model={getAutofillAccessor(detail.autofillWith)}
     />
   )
 }
@@ -31,6 +43,7 @@ const { detail } = Astro.props
       name={`detail-${detail.label}`}
       id={detail.id}
       caption={detail.description}
+      x-model={getAutofillAccessor(detail.autofillWith)}
     />
   )
 }
