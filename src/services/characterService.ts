@@ -30,6 +30,18 @@ export async function getCharactersForUser(userId: UserID) {
   return data
 }
 
+export async function getCharacterById(characterId: Character["id"]) {
+  const { data, error } = await supabase
+    .from("characters")
+    .select()
+    .eq("id", characterId)
+    .single()
+
+  if (error) throw new Error(error.message)
+
+  return data
+}
+
 export async function deleteCharacter(characterId: Character["id"]) {
   const { error } = await supabase
     .from("characters")
@@ -37,4 +49,33 @@ export async function deleteCharacter(characterId: Character["id"]) {
     .eq("id", characterId)
 
   if (error) throw new Error(error.message)
+}
+
+export async function editCharacter(
+  userId: UserID,
+  characterId: Character["id"],
+  characterData: Pick<Character, "name" | "description" | "image_url">,
+) {
+  const character = await getCharacterById(characterId)
+
+  if (!character)
+    throw new Error(
+      `Could not find character with id ${characterId} for updating.`,
+    )
+
+  const { data, error } = await supabase
+    .from("characters")
+    .update({
+      name: characterData.name || character.name,
+      description: characterData.description || character.description,
+      image_url: characterData.image_url || character.image_url,
+    })
+    .eq("user_id", userId)
+    .eq("id", characterId)
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+
+  return data
 }

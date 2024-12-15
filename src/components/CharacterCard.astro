@@ -1,12 +1,17 @@
 ---
 import type { Character } from "../services/characterService"
 import Button from "./Button.astro"
+import Input from "./Input.astro"
+import TextArea from "./TextArea.astro"
+import type { UserID } from "../services/userService"
+import Modal from "./Modal.astro"
 
 interface Props {
   character: Character
+  userId: UserID
 }
 
-const { character } = Astro.props
+const { character, userId } = Astro.props
 ---
 
 <article
@@ -27,5 +32,57 @@ const { character } = Astro.props
     hx-replace-url="false"
     hx-target-500={`error-${character.id}`}>Delete</Button
   >
+
+  <Button
+    variant="secondary"
+    data-modal-target={`edit-character-${character.id}`}
+    data-modal-toggle={`edit-character-${character.id}`}
+  >
+    Edit
+  </Button>
+
   <div id={`error-${character.id}`}></div>
+
+  <Modal id={`edit-character-${character.id}`} title="New character">
+    <form
+      class="p-4 md:p-5 flex flex-col gap-4"
+      method="put"
+      action={`/api/users/${userId}/characters/${character.id}`}
+      hx-boost="true"
+      enctype="multipart/form-data"
+      hx-target={`#character-${character.id}`}
+      hx-swap="outerHTML"
+      hx-replace-url="false"
+      hx-target-500="#error-message"
+    >
+      <Input
+        label="Name"
+        id="characterNameInput"
+        name="characterName"
+        type="text"
+        value={character.name}
+        required
+      />
+
+      <TextArea
+        label="Description"
+        id="characterDescriptionInput"
+        name="characterDescription"
+        value={character.description}
+        required
+      />
+
+      <Input
+        id="picInput"
+        type="file"
+        label="Character picture"
+        name="characterPicture"
+        accept=".jpg,.jpeg,.png,.bmp,.webp"
+      />
+
+      <Button class="self-end" type="submit">Save</Button>
+
+      <div id="error-message"></div>
+    </form>
+  </Modal>
 </article>
