@@ -38,7 +38,11 @@ try {
 
   {characters === null || (characters.length === 0 && <p>No characters</p>)}
 
-  {characters.map((character) => <CharacterCard character={character} />)}
+  {
+    characters.map((character) => (
+      <CharacterCard character={character} userId={userId} />
+    ))
+  }
 
   <Modal id="newCharacterModal" title="New character">
     <form

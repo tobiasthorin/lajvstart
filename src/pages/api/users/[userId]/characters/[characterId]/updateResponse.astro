@@ -1,0 +1,14 @@
+---
+import CharacterCard from "../../../../../../components/CharacterCard.astro"
+import { getCharacterById } from "../../../../../../services/characterService"
+import { errorResponse } from "../../../../../../utils/responseUtils"
+
+const { userId, characterId } = Astro.params
+
+const character = await getCharacterById(Number(characterId))
+
+if (!userId || !character)
+  return errorResponse("Error rendering response for updating character")
+---
+
+<CharacterCard character={character} userId={userId} />
