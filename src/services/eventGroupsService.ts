@@ -17,7 +17,7 @@ export async function getEventGroups(eventId: EventID) {
 export async function createEventGroup(
   eventId: EventID,
   groupName: EventGroup["name"],
-  description: EventGroup["description"] | undefined
+  description: EventGroup["description"] | undefined,
 ) {
   const { data, error: createGroupError } = await supabase
     .from("event_groups")

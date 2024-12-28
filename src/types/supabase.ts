@@ -189,6 +189,7 @@ export type Database = {
           event_id: string | null
           id: string
           updated_at: string | null
+          user_details: string | null
           user_id: string | null
         }
         Insert: {
@@ -196,6 +197,7 @@ export type Database = {
           event_id?: string | null
           id?: string
           updated_at?: string | null
+          user_details?: string | null
           user_id?: string | null
         }
         Update: {
@@ -203,11 +205,54 @@ export type Database = {
           event_id?: string | null
           id?: string
           updated_at?: string | null
+          user_details?: string | null
           user_id?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "favourites_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favourites_user_details_fkey"
+            columns: ["user_details"]
+            isOneToOne: false
+            referencedRelation: "user_details"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mailings: {
+        Row: {
+          body: string
+          created_at: string
+          event_id: string
+          id: number
+          subject: string
+          to: string[]
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          event_id: string
+          id?: number
+          subject: string
+          to: string[]
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          event_id?: string
+          id?: number
+          subject?: string
+          to?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mailings_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
@@ -285,6 +330,7 @@ export type Database = {
           birth_date: string
           birth_date_public: boolean
           created_at: string
+          email: string
           id: string
           name: string | null
           profile_picture_url: string | null
@@ -297,6 +343,7 @@ export type Database = {
           birth_date: string
           birth_date_public?: boolean
           created_at?: string
+          email?: string
           id?: string
           name?: string | null
           profile_picture_url?: string | null
@@ -309,6 +356,7 @@ export type Database = {
           birth_date?: string
           birth_date_public?: boolean
           created_at?: string
+          email?: string
           id?: string
           name?: string | null
           profile_picture_url?: string | null

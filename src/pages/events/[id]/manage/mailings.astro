@@ -1,0 +1,136 @@
+---
+import Button from "../../../../components/Button.astro"
+import Checkbox from "../../../../components/Checkbox.astro"
+import Input from "../../../../components/Input.astro"
+import Select from "../../../../components/Select.astro"
+import TextArea from "../../../../components/TextArea.astro"
+import ManageEvent from "../../../../layouts/ManageEvent.astro"
+import { getEventGroups } from "../../../../services/eventGroupsService"
+
+import { getEvent } from "../../../../services/eventService"
+import { getMailings } from "../../../../services/mailingService"
+
+import type { LARPEvent } from "../../../../types/types"
+import { errorResponse as _errorResponse } from "../../../../utils/responseUtils"
+
+const { id } = Astro.params
+const userId = Astro.locals.user.id
+
+if (!id) throw new Error("Missing id url param")
+
+let event: LARPEvent
+
+try {
+  event = await getEvent(id)
+} catch (error) {
+  return _errorResponse(error)
+}
+
+if (event.owner_id !== userId) Astro.redirect("/events")
+
+const groups = await getEventGroups(event.id)
+const mailings = await getMailings(event.id)
+
+const dateFormatter = new Intl.DateTimeFormat("sv", {
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+})
+---
+
+<ManageEvent eventId={event.id}>
+  <form
+    method={"post"}
+    action={`/api/event/${event.id}/mailing`}
+    hx-boost="true"
+    enctype="multipart/form-data"
+    hx-target="#main"
+    hx-target-500="#error-message"
+    hx-replace-url="false"
+    class="flex flex-col gap-4"
+  >
+    <h3 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+      New mailing
+    </h3>
+
+    <Input id="subject" type="text" label="Subject" name="subject" required />
+
+    <Select id="toGroups" name="toGroups" label="Send to groups" multiple>
+      {
+        (groups || []).map((group) => (
+          <option value={group.id}>{group.name}</option>
+        ))
+      }
+    </Select>
+
+    <Checkbox
+      id="toFavourites"
+      name="toFavourites"
+      label="Send to favourites"
+      caption="Send to everyone who has marked this even as a favourite, but is not registered"
+    />
+
+    <Input
+      id="toAdditional"
+      type="text"
+      label="Send to additional addresses"
+      caption="Email addresses, each separated by a comma"
+      placeholder="one@example.com, two@example.com"
+      name="toAdditional"
+    />
+
+    <TextArea id="body" name="body" label="Mail content" rows="10" required />
+
+    <Button class="self-end" type="submit">Send mail</Button>
+
+    <div id="error-message"></div>
+  </form>
+
+  <h3
+    class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-4"
+  >
+    Previous mailings
+  </h3>
+
+  {mailings.length === 0 && <p>No mails sent for this event</p>}
+
+  {
+    mailings.length > 0 && (
+      <ol class="flex flex-col gap-4">
+        {mailings.reverse().map((mailing) => (
+          <li>
+            <details
+              class="p-2 border rounded border-gray-300"
+              name="mailingDetail"
+            >
+              <summary>
+                <div class="inline-flex gap-2 items-baseline w-[calc(100%-20px)] cursor-pointer">
+                  <span class="text-lg">{mailing.subject}</span>
+                  <span class="text-gray-600 text-sm ">
+                    {mailing.to.length} recipient
+                    {mailing.to.length > 1 && "s"}
+                  </span>
+                  <time class="ml-auto" datetime={mailing.created_at}>
+                    {dateFormatter.format(new Date(mailing.created_at))}
+                  </time>
+                </div>
+              </summary>
+
+              <div class="mt-4 p-4 border rounded border-gray-300 bg-gray-100 text-gray-600 text-sm">
+                <div class="font-bold">Sent to:</div>
+                {mailing.to.join(", ")}
+              </div>
+
+              <div class="mt-4 p-4 border rounded border-gray-300 bg-gray-100 text-gray-600 text-sm">
+                <div class="font-bold">Mail content:</div>
+                {mailing.body}
+              </div>
+            </details>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+</ManageEvent>

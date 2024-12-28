@@ -35,12 +35,13 @@ export const POST: APIRoute = async ({ request }) => {
       birth_date: birthDate,
       profile_picture_url: filePath,
       name,
+      email,
     })
 
   if (createProfileError)
     return errorResponse(
       `Error creating profile: ${createProfileError.message}`,
-      500
+      500,
     )
 
   return new Response(null, {
