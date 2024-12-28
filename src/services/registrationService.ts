@@ -20,6 +20,7 @@ const registrationSchema = z.object({
   user_details: z.object({
     name: z.string(),
     special_needs: z.string().nullable(),
+    email: z.string(),
   }),
   event_group: z
     .object({
@@ -34,6 +35,20 @@ const registrationsSchema = z.array(registrationSchema)
 
 export type Registration = z.infer<typeof registrationSchema>
 export type RegistrationDetails = z.infer<typeof registrationDetailsSchema>
+
+const registrationQuery = `
+      *,
+      user_details (
+        name,
+        special_needs,
+        email
+      ),
+      event_group (
+        id,
+        name,
+        description
+      )
+      `
 
 export async function createRegistration(
   eventId: EventID,
@@ -75,20 +90,7 @@ export async function replaceRegistration(
 export async function findRegistration(userId: UserID, eventId: EventID) {
   const { data: registration } = await supabase
     .from("registrations")
-    .select(
-      `
-      *,
-      user_details (
-        name,
-        special_needs
-      ),
-      event_group (
-        id,
-        name,
-        description
-      )
-      `,
-    )
+    .select(registrationQuery)
     .eq("user_id", userId)
     .eq("event_id", eventId)
     .eq("deleted", false)
@@ -102,20 +104,7 @@ export async function findRegistration(userId: UserID, eventId: EventID) {
 export async function getRegistration(registrationID: Registration["id"]) {
   const { data: registration } = await supabase
     .from("registrations")
-    .select(
-      `
-      *,
-      user_details (
-        name,
-        special_needs
-      ),
-      event_group (
-        id,
-        name,
-        description
-      )
-      `,
-    )
+    .select(registrationQuery)
     .eq("id", registrationID)
     .eq("deleted", false)
     .single()
@@ -126,25 +115,13 @@ export async function getRegistration(registrationID: Registration["id"]) {
 }
 
 export async function getRegistrationsForEvent(eventId: EventID) {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("registrations")
-    .select(
-      `
-      *,
-      user_details (
-        name,
-        special_needs
-      ),
-      event_group (
-        id,
-        name,
-        description
-      )
-      `,
-    )
+    .select(registrationQuery)
     .eq("event_id", eventId)
     .eq("deleted", false)
 
+  if (error) throw new Error(error.message)
   if (!data) return []
 
   const parsedData = registrationsSchema.parse(data)

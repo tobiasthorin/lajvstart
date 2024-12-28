@@ -4,10 +4,11 @@ import { toggleFavourite } from "../../../services/favouritesService"
 
 const { eventId } = Astro.params
 const userId = Astro.locals.user.id
+const userDetails = Astro.locals.user.details
 
 if (!eventId) return
 
-const favourite = await toggleFavourite(userId, eventId)
+const favourite = await toggleFavourite(userId, eventId, userDetails)
 ---
 
 <FavButton favouriteExists={favourite !== null} eventId={eventId} />
