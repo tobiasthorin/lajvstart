@@ -9,6 +9,10 @@ declare global {
     readonly DEBUG: "true" | undefined
     readonly DEBUG_LOGS: "true" | undefined
     readonly DEV_BUILD: boolean
+    readonly EMAIL_HOST: string
+    readonly EMAIL_PORT: string
+    readonly EMAIL_USER: string
+    readonly EMAIL_PASSWORD: string
   }
 
   interface ImportMeta {
