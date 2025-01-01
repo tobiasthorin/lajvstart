@@ -19,17 +19,23 @@ const {
 ---
 
 <div class={`w-full ${className}`}>
-  <label
-    for={id}
-    class:list={[
-      "block",
-      "mb-2",
-      "text-sm",
-      "font-medium",
-      "text-gray-900",
-      "dark:text-white",
-    ]}>{label}</label
-  >
+  {
+    rest.type !== "hidden" && (
+      <label
+        for={id}
+        class:list={[
+          "block",
+          "mb-2",
+          "text-sm",
+          "font-medium",
+          "text-gray-900",
+          "dark:text-white",
+        ]}
+      >
+        {label}
+      </label>
+    )
+  }
   <input
     id={id}
     class:list={[
