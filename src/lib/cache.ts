@@ -23,13 +23,14 @@ function getNamedCache<T>(namespace: string) {
     >()
   }
 
-  return cacheStore[namespace]!
+  return cacheStore[namespace]
 }
 
 function useNamespace<T>(namespace: string) {
   const namedCache = getNamedCache<T>(namespace)
-  function get(key: string) {
-    const { value, expiresAt } = namedCache.get(key) || {}
+  function get(_key: string) {
+    return undefined as T // Disable cache until I can make it work well all over
+    /* const { value, expiresAt } = namedCache.get(key) || {}
 
     if (value === undefined) {
       log(`CACHE: "${namespace}"."${key}" is not set`)
@@ -43,7 +44,7 @@ function useNamespace<T>(namespace: string) {
     }
 
     log(`CACHE: Returning "${namespace}.${key}"`)
-    return value as T
+    return value as T */
   }
 
   function set(key: string, value: T, timeout?: number) {
