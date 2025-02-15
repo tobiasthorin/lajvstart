@@ -188,7 +188,7 @@ const { method, action, event } = Astro.props
 
   <div class="self-end">
     <Button variant="secondary" class="mr-4" type="reset">Clear</Button>
-    <Button type="submit">Update</Button>
+    <Button type="submit">{event ? 'Update' : 'Create'}</Button>
   </div>
 
   <div id="error-message"></div>
