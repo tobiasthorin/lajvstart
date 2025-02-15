@@ -5,9 +5,11 @@ import { errorResponse } from "../../../utils/responseUtils"
 import { v4 as uuidv4 } from "uuid"
 import { createEvent } from "../../../services/eventService"
 import { extractEventFormData } from "../../../utils/eventUtils"
+import { useNamespace, USER_EVENTS_CACHE } from "../../../lib/cache"
+import type { LARPEvent } from "../../../types/types"
 
 export const POST: APIRoute = async ({ request }) => {
-  const formData = await request.formData()
+  const formData = await request.clone().formData()
 
   const {
     name,
@@ -42,8 +44,10 @@ export const POST: APIRoute = async ({ request }) => {
     }
   }
 
+  let createdId: string = ""
+
   try {
-    createEvent({
+    const createdEvent = createEvent({
       id: eventId,
       name,
       description,
@@ -64,13 +68,18 @@ export const POST: APIRoute = async ({ request }) => {
       currency: "SEK",
       is_published: false,
     })
+
+    createdId = (await createdEvent).id
   } catch (error) {
     if (error instanceof Error) return errorResponse(error.message, 500)
   }
 
+  const userEventsCache = useNamespace<LARPEvent[]>(USER_EVENTS_CACHE)
+  userEventsCache.clear()
+
   return new Response(null, {
     headers: new Headers({
-      "HX-Location": '{"path":"/events", "target":"#main"}',
+      "HX-Location": `{"path":"/events/${createdId}/manage/overview", "target":"#main"}`,
     }),
   })
 }

@@ -48,7 +48,7 @@ export async function getUpcomingEvents() {
   let events = eventsCache.get("upcoming")
 
   if (!events) {
-    log("Getting events from DB")
+    console.log("Getting events from DB")
 
     const { data, error } = await supabase
       .from("events")
@@ -204,30 +204,36 @@ export async function createEvent({
   display_mode,
   price,
 }: Omit<LARPEvent, "owner_id" | "details" | "created_at" | "updated_at">) {
-  const { error: createEventError } = await supabase.from("events").insert({
-    id,
-    name,
-    description,
-    description_short,
-    date_start,
-    date_end,
-    date_signup,
-    location_name,
-    event_image_url,
-    tags: tags,
-    is_beginner_friendly,
-    minimum_age,
-    maximum_participants,
-    location_latitude,
-    location_longitude,
-    display_mode,
-    price,
-  })
+  const { data, error: createEventError } = await supabase
+    .from("events")
+    .insert({
+      id,
+      name,
+      description,
+      description_short,
+      date_start,
+      date_end,
+      date_signup,
+      location_name,
+      event_image_url,
+      tags: tags,
+      is_beginner_friendly,
+      minimum_age,
+      maximum_participants,
+      location_latitude,
+      location_longitude,
+      display_mode,
+      price,
+    })
+    .select()
+    .single()
 
   if (createEventError) throw new Error(createEventError.message)
 
   eventsCache.clear()
   userEventsCache.clear()
+
+  return data
 }
 
 export async function updateEvent({
