@@ -7,15 +7,12 @@ import {
   getUpcomingEvents,
   getFilteredEvents,
 } from "../../services/eventService"
-import Link from "../../components/Link.astro"
-import Plus from "../../components/icons/Plus.astro"
 import Button from "../../components/Button.astro"
 import Filter from "../../components/icons/Filter.astro"
 import Select from "../../components/Select.astro"
 import { eventTags } from "../../utils/constants"
 import Input from "../../components/Input.astro"
 
-const { isSignedIn } = Astro.locals
 
 let events: LARPEvent[] = []
 
@@ -59,19 +56,6 @@ if (Astro.url.search) {
         x-on:click="filtersOpen = !filtersOpen"
         ><Filter class="text-white" />Filter
       </Button>
-
-      {
-        isSignedIn && (
-          <Link
-            appearance="button"
-            href="/events/new"
-            hx-boost="true"
-            hx-target="#main"
-          >
-            <Plus class="text-white" /> <span>Create event</span>
-          </Link>
-        )
-      }
     </div>
 
     <form

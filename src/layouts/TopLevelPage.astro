@@ -1,22 +1,18 @@
 ---
 import Link from "../components/Link.astro"
-import { getMyEvents } from "../services/eventService"
+import UserMenu from "../components/UserMenu.astro"
 import { isDev, isProd } from "../utils/constants"
 import { isLocal } from "../utils/constants"
 import BaseHtml from "./BaseHtml.astro"
 
 let userName
-let userId
 let avatarUrl
-let userEvents = []
 
 const isSignedIn = Astro.locals.isSignedIn
 
 if (isSignedIn) {
   userName = Astro.locals.user.details.name
-  userId = Astro.locals.user.details.user_id
   avatarUrl = Astro.locals.user.details.profile_picture_url
-  userEvents = await getMyEvents(userId)
 }
 
 const headers = Astro.request.headers
@@ -86,78 +82,7 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Alpha"
                       </svg>
                     )}
                   </button>
-                  <div
-                    class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow"
-                    id="user-dropdown"
-                  >
-                    <div class="px-4 py-3">
-                      <span class="block font-bold text-gray-900">
-                        {userName}
-                      </span>
-                    </div>
-
-                    <ul aria-labelledby="user-menu-button">
-                      {userEvents.length > 0 && (
-                        <li class="text-sm text-gray-700 hover:bg-gray-100">
-                          <a
-                            class="block p-2 w-full"
-                            href="/events/my"
-                            hx-boost="true"
-                            hx-target="#main"
-                          >
-                            My events
-                          </a>
-                        </li>
-                      )}
-
-                      <li class="text-sm text-gray-700 hover:bg-gray-100">
-                        <a
-                          class="block p-2 w-full"
-                          href="/events/favourites"
-                          hx-boost="true"
-                          hx-target="#main"
-                        >
-                          My favourites
-                        </a>
-                      </li>
-
-                      <li class="text-sm text-gray-700 hover:bg-gray-100">
-                        <a
-                          class="block p-2 w-full"
-                          href="/characters"
-                          hx-boost="true"
-                          hx-target="#main"
-                        >
-                          My characters
-                        </a>
-                      </li>
-
-                      <li class="text-sm text-gray-700 hover:bg-gray-100">
-                        <a
-                          href="/profile"
-                          hx-boost="true"
-                          hx-target="#main"
-                          class="block p-2 w-full"
-                        >
-                          Profile
-                        </a>
-                      </li>
-
-                      <li>
-                        <form
-                          class="block hover:bg-gray-100"
-                          action="/api/auth/signout"
-                        >
-                          <button
-                            class="p-2 w-full text-sm flex text-gray-700"
-                            type="submit"
-                          >
-                            Sign out
-                          </button>
-                        </form>
-                      </li>
-                    </ul>
-                  </div>
+                  {userName && <UserMenu userName={userName} />}
                 </>
               )}
 
