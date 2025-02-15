@@ -23,7 +23,7 @@ function getNamedCache<T>(namespace: string) {
     >()
   }
 
-  return cacheStore[namespace]
+  return cacheStore[namespace]!
 }
 
 function useNamespace<T>(namespace: string) {
