@@ -4,13 +4,14 @@ import { useNamespace, USER_EVENTS_CACHE } from "../../lib/cache"
 import { errorResponse as _errorResponse } from "../../utils/responseUtils"
 import type { LARPEvent } from "../../types/types"
 import { log } from "../../lib/logger"
-import { getUpcomingEvents } from "../../services/eventService"
+import { getMyEvents } from "../../services/eventService"
 import Table from "../../components/table/Table.astro"
 import TableHead from "../../components/table/TableHead.astro"
 import TH from "../../components/table/TH.astro"
 import TR from "../../components/table/TR.astro"
 import TD from "../../components/table/TD.astro"
 import Link from "../../components/Link.astro"
+import Plus from "../../components/icons/Plus.astro"
 
 const userId = Astro.locals.user.id
 
@@ -20,7 +21,7 @@ let events = userEventsCache.get(userId)
 if (!events) {
   log("Getting events from DB")
 
-  events = await getUpcomingEvents()
+  events = await getMyEvents(userId)
 }
 ---
 
@@ -54,4 +55,14 @@ if (!events) {
       }
     </tbody>
   </Table>
+  <Link
+    appearance="button"
+    href="/events/new"
+    hx-boost="true"
+    hx-target="#main"
+    class="mt-4"
+  >
+    <Plus class="text-white" />
+    <span>Create event</span>
+  </Link>
 </TopLevelPage>
