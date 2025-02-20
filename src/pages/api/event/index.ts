@@ -38,6 +38,7 @@ export const POST: APIRoute = async ({ request }) => {
     try {
       filePath = await uploadEventPicture(eventFile, eventId)
     } catch (error) {
+      console.error(error)
       if (error instanceof BadRequestError || error instanceof InternalError)
         return errorResponse(error.message, error.errorCode)
       else throw error
@@ -71,6 +72,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     createdId = (await createdEvent).id
   } catch (error) {
+    console.error(error)
     if (error instanceof Error) return errorResponse(error.message, 500)
   }
 
