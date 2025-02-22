@@ -3,7 +3,6 @@ import Button from "../components/Button.astro"
 import Input from "../components/Input.astro"
 import Link from "../components/Link.astro"
 import BaseHtml from "../layouts/BaseHtml.astro"
-import { isProd } from "../utils/constants"
 
 const justRegistered = Astro.url.searchParams.get("registered")
 ---
@@ -37,14 +36,12 @@ const justRegistered = Astro.url.searchParams.get("registered")
     </form>
 
     {
-      !isProd && (
         <Link class="mt-8" href="/register">
           Create an account
         </Link>
         <Link class="mt-8" href="/forgotPassword">
           Forgot password?
         </Link>
-      )
     }
 
     {
