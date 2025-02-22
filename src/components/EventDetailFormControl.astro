@@ -88,7 +88,7 @@ const { detail, eventId } = Astro.props
                   hx-replace-url="false"
                   hx-target-500="#error-message"
                 >
-                  Remove
+                  Ta bort
                 </Button>
               </li>
             ))}
@@ -106,12 +106,12 @@ const { detail, eventId } = Astro.props
           >
             <Input
               size="small"
-              label="New option"
+              label="Nytt val"
               id={`new-option-${detail.label}`}
               name="newOptionName"
             />
             <Button type="submit" size="xs" variant="secondary">
-              Add option
+              Lägg till val
             </Button>
           </form>
         </div>
@@ -145,7 +145,7 @@ const { detail, eventId } = Astro.props
                   hx-replace-url="false"
                   hx-target-500="#error-message"
                 >
-                  Remove
+                  Ta bort
                 </Button>
               </li>
             ))}
@@ -168,7 +168,7 @@ const { detail, eventId } = Astro.props
               name="newOptionName"
             />
             <Button type="submit" size="xs" variant="secondary">
-              Add option
+              Lägg till val
             </Button>
           </form>
         </div>
@@ -177,7 +177,7 @@ const { detail, eventId } = Astro.props
 
     <span class="text-sm text-gray-600 italic"
       >{
-        detail.autofillWith && <p>Autofills with {detail.autofillWithName}</p>
+        detail.autofillWith && <p>Autofyll med {detail.autofillWithName}</p>
       }</span
     >
   </div>
@@ -190,7 +190,7 @@ const { detail, eventId } = Astro.props
     hx-replace-url="false"
     hx-target-500="#error-message"
   >
-    Remove
+    Ta bort
   </Button>
 
   <div id="error-message"></div>

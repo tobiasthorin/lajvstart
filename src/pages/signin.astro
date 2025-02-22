@@ -24,31 +24,31 @@ const justRegistered = Astro.url.searchParams.get("registered")
       <Input label="Email" type="email" name="email" id="email" required />
 
       <Input
-        label="Password"
+        label="Lösenord"
         type="password"
         name="password"
         id="password"
         required
       />
 
-      <Button type="submit">Login</Button>
+      <Button type="submit">Logga in</Button>
       <div id="error-message"></div>
     </form>
 
     {
         <Link class="mt-8" href="/register">
-          Create an account
+          Skapa konto
         </Link>
         <Link class="mt-8" href="/forgotPassword">
-          Forgot password?
+          Glömt lösenord?
         </Link>
     }
 
     {
       justRegistered && (
         <p class="mt-8">
-          A confirmation email has been sent to your inbox. Click the link
-          there, and then sign in!
+          Ett bekräftelsemail har skickats till din inbox.
+          Klicka på länken däri och logga sedan in!
         </p>
       )
     }

@@ -40,11 +40,11 @@ if (isSignedIn) {
   registration = await findRegistration(userId, event.id)
 }
 
-const startDate = new Intl.DateTimeFormat("en-GB", {
+const startDate = new Intl.DateTimeFormat("sv", {
   day: "numeric",
   month: "short",
 }).format(new Date(event.date_start))
-const endDate = new Intl.DateTimeFormat("en-GB", {
+const endDate = new Intl.DateTimeFormat("sv", {
   day: "numeric",
   month: "short",
   year: "numeric",
@@ -82,10 +82,10 @@ const descriptionHTML = converter.makeHtml(cleanDescription)
       <ul
         class="flex flex-col gap-4 p-4 bg-green-50 rounded border-green-300 border"
       >
-        <li>Loction: {event.location_name}</li>
-        <li>Last sign up date: {event.date_signup}</li>
-        <li>Cost: {event.price} {event.currency}</li>
-        <li>Age limit: {event.minimum_age}+</li>
+        <li>Plats: {event.location_name}</li>
+        <li>Sista anmälningsdag: {event.date_signup}</li>
+        <li>Pris: {event.price} {event.currency}</li>
+        <li>Åldersgräns: {event.minimum_age}+</li>
         <li>
           Tags: {
             (event.tags || []).map((tag) => (
@@ -105,7 +105,7 @@ const descriptionHTML = converter.makeHtml(cleanDescription)
             hx-target="#main"
             class="flex items-center justify-center px-3 py-2 text-2xl font-display tracking-wide text-white bg-cyan-600 rounded-lg hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800"
           >
-            {registration ? "Edit registration" : "Register now!"}
+            {registration ? "Ändra anmälan" : "Anmäl mig!"}
           </a>
         )
       }

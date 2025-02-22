@@ -52,7 +52,7 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
                     data-dropdown-toggle="user-dropdown"
                     data-dropdown-placement="bottom-start"
                   >
-                    <span class="sr-only">Open user menu</span>
+                    <span class="sr-only">Öppna användarmeny</span>
                     {avatarUrl ? (
                       <img src={avatarUrl} class="w-10 h-10 rounded-full" />
                     ) : (
@@ -78,7 +78,7 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
 
               {!isSignedIn && (
                 <Link appearance="button" href="/signin">
-                  Sign in
+                  Logga in
                 </Link>
               )}
 
@@ -89,7 +89,7 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
                 aria-controls="navbar-user"
                 aria-expanded="false"
               >
-                <span class="sr-only">Open main menu</span>
+                <span class="sr-only">Öppna huvudmenyn</span>
                 <svg
                   class="w-5 h-5"
                   aria-hidden="true"
@@ -129,7 +129,7 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
                     x-on:click="activePage = 'events'"
                     aria-current="page"
                   >
-                    Events
+                    Lista
                   </a>
                 </li>
 
@@ -142,7 +142,7 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
                     x-on:click="activePage = 'map'"
                     aria-current="page"
                   >
-                    Map
+                    Karta
                   </a>
                 </li>
               </ul>
@@ -157,11 +157,11 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
 
       <footer class="flex justify-center w-full mt-64 mb-4">
         <span class="block">
-          Join the Lajvstart
+          Gå med i Lajvstarts
           <a href="https://discord.gg/bdA6hfXBgu" class="text-blue-700 ">
             Discord
           </a>
-          for updates and discussions.
+          för uppdateringar och diskussioner.
         </span>
       </footer>
     </BaseHtml>

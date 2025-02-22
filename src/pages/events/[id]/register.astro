@@ -34,7 +34,7 @@ const selectedGroupId = registration?.event_group?.id
 
 <TopLevelPage
   ><h2 class="font-display text-2xl mb-4">
-    {registration ? "Edit details" : "Register"} for {event.name}
+    {registration ? "Ändra detaljer" : "Anmälan"} för {event.name}
   </h2>
   <div x-data="{selectedCharacter: {name: '', description: ''}}">
     {
@@ -42,7 +42,7 @@ const selectedGroupId = registration?.event_group?.id
         characters.length > 0 && (
           <Select
             id="character-select"
-            label="Autofill with character"
+            label="Autofyll med karaktär"
             x-on:change="selectedCharacter = JSON.parse($event.target.value)"
             class="ml-auto max-w-sm"
           >
@@ -75,11 +75,11 @@ const selectedGroupId = registration?.event_group?.id
 
       <Select
         id="select-group"
-        label="Group"
+        label="Grupp"
         name="groupId"
         x-on:change="groupId = $event.target.value"
       >
-        <option value="ungrouped">No group</option>
+        <option value="ungrouped">Ingen grupp</option>
 
         {eventGroups && eventGroups.length > 0 && <hr />}
 
@@ -93,27 +93,27 @@ const selectedGroupId = registration?.event_group?.id
 
         <hr />
 
-        <option value="new">New group</option>
+        <option value="new">Ny grupp</option>
       </Select>
 
       <div x-show="groupId === 'new'">
         <Input
           id="newGroupName"
           type="text"
-          label="New group name"
+          label="Nytt gruppnamn"
           name="newGroupName"
         />
 
         <Input
           id="newGroupDescription"
           type="text"
-          label="New group description"
+          label="Ny gruppbeskrivning"
           name="newGroupDescription"
         />
       </div>
 
       <Button type="submit" class="self-end"
-        >{registration ? "Update" : "Register"}</Button
+        >{registration ? "Uppdatera" : "Skicka anmälan"}</Button
       >
 
       <div id="error-message"></div>
