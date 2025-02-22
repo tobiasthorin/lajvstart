@@ -30,7 +30,7 @@ const { character, userId } = Astro.props
     hx-target={`#character-${character.id}`}
     hx-swap="delete"
     hx-replace-url="false"
-    hx-target-500={`error-${character.id}`}>Delete</Button
+    hx-target-500={`error-${character.id}`}>Radera</Button
   >
 
   <Button
@@ -38,7 +38,7 @@ const { character, userId } = Astro.props
     data-modal-target={`edit-character-${character.id}`}
     data-modal-toggle={`edit-character-${character.id}`}
   >
-    Edit
+    Ändra
   </Button>
 
   <div id={`error-${character.id}`}></div>
@@ -80,7 +80,7 @@ const { character, userId } = Astro.props
         accept=".jpg,.jpeg,.png,.bmp,.webp"
       />
 
-      <Button class="self-end" type="submit">Save</Button>
+      <Button class="self-end" type="submit">Spara</Button>
 
       <div id="error-message"></div>
     </form>

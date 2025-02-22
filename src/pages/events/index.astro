@@ -13,7 +13,6 @@ import Select from "../../components/Select.astro"
 import { eventTags } from "../../utils/constants"
 import Input from "../../components/Input.astro"
 
-
 let events: LARPEvent[] = []
 
 const searchParams = Astro.url.searchParams
@@ -46,9 +45,7 @@ if (Astro.url.search) {
 <TopLevelPage>
   <div x-data="{ filtersOpen: false }">
     <div class="flex justify-between items-baseline gap-4">
-      <h2 class="text-5xl text-orange-500 font-display mb-8">
-        Upcoming events
-      </h2>
+      <h2 class="text-5xl text-orange-500 font-display mb-8">Kommande lajv</h2>
 
       <Button
         size="small"
@@ -68,7 +65,7 @@ if (Astro.url.search) {
     >
       <h3 class="col-span-2">Filter</h3>
 
-      <Select multiple label="Tags" id="tagsFilter" name="tags">
+      <Select multiple label="Taggar" id="tagsFilter" name="tags">
         {
           eventTags.map((tag) => (
             <option value={tag} selected={tags.includes(tag)}>
@@ -79,7 +76,7 @@ if (Astro.url.search) {
       </Select>
 
       <Input
-        label="Participant age"
+        label="Deltagarens ålder"
         id="minAgeFilter"
         name="minAge"
         type="number"
@@ -88,16 +85,16 @@ if (Astro.url.search) {
 
       <div class="col-span-2 place-self-end">
         <Button hx-get="/events" hx-target="#main" hx-push-url="true"
-          >Clear</Button
+          >Rensa</Button
         >
-        <Button type="submit" class="ml-4">Filter events</Button>
+        <Button type="submit" class="ml-4">Filtrera</Button>
       </div>
     </form>
   </div>
 
-  {events === null && <p>No upcoming events</p>}
+  {events === null && <p>Inga kommande arrangemang</p>}
 
-  {events.length === 0 && <p>No events matches the current filters</p>}
+  {events.length === 0 && <p>Inga arrangemang matchar nuvarande filter</p>}
 
   {
     events !== null && (

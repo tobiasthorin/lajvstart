@@ -52,12 +52,12 @@ const dateFormatter = new Intl.DateTimeFormat("sv", {
     class="flex flex-col gap-4"
   >
     <h3 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-      New mailing
+      Nytt utskick
     </h3>
 
-    <Input id="subject" type="text" label="Subject" name="subject" required />
+    <Input id="subject" type="text" label="Ämne" name="subject" required />
 
-    <Select id="toGroups" name="toGroups" label="Send to groups" multiple>
+    <Select id="toGroups" name="toGroups" label="Skicka till grupper" multiple>
       {
         (groups || []).map((group) => (
           <option value={group.id}>{group.name}</option>
@@ -68,22 +68,28 @@ const dateFormatter = new Intl.DateTimeFormat("sv", {
     <Checkbox
       id="toFavourites"
       name="toFavourites"
-      label="Send to favourites"
-      caption="Send to everyone who has marked this even as a favourite, but is not registered"
+      label="Skicka till favoritörer"
+      caption="Alla som har markerat arrangemanget som favorit men inte är anmäld"
     />
 
     <Input
       id="toAdditional"
       type="text"
-      label="Send to additional addresses"
-      caption="Email addresses, each separated by a comma"
+      label="Ytterligare adresser"
+      caption="Email-adresser, separerade med komma"
       placeholder="one@example.com, two@example.com"
       name="toAdditional"
     />
 
-    <TextArea id="body" name="body" label="Mail content" rows="10" required />
+    <TextArea
+      id="body"
+      name="body"
+      label="Utskickets innehåll"
+      rows="10"
+      required
+    />
 
-    <Button class="self-end" type="submit">Send mail</Button>
+    <Button class="self-end" type="submit">Skicka mail</Button>
 
     <div id="error-message"></div>
   </form>
@@ -91,10 +97,10 @@ const dateFormatter = new Intl.DateTimeFormat("sv", {
   <h3
     class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-4"
   >
-    Previous mailings
+    Tidigare utskick
   </h3>
 
-  {mailings.length === 0 && <p>No mails sent for this event</p>}
+  {mailings.length === 0 && <p>Inga utskick för det här arrangemanget</p>}
 
   {
     mailings.length > 0 && (
@@ -109,8 +115,7 @@ const dateFormatter = new Intl.DateTimeFormat("sv", {
                 <div class="inline-flex gap-2 items-baseline w-[calc(100%-20px)] cursor-pointer">
                   <span class="text-lg">{mailing.subject}</span>
                   <span class="text-gray-600 text-sm ">
-                    {mailing.to.length} recipient
-                    {mailing.to.length > 1 && "s"}
+                    {mailing.to.length} mottagare
                   </span>
                   <time class="ml-auto" datetime={mailing.created_at}>
                     {dateFormatter.format(new Date(mailing.created_at))}
@@ -119,12 +124,12 @@ const dateFormatter = new Intl.DateTimeFormat("sv", {
               </summary>
 
               <div class="mt-4 p-4 border rounded border-gray-300 bg-gray-100 text-gray-600 text-sm">
-                <div class="font-bold">Sent to:</div>
+                <div class="font-bold">Skickat till:</div>
                 {mailing.to.join(", ")}
               </div>
 
               <div class="mt-4 p-4 border rounded border-gray-300 bg-gray-100 text-gray-600 text-sm">
-                <div class="font-bold">Mail content:</div>
+                <div class="font-bold">Utskickets innehåll:</div>
                 {mailing.body}
               </div>
             </details>

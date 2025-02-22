@@ -13,20 +13,20 @@ const { published, eventId } = Astro.props
 
 <Card
   id="publishCard"
-  title={published ? "Published" : "Not published"}
+  title={published ? "Publicerat" : "Inte publicerat"}
   backgroundColor={published ? "bg-green-100" : "bg-red-100"}
 >
   <div class="mb-2">
     {
       published
-        ? "Your event is published and will appear in lists and searches"
-        : "Your event is not published yet and cannot be found in lists or searches."
+        ? "Ditt event är publicerat och kommer dyka upp i listor och sökningar"
+        : "Ditt event är inte publicerat ännu och kommer inte dyka upp i listor och sökningar"
     }
   </div>
 
   <Button
     hx-put={`/api/event/${eventId}/publish`}
     hx-target="#publishCard"
-    hx-swap="outerHTML">{published ? "Unpublish" : "Publish now!"}</Button
+    hx-swap="outerHTML">{published ? "Opublicera" : "Publicera nu!"}</Button
   >
 </Card>

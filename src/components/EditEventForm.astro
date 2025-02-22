@@ -28,7 +28,7 @@ const { method, action, event } = Astro.props
   <Input
     id="eventName"
     type="text"
-    label="Name"
+    label="Namn"
     name="name"
     required
     maxlength="100"
@@ -37,16 +37,16 @@ const { method, action, event } = Astro.props
 
   <Checkbox
     id="isDisplayInput"
-    label="Presentational event"
+    label="Endast annonsering"
     name="isDisplay"
-    caption="This will disable registrations, allowing you to use the event to link to your own registration system and/or website."
+    caption="Detta stänger av anmälningar. Du kan länka till ditt eget anmälningssystem eller hemsida i arrangemangets text."
     inputProps={{ checked: event?.display_mode }}
   />
 
   <Input
     id="priceInput"
     type="number"
-    label="Price (SEK)"
+    label="Pris (SEK)"
     name="price"
     value={event?.price ?? 0}
     required
@@ -55,7 +55,7 @@ const { method, action, event } = Astro.props
   <Input
     id="eventStartDateInput"
     type="date"
-    label="Start date"
+    label="Startdatum"
     name="startDate"
     required
     value={event?.date_start}
@@ -64,7 +64,7 @@ const { method, action, event } = Astro.props
   <Input
     id="eventEndDateInput"
     type="date"
-    label="End date"
+    label="Slutdatum"
     name="endDate"
     required
     value={event?.date_end}
@@ -73,8 +73,8 @@ const { method, action, event } = Astro.props
   <Input
     id="finalSignupDateInput"
     type="date"
-    label="Final signup date"
-    caption="After this date registration will be disabled"
+    label="Sista anmälningsdag"
+    caption="Efter detta datum avaktiveras anmälningar"
     name="finalSignupDate"
     required
     value={event?.date_signup}
@@ -83,7 +83,7 @@ const { method, action, event } = Astro.props
   <Input
     id="eventLocation"
     type="text"
-    label="Location"
+    label="Plats"
     name="location"
     required
     value={event?.location_name}
@@ -92,7 +92,7 @@ const { method, action, event } = Astro.props
   <Input
     id="eventLatitude"
     type="text"
-    label="Latitude"
+    label="Latitud"
     name="latitude"
     required
     value={event?.location_latitude}
@@ -101,7 +101,7 @@ const { method, action, event } = Astro.props
   <Input
     id="eventLongitude"
     type="text"
-    label="Longitude"
+    label="Longitud"
     name="longitude"
     required
     value={event?.location_longitude}
@@ -109,7 +109,7 @@ const { method, action, event } = Astro.props
 
   <TextArea
     id="eventDescriptionShort"
-    label="Short description"
+    label="Kort beskrivning"
     name="descriptionShort"
     maxlength="200"
     value={event?.description_short}
@@ -117,7 +117,7 @@ const { method, action, event } = Astro.props
 
   <TextArea
     id="eventDescription"
-    label="Description"
+    label="Beskrivning"
     name="description"
     value={event?.description}
   />
@@ -148,12 +148,12 @@ const { method, action, event } = Astro.props
   <Input
     id="eventPicInput"
     type="file"
-    label="Event picture"
+    label="Omslagsbild"
     name="eventPicture"
     accept=".jpg,.jpeg,.png,.bmp,.webp"
   />
 
-  <Select multiple id="eventTagsInput" label="Tags" name="tags">
+  <Select multiple id="eventTagsInput" label="Taggar" name="tags">
     {
       eventTags.map((tag) => (
         <option value={tag} selected={event?.tags?.includes(tag)}>
@@ -165,7 +165,7 @@ const { method, action, event } = Astro.props
 
   <Checkbox
     id="eventBeginnerFriendly"
-    label="Beginner friendly"
+    label="Nybörjarvänligt"
     name="beginnerFriendly"
     inputProps={{ checked: event?.is_beginner_friendly }}
   />
@@ -173,7 +173,7 @@ const { method, action, event } = Astro.props
   <Input
     id="ageRestriction"
     type="number"
-    label="Lowest age allowed"
+    label="Lägsta tillåtna ålder"
     name="ageRestriction"
     value={event?.minimum_age}
   />
@@ -181,14 +181,14 @@ const { method, action, event } = Astro.props
   <Input
     id="maximumParticipants"
     type="number"
-    label="Maximum participants"
+    label="Deltagargräns"
     name="maximumParticipants"
     value={event?.maximum_participants}
   />
 
   <div class="self-end">
-    <Button variant="secondary" class="mr-4" type="reset">Clear</Button>
-    <Button type="submit">{event ? 'Update' : 'Create'}</Button>
+    <Button variant="secondary" class="mr-4" type="reset">Rensa</Button>
+    <Button type="submit">{event ? "Uppdatera" : "Skapa!"}</Button>
   </div>
 
   <div id="error-message"></div>

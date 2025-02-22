@@ -35,7 +35,7 @@ const ungroupedRegistrations = registrations.filter(
 <ManageEvent eventId={event.id}>
   {
     groups === null || groups.length === 0 ? (
-      <p>No groups</p>
+      <p>Inga grupper</p>
     ) : (
       <>
         {groups?.map((group) => {
@@ -57,8 +57,8 @@ const ungroupedRegistrations = registrations.filter(
           )
         })}
 
-        <h3 class="text-lg font-bold">Ungrouped</h3>
-        <p class="text-sm text-gray-700">Registrations with no group</p>
+        <h3 class="text-lg font-bold">Ogrupperade</h3>
+        <p class="text-sm text-gray-700">Anmälningar utan grupp</p>
         <GroupsTable
           registrations={ungroupedRegistrations}
           eventId={event.id}
@@ -81,7 +81,7 @@ const ungroupedRegistrations = registrations.filter(
     <Input
       id="groupName"
       type="text"
-      label="Group name"
+      label="Gruppnamn"
       name="groupName"
       required
     />
@@ -89,11 +89,11 @@ const ungroupedRegistrations = registrations.filter(
     <Input
       id="groupDescription"
       type="text"
-      label="Description"
+      label="Beskrivning"
       name="groupDescription"
     />
 
-    <Button type="submit">Create group</Button>
+    <Button type="submit">Skapa grupp</Button>
 
     <div id="error-message"></div>
   </form>

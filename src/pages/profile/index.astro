@@ -2,14 +2,8 @@
 import Link from "../../components/Link.astro"
 import TopLevelPage from "../../layouts/TopLevelPage.astro"
 
-const {
-  name,
-  biography,
-  created_at,
-  birth_date,
-  birth_date_public,
-  special_needs,
-} = Astro.locals.user.details
+const { name, biography, created_at, birth_date, special_needs } =
+  Astro.locals.user.details
 const publicUrl = Astro.locals.user.details.profile_picture_url
 
 const joinDate = new Date(created_at).toLocaleDateString()
@@ -48,15 +42,14 @@ const birthDate = new Date(birth_date).toLocaleDateString()
     </h2>
   </div>
 
-  <p class="mb-4 text-sm text-gray-500">Member since {joinDate}</p>
+  <p class="mb-4 text-sm text-gray-500">Medlem sedan {joinDate}</p>
 
   <p class="mb-4 text-sm text-gray-700">
-    Birth day: {birthDate}
-    {birth_date_public && <span class="text-gray-500">(public)</span>}
+    Födelsedag: {birthDate}
   </p>
 
   <p class="mb-4 text-sm text-gray-700">
-    Allergies and special needs: {special_needs || "None"}
+    Allergier och specialbehov: {special_needs || "None"}
   </p>
 
   <p>{biography}</p>
@@ -65,6 +58,6 @@ const birthDate = new Date(birth_date).toLocaleDateString()
     appearance="button"
     href="/profile/edit"
     hx-boost="true"
-    hx-target="#main">Edit profile</Link
+    hx-target="#main">Redigera profil</Link
   >
 </TopLevelPage>

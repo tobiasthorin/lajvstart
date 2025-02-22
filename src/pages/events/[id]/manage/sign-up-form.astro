@@ -31,17 +31,17 @@ if (event.owner_id !== userId) Astro.redirect("/events")
 function getLabelFromType(type: EventDetailsType) {
   switch (type) {
     case "textShort":
-      return "Short text"
+      return "Kort text"
     case "textLong":
-      return "Long text"
+      return "Lång text"
     case "checkbox":
-      return "Yes or no"
+      return "Ja eller nej"
     case "number":
-      return "Number"
+      return "Nummer"
     case "multiChoice":
-      return "List of options"
+      return "Lista med alternativ"
     case "multiChoiceMultiValue":
-      return "List of options, multiple choice"
+      return "Lista med alternativ, flerval"
   }
 }
 ---
@@ -62,7 +62,7 @@ function getLabelFromType(type: EventDetailsType) {
       data-modal-toggle="newControlModal"
     >
       <Plus class="inline-block w-4 fill-white mr-2" />
-      New field
+      Nytt fält
     </Button>
   </div>
 
@@ -79,7 +79,7 @@ function getLabelFromType(type: EventDetailsType) {
       x-data="{ controlType: 'textShort' }"
     >
       <Select
-        label="Type"
+        label="Typ"
         id="controlTypeInput"
         name="controlType"
         @change="controlType = $event.target.value"
@@ -92,33 +92,35 @@ function getLabelFromType(type: EventDetailsType) {
       </Select>
 
       <Input
-        label="Name"
+        label="Namn"
         id="controlNameInput"
         name="controlName"
         type="text"
       />
 
       <Input
-        label="Description"
+        label="Beskrivning"
         id="controlDescriptionInput"
         name="controlDescription"
         type="text"
       />
       <div x-show="controlType === 'textShort' || controlType === 'textLong'">
         <Select
-          label="Autofill with"
+          label="Autofyll med"
           id="autofillWithInput"
           name="autofillWith"
           caption="Allow users to quickly fill this field with information from their character or profile when signing up."
         >
-          <option selected value="">No autofill</option>
+          <option selected value="">Ingen autoyfyll</option>
           <hr />
-          <option value="characterName">Character name</option>
-          <option value="characterDescription">Character description</option>
+          <option value="characterName">Karaktärsnamn</option>
+          <option value="characterDescription">Karaktärsbeskrivning</option>
         </Select>
       </div>
 
-      <Button type="submit" data-modal-toggle="newControlModal">Add</Button>
+      <Button type="submit" data-modal-toggle="newControlModal"
+        >Lägg till</Button
+      >
 
       <div id="error-message"></div>
     </form>

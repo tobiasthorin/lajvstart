@@ -25,7 +25,7 @@ const registrations = await getRegistrationsForEvent(event.id)
 
 <ManageEvent eventId={event.id}>
   <div class="flex gap-4 flex-wrap">
-    <Card title="Participants">
+    <Card title="Deltagare">
       {registrations.length} / {event.maximum_participants}
     </Card>
 

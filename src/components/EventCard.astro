@@ -39,7 +39,7 @@ const fewSpotsRemaining =
       {
         event.price === 0 && (
           <p class="absolute -right-6 bottom-4 -rotate-45 shadow bg-orange-600 text-white text-sm text-center w-[100px]">
-            FREE
+            GRATIS
           </p>
         )
       }
@@ -83,20 +83,20 @@ const fewSpotsRemaining =
 
       {
         !event.display_mode && spotsRemaining < 1 && (
-          <span class="font-bold text-red-900 text-right">Sold out</span>
+          <span class="font-bold text-red-900 text-right">Slutsålt</span>
         )
       }
       {
         !event.display_mode && spotsRemaining > 0 && fewSpotsRemaining && (
           <span class="font-bold text-yellow-600 text-right">
-            {spotsRemaining} spots left
+            {spotsRemaining} platser kvar
           </span>
         )
       }
       {
         !event.display_mode && spotsRemaining > 0 && (
           <span class="font-bold text-green-700 text-right">
-            {spotsRemaining} spots left
+            {spotsRemaining} platser kvar
           </span>
         )
       }

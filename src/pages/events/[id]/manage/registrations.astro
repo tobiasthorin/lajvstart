@@ -27,7 +27,7 @@ const registrations = await getRegistrationsForEvent(event.id)
 <ManageEvent eventId={event.id}>
   {
     registrations === null || registrations.length === 0 ? (
-      <p>No registrations</p>
+      <p>Inga anmälningar</p>
     ) : (
       <RegistrationsTable event={event} registrations={registrations} />
     )
