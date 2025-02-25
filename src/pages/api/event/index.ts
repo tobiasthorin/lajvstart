@@ -24,7 +24,7 @@ export const POST: APIRoute = async ({ request }) => {
     maximumParticipants,
     latitude,
     longitude,
-    isDisplay,
+    useLajvstartSystem,
     finalSignupDate,
     price,
   } = extractEventFormData(formData)
@@ -64,7 +64,7 @@ export const POST: APIRoute = async ({ request }) => {
       maximum_participants: Number(maximumParticipants),
       location_latitude: Number(latitude),
       location_longitude: Number(longitude),
-      display_mode: !!isDisplay,
+      display_mode: !useLajvstartSystem,
       price: Number(price),
       currency: "SEK",
       is_published: false,
