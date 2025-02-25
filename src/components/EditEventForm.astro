@@ -1,6 +1,6 @@
 ---
 import type { HTMLAttributes } from "astro/types"
-import { eventTags } from "../utils/constants"
+import { eventTags, isProd } from "../utils/constants"
 import Button from "./Button.astro"
 import Checkbox from "./Checkbox.astro"
 import Input from "./Input.astro"
@@ -24,6 +24,7 @@ const { method, action, event } = Astro.props
   hx-boost="true"
   enctype="multipart/form-data"
   hx-target-5*="#error-message"
+  hx-replace-url="false"
 >
   <Input
     id="eventName"
@@ -37,10 +38,10 @@ const { method, action, event } = Astro.props
 
   <Checkbox
     id="isDisplayInput"
-    label="Endast annonsering"
-    name="isDisplay"
-    caption="Detta stänger av anmälningar. Du kan länka till ditt eget anmälningssystem eller hemsida i arrangemangets text."
-    inputProps={{ checked: event?.display_mode }}
+    label="Använd Lajvstarts registreringssystem"
+    name="useLajvstartSystem"
+    inputProps={{ checked: event?.display_mode === false }}
+    hidden={!isProd}
   />
 
   <Input
@@ -74,7 +75,6 @@ const { method, action, event } = Astro.props
     id="finalSignupDateInput"
     type="date"
     label="Sista anmälningsdag"
-    caption="Efter detta datum avaktiveras anmälningar"
     name="finalSignupDate"
     required
     value={event?.date_signup}

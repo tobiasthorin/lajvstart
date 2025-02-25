@@ -25,7 +25,7 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
     maximumParticipants,
     latitude,
     longitude,
-    isDisplay,
+    useLajvstartSystem,
     finalSignupDate,
     price,
   } = extractEventFormData(formData)
@@ -60,7 +60,7 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
       maximum_participants: Number(maximumParticipants),
       location_latitude: Number(latitude),
       location_longitude: Number(longitude),
-      display_mode: !!isDisplay,
+      display_mode: !useLajvstartSystem,
       date_signup: finalSignupDate,
       price: Number(price),
     })

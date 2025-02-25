@@ -48,48 +48,69 @@ const inActiveClass =
         >
       </li>
 
-      <li class="me-2">
-        <a
-          href={`/events/${eventId}/manage/sign-up-form`}
-          hx-boost="true"
-          hx-target="#main"
-          class={url.pathname.includes("sign-up-form")
-            ? activeClass
-            : inActiveClass}>Anmälningsformulär</a
-        >
-      </li>
+      {
+        !event.display_mode && (
+          <>
+            <li class="me-2">
+              <a
+                href={`/events/${eventId}/manage/sign-up-form`}
+                hx-boost="true"
+                hx-target="#main"
+                class={
+                  url.pathname.includes("sign-up-form")
+                    ? activeClass
+                    : inActiveClass
+                }
+              >
+                Anmälningsformulär
+              </a>
+            </li>
 
-      <li class="me-2">
-        <a
-          href={`/events/${eventId}/manage/registrations`}
-          hx-boost="true"
-          hx-target="#main"
-          class={url.pathname.includes("registrations")
-            ? activeClass
-            : inActiveClass}>Anmälningar</a
-        >
-      </li>
+            <li class="me-2">
+              <a
+                href={`/events/${eventId}/manage/registrations`}
+                hx-boost="true"
+                hx-target="#main"
+                class={
+                  url.pathname.includes("registrations")
+                    ? activeClass
+                    : inActiveClass
+                }
+              >
+                Anmälningar
+              </a>
+            </li>
 
-      <li class="me-2">
-        <a
-          href={`/events/${eventId}/manage/groups`}
-          hx-boost="true"
-          hx-target="#main"
-          class={url.pathname.includes("groups") ? activeClass : inActiveClass}
-          >Grupper</a
-        >
-      </li>
+            <li class="me-2">
+              <a
+                href={`/events/${eventId}/manage/groups`}
+                hx-boost="true"
+                hx-target="#main"
+                class={
+                  url.pathname.includes("groups") ? activeClass : inActiveClass
+                }
+              >
+                Grupper
+              </a>
+            </li>
 
-      <li class="me-2">
-        <a
-          href={`/events/${eventId}/manage/mailings`}
-          hx-boost="true"
-          hx-target="#main"
-          class={url.pathname.includes("mailings")
-            ? activeClass
-            : inActiveClass}>Utskick</a
-        >
-      </li>
+            <li class="me-2">
+              <a
+                href={`/events/${eventId}/manage/mailings`}
+                hx-boost="true"
+                hx-target="#main"
+                class={
+                  url.pathname.includes("mailings")
+                    ? activeClass
+                    : inActiveClass
+                }
+              >
+                Utskick
+              </a>
+            </li>
+          </>
+        )
+      }
     </ul>
   </nav>
 

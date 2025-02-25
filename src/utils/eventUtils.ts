@@ -11,7 +11,7 @@ export function extractEventFormData(formData: FormData) {
   const maximumParticipants = formData.get("maximumParticipants")?.toString()
   const latitude = formData.get("latitude")?.toString()
   const longitude = formData.get("longitude")?.toString()
-  const isDisplay = formData.get("isDisplay")?.toString()
+  const useLajvstartSystem = formData.get("useLajvstartSystem")?.toString()
   const finalSignupDate = formData.get("finalSignupDate")?.toString()
   const price = formData.get("price")?.toString()
 
@@ -63,7 +63,7 @@ export function extractEventFormData(formData: FormData) {
     maximumParticipants,
     latitude,
     longitude,
-    isDisplay,
+    useLajvstartSystem,
     finalSignupDate,
     price,
   }
