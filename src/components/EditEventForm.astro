@@ -40,8 +40,7 @@ const { method, action, event } = Astro.props
     id="isDisplayInput"
     label="Använd Lajvstarts registreringssystem"
     name="useLajvstartSystem"
-    inputProps={{ checked: event?.display_mode === false }}
-    hidden={!isProd}
+    inputProps={{ checked: event?.display_mode === false, hidden: isProd }}
   />
 
   <Input
