@@ -15,6 +15,7 @@ import Input from "../../components/Input.astro"
 import List from "../../components/icons/List.astro"
 import Link from "../../components/Link.astro"
 import Grid from "../../components/icons/Grid.astro"
+import EventListItem from "../../components/EventListItem.astro"
 
 let events: LARPEvent[] = []
 
@@ -135,10 +136,20 @@ if (Astro.url.search) {
 
   {
     events !== null && (
-      <ul class="grid grid-cols-events gap-8 mb-8">
+      <ul
+        class={
+          displayAsList
+            ? "flex flex-col gap-4 mb-8"
+            : "grid grid-cols-events gap-8 mb-8"
+        }
+      >
         {events.map((event) => (
           <li>
-            <EventCard event={event} />
+            {displayAsList ? (
+              <EventListItem event={event} />
+            ) : (
+              <EventCard event={event} />
+            )}
           </li>
         ))}
       </ul>
