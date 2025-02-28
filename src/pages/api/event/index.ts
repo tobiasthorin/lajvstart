@@ -27,6 +27,7 @@ export const POST: APIRoute = async ({ request }) => {
     useLajvstartSystem,
     finalSignupDate,
     price,
+    externalWebsiteURL,
   } = extractEventFormData(formData)
 
   const eventFile = formData.get("eventPicture") as File | null
@@ -55,19 +56,20 @@ export const POST: APIRoute = async ({ request }) => {
       description_short: descriptionShort,
       date_start: startDate,
       date_end: endDate,
-      date_signup: finalSignupDate,
+      date_signup: finalSignupDate || null,
       location_name: location,
       event_image_url: filePath,
       tags: tags.split(","),
       is_beginner_friendly: !!beginnerFriendly,
-      minimum_age: Number(ageRestriction),
+      minimum_age: ageRestriction ? Number(ageRestriction) : null,
       maximum_participants: Number(maximumParticipants),
-      location_latitude: Number(latitude),
-      location_longitude: Number(longitude),
+      location_latitude: latitude ? Number(latitude) : null,
+      location_longitude: longitude ? Number(longitude) : null,
       display_mode: !useLajvstartSystem,
       price: Number(price),
       currency: "SEK",
       is_published: false,
+      external_website_url: externalWebsiteURL || null,
     })
 
     createdId = (await createdEvent).id

@@ -14,6 +14,7 @@ const {
   id,
   caption,
   size = "regular",
+  required,
   ...rest
 } = Astro.props
 ---
@@ -33,6 +34,7 @@ const {
         ]}
       >
         {label}
+        {!required && <span class="text-xs text-gray-500">(valfritt)</span>}
       </label>
     )
   }
@@ -58,6 +60,7 @@ const {
       { "p-2 text-xs": size === "small" },
     ]}
     aria-describedby={`${id}-caption`}
+    required={required}
     {...rest}
   />
   {

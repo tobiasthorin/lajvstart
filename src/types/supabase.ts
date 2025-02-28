@@ -113,10 +113,11 @@ export type Database = {
           date_signup: string | null
           date_start: string
           description: string
-          description_short: string | null
+          description_short: string
           details: Json
           display_mode: boolean
           event_image_url: string | null
+          external_website_url: string | null
           id: string
           is_beginner_friendly: boolean
           is_published: boolean
@@ -138,10 +139,11 @@ export type Database = {
           date_signup?: string | null
           date_start: string
           description?: string
-          description_short?: string | null
+          description_short: string
           details?: Json
           display_mode?: boolean
           event_image_url?: string | null
+          external_website_url?: string | null
           id?: string
           is_beginner_friendly?: boolean
           is_published?: boolean
@@ -163,10 +165,11 @@ export type Database = {
           date_signup?: string | null
           date_start?: string
           description?: string
-          description_short?: string | null
+          description_short?: string
           details?: Json
           display_mode?: boolean
           event_image_url?: string | null
+          external_website_url?: string | null
           id?: string
           is_beginner_friendly?: boolean
           is_published?: boolean

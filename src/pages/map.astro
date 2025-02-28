@@ -8,12 +8,17 @@ if (!events) {
   return _errorResponse("Could not get upcoming events")
 }
 
-const locationScripts = events.map(
-  (event) =>
-    `L.marker([${event.location_latitude}, ${event.location_longitude}])
+const locationScripts = events
+  .filter(
+    (event) =>
+      event.location_latitude !== null && event.location_longitude !== null
+  )
+  .map(
+    (event) =>
+      `L.marker([${event.location_latitude}, ${event.location_longitude}])
     .addTo(map)
     .bindPopup("<h3 class='font-bold text-lg'>${event.name}</h3> <p>${event.location_name}</p> <p>${event.description_short}</p> <p><a href='/events/${event.id}'>Go to event</a></p>");`
-)
+  )
 ---
 
 <TopLevelPage>

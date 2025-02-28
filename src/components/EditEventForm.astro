@@ -45,6 +45,15 @@ const { method, action, event } = Astro.props
   />
 
   <Input
+    id="externalWebsiteURL"
+    type="text"
+    label="Hemsida"
+    name="externalWebsiteURL"
+    value={event?.external_website_url}
+    placeholder="https://www.minlajvsida.se"
+  />
+
+  <Input
     id="priceInput"
     type="number"
     label="Pris (SEK)"
@@ -76,14 +85,13 @@ const { method, action, event } = Astro.props
     type="date"
     label="Sista anmälningsdag"
     name="finalSignupDate"
-    required
     value={event?.date_signup}
   />
 
   <Input
     id="eventLocation"
     type="text"
-    label="Plats"
+    label="Ortsnamn eller Plats"
     name="location"
     required
     value={event?.location_name}
@@ -94,7 +102,6 @@ const { method, action, event } = Astro.props
     type="text"
     label="Latitud"
     name="latitude"
-    required
     value={event?.location_latitude}
   />
 
@@ -103,7 +110,6 @@ const { method, action, event } = Astro.props
     type="text"
     label="Longitud"
     name="longitude"
-    required
     value={event?.location_longitude}
   />
 
@@ -153,7 +159,7 @@ const { method, action, event } = Astro.props
     accept=".jpg,.jpeg,.png,.bmp,.webp"
   />
 
-  <Select multiple id="eventTagsInput" label="Taggar" name="tags">
+  <Select multiple id="eventTagsInput" label="Taggar" name="tags" required>
     {
       eventTags.map((tag) => (
         <option value={tag} selected={event?.tags?.includes(tag)}>
@@ -163,12 +169,12 @@ const { method, action, event } = Astro.props
     }
   </Select>
 
-  <Checkbox
+  <!-- <Checkbox
     id="eventBeginnerFriendly"
     label="Nybörjarvänligt"
     name="beginnerFriendly"
     inputProps={{ checked: event?.is_beginner_friendly }}
-  />
+  /> -->
 
   <Input
     id="ageRestriction"
@@ -184,6 +190,7 @@ const { method, action, event } = Astro.props
     label="Deltagargräns"
     name="maximumParticipants"
     value={event?.maximum_participants}
+    required
   />
 
   <div class="self-end">
