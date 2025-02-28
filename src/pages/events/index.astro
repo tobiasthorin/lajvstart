@@ -12,12 +12,31 @@ import Filter from "../../components/icons/Filter.astro"
 import Select from "../../components/Select.astro"
 import { eventTags } from "../../utils/constants"
 import Input from "../../components/Input.astro"
+import List from "../../components/icons/List.astro"
+import Link from "../../components/Link.astro"
+import Grid from "../../components/icons/Grid.astro"
 
 let events: LARPEvent[] = []
 
 const searchParams = Astro.url.searchParams
 const tags = searchParams.getAll("tags")
 const minAge = Number(searchParams.get("minAge"))
+
+const displayParamIsList = searchParams.get("display") === "list"
+const displayParamIsGrid = searchParams.get("display") === "grid"
+const cookieIsList =
+  Astro.cookies.has("displayMode") &&
+  Astro.cookies.get("displayMode")?.value === "list"
+
+let displayAsList: boolean
+
+if (displayParamIsGrid || (!cookieIsList && !displayParamIsList)) {
+  displayAsList = false
+  Astro.cookies.set("displayMode", "grid")
+} else {
+  displayAsList = true
+  Astro.cookies.set("displayMode", "list")
+}
 
 // If there are search params, filter events accordingly
 if (Astro.url.search) {
@@ -44,7 +63,7 @@ if (Astro.url.search) {
 
 <TopLevelPage>
   <div x-data="{ filtersOpen: false }">
-    <div class="flex justify-between items-baseline gap-4">
+    <div class="flex items-baseline gap-4">
       <h2 class="text-5xl text-orange-500 font-display mb-8">Kommande lajv</h2>
 
       <Button
@@ -53,6 +72,24 @@ if (Astro.url.search) {
         x-on:click="filtersOpen = !filtersOpen"
         ><Filter class="text-white" />Filter
       </Button>
+
+      <Link
+        appearance="button"
+        class="flex gap-2"
+        href={displayAsList ? "/events?display=grid" : "/events?display=list"}
+      >
+        {
+          displayAsList ? (
+            <>
+              <Grid class="text-white" /> Visa kort
+            </>
+          ) : (
+            <>
+              <List class="text-white" /> Visa lista
+            </>
+          )
+        }
+      </Link>
     </div>
 
     <form
