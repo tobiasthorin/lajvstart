@@ -33,29 +33,33 @@ const fewSpotsRemaining =
   >
     <div class="rounded-l-lg w-24 relative overflow-hidden flex-shrink-0">
       <img
-        class="rounded-l-lg object-cover h-full w-full group-hover:scale-105 transition-all"
+        class="rounded-l-lg object-cover h-full w-full group-hover:scale-105 transition-all aspect-[4/3]"
         src={eventImage}
         alt={`Event image for ${event.name}`}
       />
     </div>
     <div class="flex gap-2 p-2 w-full">
-      <h3
+      <h5
         class:list={[
           {
             "text-2xl": event.name.length < 45,
             "text-xl": event.name.length >= 45,
           },
-          "text-black font-display max-w-sm flex items-center",
+          "text-black font-display max-w-sm flex items-start",
         ]}
       >
         {event.name}
-      </h3>
+      </h5>
 
-      <p class="font-normal text-gray-700 dark:text-gray-400">
+      <p
+        class="font-normal text-gray-700 dark:text-gray-400 flex items-start mx-8"
+      >
         {event.description_short}
       </p>
 
-      <ul class="ml-auto grid grid-rows-[auto,auto] grid-flow-col gap-2">
+      <ul
+        class="ml-auto grid grid-rows-[auto,auto] grid-flow-col gap-2 self-start"
+      >
         {
           (event.tags || []).map((tag) => (
             <li class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 capitalize whitespace-nowrap odd:self-end self-start inline-block">
@@ -66,7 +70,7 @@ const fewSpotsRemaining =
       </ul>
 
       <div
-        class="grid grid-cols-[auto,auto] grid-rows-2 gap-x-2 shrink-0 self-center"
+        class="grid grid-cols-[auto,auto] grid-rows-2 gap-x-2 shrink-0 self-start"
       >
         <span
           class="text-sm text-gray-600 small-caps justify-self-end content-center"
@@ -85,7 +89,7 @@ const fewSpotsRemaining =
         >
 
         <span
-          class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 justify-self-end self-center"
+          class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 justify-self-end self-start"
         >
           {event.minimum_age ? `${event.minimum_age}+` : "Alla åldrar"}
         </span>

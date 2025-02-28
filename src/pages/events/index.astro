@@ -16,6 +16,7 @@ import List from "../../components/icons/List.astro"
 import Link from "../../components/Link.astro"
 import Grid from "../../components/icons/Grid.astro"
 import EventListItem from "../../components/EventListItem.astro"
+import { groupEvents } from "../../utils/eventUtils"
 
 let events: LARPEvent[] = []
 
@@ -60,6 +61,8 @@ if (Astro.url.search) {
     }
   }
 }
+
+const eventGroups = groupEvents(events)
 ---
 
 <TopLevelPage>
@@ -130,29 +133,41 @@ if (Astro.url.search) {
     </form>
   </div>
 
-  {events === null && <p>Inga kommande arrangemang</p>}
-
   {events.length === 0 && <p>Inga arrangemang matchar nuvarande filter</p>}
 
   {
-    events !== null && (
-      <ul
-        class={
-          displayAsList
-            ? "flex flex-col gap-4 mb-8"
-            : "grid grid-cols-events gap-8 mb-8"
-        }
-      >
-        {events.map((event) => (
-          <li>
-            {displayAsList ? (
-              <EventListItem event={event} />
-            ) : (
-              <EventCard event={event} />
-            )}
-          </li>
+    Object.entries(eventGroups).map(([year, months]) => (
+      <section>
+        <h3 class="text-3xl text-cyan-700 font-bold font-display my-4 flex items-center gap-8">
+          <hr class="flex-1 border-gray-300" />
+          {year}
+          <hr class="flex-1 border-gray-300" />
+        </h3>
+        {Object.entries(months).map(([month, events]) => (
+          <section>
+            <h4 class="capitalize text-orange-800 small-caps tracking-wide text-xl my-4">
+              {month}
+            </h4>
+            <ul
+              class={
+                displayAsList
+                  ? "flex flex-col gap-4"
+                  : "grid grid-cols-events gap-8"
+              }
+            >
+              {events.map((event) => (
+                <li>
+                  {displayAsList ? (
+                    <EventListItem event={event} />
+                  ) : (
+                    <EventCard event={event} />
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
         ))}
-      </ul>
-    )
+      </section>
+    ))
   }
 </TopLevelPage>
