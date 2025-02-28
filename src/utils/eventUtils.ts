@@ -58,3 +58,16 @@ export function extractEventFormData(formData: FormData) {
     externalWebsiteURL,
   }
 }
+
+export function getEventDateString(startDate: Date, endDate: Date) {
+  const crossesMonth = startDate.getMonth() !== endDate.getMonth()
+  const formattedStartDate = new Intl.DateTimeFormat("sv", {
+    day: "numeric",
+    month: crossesMonth ? "short" : undefined,
+  }).format(startDate)
+  const formattedEndDate = new Intl.DateTimeFormat("sv", {
+    day: "numeric",
+    month: "short",
+  }).format(endDate)
+  return `${formattedStartDate} - ${formattedEndDate}`
+}
