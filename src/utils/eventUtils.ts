@@ -1,3 +1,5 @@
+import type { LARPEvent } from "../types/types"
+
 export function extractEventFormData(formData: FormData) {
   const name = formData.get("name")?.toString()
   const startDate = formData.get("startDate")?.toString()
@@ -70,4 +72,24 @@ export function getEventDateString(startDate: Date, endDate: Date) {
     month: "short",
   }).format(endDate)
   return `${formattedStartDate} - ${formattedEndDate}`
+}
+
+export function groupEvents(events: LARPEvent[]) {
+  const monthFormatter = new Intl.DateTimeFormat("sv", { month: "long" })
+
+  const eventGroups: Record<number, Record<string, LARPEvent[]>> = {}
+
+  events.forEach((event) => {
+    const startDate = new Date(event.date_start)
+    const eventYear = startDate.getFullYear()
+    const eventMonth = monthFormatter.format(startDate)
+
+    if (!eventGroups[eventYear]) eventGroups[eventYear] = {}
+    if (!eventGroups[eventYear][eventMonth])
+      eventGroups[eventYear][eventMonth] = []
+
+    eventGroups[eventYear][eventMonth].push(event)
+  })
+
+  return eventGroups
 }
