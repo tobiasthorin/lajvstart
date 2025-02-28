@@ -17,6 +17,7 @@ import showdown from "showdown"
 import { JSDOM } from "jsdom"
 import DOMPurify from "dompurify"
 import { showdownTailwindExtentions } from "../../../utils/markdownUtils"
+import { getEventDateString } from "../../../utils/eventUtils"
 
 const { isSignedIn } = Astro.locals
 const { id } = Astro.params
@@ -40,16 +41,6 @@ if (isSignedIn) {
   registration = await findRegistration(userId, event.id)
 }
 
-const startDate = new Intl.DateTimeFormat("sv", {
-  day: "numeric",
-  month: "short",
-}).format(new Date(event.date_start))
-const endDate = new Intl.DateTimeFormat("sv", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-}).format(new Date(event.date_end))
-
 const window = new JSDOM("").window
 const purify = DOMPurify(window)
 const cleanDescription = purify.sanitize(event.description)
@@ -65,12 +56,13 @@ const descriptionHTML = converter.makeHtml(cleanDescription)
   <div class="flex flex-col md:flex-row justify-between items-baseline mb-4">
     <h2 class="text-5xl text-orange-500 font-display">{event.name}</h2>
     <p class="text-3xl text-orange-500 font-display">
-      {startDate} - {endDate}
+      {getEventDateString(new Date(event.date_start), new Date(event.date_end))}
     </p>
   </div>
 
   <img
-    src={event.event_image_url}
+    src={event.event_image_url ||
+      `${import.meta.env.SUPABASE_URL}/storage/v1/object/public/system-files/placeholders/event-placeholder.jpg`}
     alt="Event image"
     class="w-full h-36 object-cover mb-8"
   />

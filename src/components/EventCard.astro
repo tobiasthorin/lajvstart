@@ -2,6 +2,7 @@
 import type { HTMLAttributes } from "astro/types"
 import type { LARPEvent } from "../types/types"
 import { getRegistrationsForEvent } from "../services/registrationService"
+import { getEventDateString } from "../utils/eventUtils"
 
 interface Props extends HTMLAttributes<"article"> {
   event: LARPEvent
@@ -12,10 +13,6 @@ const { class: className, event, ...rest } = Astro.props
 const eventImage =
   event.event_image_url ||
   `${import.meta.env.SUPABASE_URL}/storage/v1/object/public/system-files/placeholders/event-placeholder.jpg`
-
-const startDate = new Intl.DateTimeFormat("sv", { dateStyle: "medium" }).format(
-  new Date(event.date_start)
-)
 
 const registrations = await getRegistrationsForEvent(event.id)
 const spotsRemaining = event.maximum_participants - registrations.length
@@ -51,7 +48,12 @@ const fewSpotsRemaining =
       </h3>
 
       <time datetime={event.date_start} class="text-l text-white"
-        >{startDate}</time
+        >{
+          getEventDateString(
+            new Date(event.date_start),
+            new Date(event.date_end)
+          )
+        }</time
       >
     </div>
 
@@ -60,7 +62,7 @@ const fewSpotsRemaining =
         <span
           class="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 self-start"
         >
-          {event.minimum_age ? `${event.minimum_age}+` : "All ages"}
+          {event.minimum_age ? `${event.minimum_age}+` : "Alla åldrar"}
         </span>
 
         <span class="text-sm text-gray-600 small-caps"
@@ -97,6 +99,13 @@ const fewSpotsRemaining =
         !event.display_mode && spotsRemaining > 0 && (
           <span class="font-bold text-green-700 text-right">
             {spotsRemaining} platser kvar
+          </span>
+        )
+      }
+      {
+        event.display_mode && (
+          <span class="font-bold text-green-700 text-right">
+            {spotsRemaining} platser
           </span>
         )
       }
