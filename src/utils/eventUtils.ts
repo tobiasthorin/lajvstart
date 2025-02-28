@@ -14,6 +14,7 @@ export function extractEventFormData(formData: FormData) {
   const useLajvstartSystem = formData.get("useLajvstartSystem")?.toString()
   const finalSignupDate = formData.get("finalSignupDate")?.toString()
   const price = formData.get("price")?.toString()
+  const externalWebsiteURL = formData.get("externalWebsiteURL")?.toString()
 
   if (name === undefined)
     throw new Error(`Missing form data name. Recieved: ${name}`)
@@ -33,20 +34,8 @@ export function extractEventFormData(formData: FormData) {
     throw new Error(
       `Missing form data maximumParticipants. Recieved: ${maximumParticipants}`,
     )
-  if (latitude === undefined)
-    throw new Error(`Missing form data latitude. Recieved: ${latitude}`)
-  if (longitude === undefined)
-    throw new Error(`Missing form data longitude. Recieved: ${longitude}`)
   if (tags === undefined)
     throw new Error(`Missing form data tags. Recieved: ${tags}`)
-  if (ageRestriction === undefined)
-    throw new Error(
-      `Missing form data ageRestriction. Recieved: ${ageRestriction}`,
-    )
-  if (finalSignupDate === undefined)
-    throw new Error(
-      `Missing form data finalSignupDate. Recieved: ${finalSignupDate}`,
-    )
   if (price === undefined)
     throw new Error(`Missing form data price. Recieved: ${price}`)
 
@@ -66,5 +55,6 @@ export function extractEventFormData(formData: FormData) {
     useLajvstartSystem,
     finalSignupDate,
     price,
+    externalWebsiteURL,
   }
 }

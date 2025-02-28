@@ -10,5 +10,5 @@ const { eventId, favouriteExists } = Astro.props
 ---
 
 <Button hx-post={`/api/favourite/${eventId}`} hx-swap="outerHTML">
-  {!favouriteExists ? "☆" : "★"}
+  {!favouriteExists ? "Markera som favorit ☆" : "Avmarkera som favorit ★"}
 </Button>

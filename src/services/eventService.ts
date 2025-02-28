@@ -203,6 +203,7 @@ export async function createEvent({
   location_longitude,
   display_mode,
   price,
+  external_website_url,
 }: Omit<LARPEvent, "owner_id" | "details" | "created_at" | "updated_at">) {
   const { data, error: createEventError } = await supabase
     .from("events")
@@ -224,6 +225,7 @@ export async function createEvent({
       location_longitude,
       display_mode,
       price,
+      external_website_url,
     })
     .select()
     .single()
@@ -255,6 +257,7 @@ export async function updateEvent({
   display_mode,
   price,
   is_published,
+  external_website_url,
 }: { id: EventID } & Partial<LARPEvent>) {
   const event = await getEvent(id)
 
@@ -278,6 +281,7 @@ export async function updateEvent({
       display_mode: display_mode ?? event.display_mode,
       price: price ?? event.price,
       is_published: is_published ?? event.is_published,
+      external_website_url: external_website_url ?? event.external_website_url,
     })
     .eq("id", id)
     .select()
