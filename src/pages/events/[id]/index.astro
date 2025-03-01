@@ -86,7 +86,13 @@ const descriptionHTML = converter.makeHtml(cleanDescription)
       >
         <li>Plats: {event.location_name}</li>
         <li>Sista anmälningsdag: {event.date_signup}</li>
-        <li>Pris: {event.price} {event.currency}</li>
+        {
+          event.price !== null && (
+            <li>
+              Kostnad: {event.price} {event.currency}
+            </li>
+          )
+        }
         {event.minimum_age && <li>Åldersgräns: {event.minimum_age}+</li>}
         <li>
           Taggar: {

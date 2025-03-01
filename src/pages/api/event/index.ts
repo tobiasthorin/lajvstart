@@ -66,7 +66,7 @@ export const POST: APIRoute = async ({ request }) => {
       location_latitude: latitude ? Number(latitude) : null,
       location_longitude: longitude ? Number(longitude) : null,
       display_mode: !useLajvstartSystem,
-      price: Number(price),
+      price: price === "" ? null : Number(price),
       currency: "SEK",
       is_published: false,
       external_website_url: externalWebsiteURL || null,
