@@ -38,8 +38,6 @@ export function extractEventFormData(formData: FormData) {
     )
   if (tags === undefined)
     throw new Error(`Missing form data tags. Recieved: ${tags}`)
-  if (price === undefined)
-    throw new Error(`Missing form data price. Recieved: ${price}`)
 
   return {
     name,

@@ -128,7 +128,7 @@ export type Database = {
           minimum_age: number | null
           name: string
           owner_id: string
-          price: number
+          price: number | null
           tags: string[] | null
           updated_at: string | null
         }
@@ -154,7 +154,7 @@ export type Database = {
           minimum_age?: number | null
           name?: string
           owner_id?: string
-          price?: number
+          price?: number | null
           tags?: string[] | null
           updated_at?: string | null
         }
@@ -180,7 +180,7 @@ export type Database = {
           minimum_age?: number | null
           name?: string
           owner_id?: string
-          price?: number
+          price?: number | null
           tags?: string[] | null
           updated_at?: string | null
         }

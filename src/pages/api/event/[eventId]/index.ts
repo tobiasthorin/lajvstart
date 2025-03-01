@@ -63,7 +63,7 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
       location_longitude: longitude ? Number(longitude) : null,
       display_mode: !useLajvstartSystem,
       date_signup: finalSignupDate || null,
-      price: Number(price),
+      price: price === "" ? null : Number(price),
       external_website_url: externalWebsiteURL || null,
     })
   } catch (error) {
