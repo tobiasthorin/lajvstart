@@ -67,33 +67,36 @@ const eventGroups = groupEvents(events)
 
 <TopLevelPage>
   <div x-data="{ filtersOpen: false }">
-    <div class="flex items-baseline gap-4">
+    <div
+      class="flex max-md:flex-wrap items-baseline justify-center md:justify-between gap-4"
+    >
       <h2 class="text-5xl text-orange-500 font-display mb-8">Kommande lajv</h2>
+      <div class="flex gap-2">
+        <Button
+          size="small"
+          class="flex gap-2"
+          x-on:click="filtersOpen = !filtersOpen"
+          ><Filter class="text-white" />Filter
+        </Button>
 
-      <Button
-        size="small"
-        class="flex gap-2 ml-auto"
-        x-on:click="filtersOpen = !filtersOpen"
-        ><Filter class="text-white" />Filter
-      </Button>
-
-      <Link
-        appearance="button"
-        class="flex gap-2"
-        href={displayAsList ? "/events?display=grid" : "/events?display=list"}
-      >
-        {
-          displayAsList ? (
-            <>
-              <Grid class="text-white" /> Visa kort
-            </>
-          ) : (
-            <>
-              <List class="text-white" /> Visa lista
-            </>
-          )
-        }
-      </Link>
+        <Link
+          appearance="button"
+          class="flex gap-2"
+          href={displayAsList ? "/events?display=grid" : "/events?display=list"}
+        >
+          {
+            displayAsList ? (
+              <>
+                <Grid class="text-white" /> Visa kort
+              </>
+            ) : (
+              <>
+                <List class="text-white" /> Visa lista
+              </>
+            )
+          }
+        </Link>
+      </div>
     </div>
 
     <form

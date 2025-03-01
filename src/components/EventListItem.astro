@@ -38,7 +38,7 @@ const fewSpotsRemaining =
         alt={`Event image for ${event.name}`}
       />
     </div>
-    <div class="flex gap-2 p-2 w-full">
+    <div class="flex gap-2 p-2 w-full max-sm:flex-col max-sm:justify-start">
       <h5
         class:list={[
           {
@@ -52,76 +52,80 @@ const fewSpotsRemaining =
       </h5>
 
       <p
-        class="font-normal text-gray-700 dark:text-gray-400 flex items-start mx-8"
+        class="font-normal text-gray-700 dark:text-gray-400 flex items-start mx-8 max-lg:hidden"
       >
         {event.description_short}
       </p>
 
-      <ul
-        class="ml-auto grid grid-rows-[auto,auto] grid-flow-col gap-2 self-start"
-      >
-        {
-          (event.tags || []).map((tag) => (
-            <li class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 capitalize whitespace-nowrap odd:self-end self-start inline-block">
-              {tag}
-            </li>
-          ))
-        }
-      </ul>
-
       <div
-        class="grid grid-cols-[auto,auto] grid-rows-2 gap-x-2 shrink-0 self-start"
+        class="flex gap-2 flex-wrap max-sm:justify-start sm:ml-auto lg:flex-shrink-0"
       >
-        <span
-          class="text-sm text-gray-600 small-caps justify-self-end content-center"
-          >{event.location_name}</span
+        <ul
+          class="sm:ml-auto grid grid-rows-[auto,auto] grid-flow-col gap-2 self-start"
         >
+          {
+            (event.tags || []).map((tag) => (
+              <li class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 capitalize whitespace-nowrap odd:self-end self-start inline-block">
+                {tag}
+              </li>
+            ))
+          }
+        </ul>
 
-        <time
-          datetime={event.date_start}
-          class="justify-self-end content-center"
-          >{
-            getEventDateString(
-              new Date(event.date_start),
-              new Date(event.date_end)
+        <div
+          class="grid grid-cols-[auto,auto] grid-rows-2 gap-x-2 shrink-0 self-start"
+        >
+          <span
+            class="text-sm text-gray-600 small-caps justify-self-end content-center"
+            >{event.location_name}</span
+          >
+
+          <time
+            datetime={event.date_start}
+            class="justify-self-end content-center"
+            >{
+              getEventDateString(
+                new Date(event.date_start),
+                new Date(event.date_end)
+              )
+            }</time
+          >
+
+          <span
+            class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 justify-self-end self-start"
+          >
+            {event.minimum_age ? `${event.minimum_age}+` : "Alla åldrar"}
+          </span>
+
+          {
+            !event.display_mode && spotsRemaining < 1 && (
+              <span class="font-bold text-red-900 justify-self-end content-center">
+                Slutsålt
+              </span>
             )
-          }</time
-        >
-
-        <span
-          class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 justify-self-end self-start"
-        >
-          {event.minimum_age ? `${event.minimum_age}+` : "Alla åldrar"}
-        </span>
-
-        {
-          !event.display_mode && spotsRemaining < 1 && (
-            <span class="font-bold text-red-900 justify-self-end content-center">
-              Slutsålt
-            </span>
-          )
-        }
-        {
-          !event.display_mode && spotsRemaining > 0 && fewSpotsRemaining && (
-            <span class="font-bold text-yellow-600 justify-self-end content-center">
-              {spotsRemaining} platser kvar
-            </span>
-          )
-        }
-        {
-          !event.display_mode && spotsRemaining > 0 && (
-            <span class="font-bold text-green-700 justify-self-end content-center">
-              {spotsRemaining} platser kvar
-            </span>
-          )
-        }
-        {
-          event.display_mode && (
-            <span class="font-bold text-green-700 justify-self-end content-center">
-              {spotsRemaining} platser
-            </span>
-          )
-        }
+          }
+          {
+            !event.display_mode && spotsRemaining > 0 && fewSpotsRemaining && (
+              <span class="font-bold text-yellow-600 justify-self-end content-center">
+                {spotsRemaining} platser kvar
+              </span>
+            )
+          }
+          {
+            !event.display_mode && spotsRemaining > 0 && (
+              <span class="font-bold text-green-700 justify-self-end content-center">
+                {spotsRemaining} platser kvar
+              </span>
+            )
+          }
+          {
+            event.display_mode && (
+              <span class="font-bold text-green-700 justify-self-end content-center">
+                {spotsRemaining} platser
+              </span>
+            )
+          }
+        </div>
       </div>
     </div>
   </a>
