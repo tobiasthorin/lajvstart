@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro"
 import { supabase } from "../../../lib/supabase"
 import { errorResponse } from "../../../utils/responseUtils"
+import { getUserDetailsByEmail } from "../../../services/userService"
 
 export const POST: APIRoute = async ({ request }) => {
   const formData = await request.formData()
@@ -14,6 +15,12 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response("Email, password, birth date, name are required", {
       status: 400,
     })
+  }
+
+  const existingUser = await getUserDetailsByEmail(email)
+
+  if (existingUser) {
+    return errorResponse(`Det finns redan en användare med denna epost.`, 400)
   }
 
   const { error: signUpError, data } = await supabase.auth.signUp({
