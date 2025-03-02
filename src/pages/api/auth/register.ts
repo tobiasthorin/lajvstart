@@ -17,7 +17,7 @@ export const POST: APIRoute = async ({ request }) => {
     })
   }
 
-  const existingUser = await getUserDetailsByEmail(email)
+  const { data: existingUser } = await getUserDetailsByEmail(email)
 
   if (existingUser) {
     return errorResponse(`Det finns redan en användare med denna epost.`, 400)
