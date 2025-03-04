@@ -2,7 +2,10 @@ import type { APIRoute } from "astro"
 import { updateEvent } from "../../../../services/eventService"
 import { BadRequestError, InternalError } from "../../../../utils/errorUtils"
 import { errorResponse } from "../../../../utils/responseUtils"
-import { uploadEventPicture } from "../../../../utils/storageUtils"
+import {
+  uploadEventBanner,
+  uploadEventPicture,
+} from "../../../../utils/storageUtils"
 import { extractEventFormData } from "../../../../utils/eventUtils"
 
 export const PUT: APIRoute = async ({ request, rewrite, params }) => {
@@ -31,13 +34,25 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
     externalWebsiteURL,
   } = extractEventFormData(formData)
 
-  const eventFile = formData.get("eventPicture") as File | null
+  const eventImageFile = formData.get("eventPicture") as File | null
+  const eventBannerFile = formData.get("eventBanner") as File | null
 
   let filePath: string | null = null
+  let bannerFilePath: string | null = null
 
-  if (eventFile) {
+  if (eventImageFile) {
     try {
-      filePath = await uploadEventPicture(eventFile, eventId)
+      filePath = await uploadEventPicture(eventImageFile, eventId)
+    } catch (error) {
+      if (error instanceof BadRequestError || error instanceof InternalError)
+        return errorResponse(error.message, error.errorCode)
+      else throw error
+    }
+  }
+
+  if (eventBannerFile) {
+    try {
+      bannerFilePath = await uploadEventBanner(eventBannerFile, eventId)
     } catch (error) {
       if (error instanceof BadRequestError || error instanceof InternalError)
         return errorResponse(error.message, error.errorCode)
@@ -55,6 +70,7 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
       date_end: endDate,
       location_name: location,
       event_image_url: filePath,
+      event_banner_url: bannerFilePath,
       tags: tags.split(","),
       is_beginner_friendly: !!beginnerFriendly,
       minimum_age: ageRestriction ? Number(ageRestriction) : null,

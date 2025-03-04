@@ -61,10 +61,11 @@ const descriptionHTML = converter.makeHtml(cleanDescription)
   </div>
 
   <img
-    src={event.event_image_url ||
+    src={event.event_banner_url ||
+      event.event_image_url ||
       `${import.meta.env.SUPABASE_URL}/storage/v1/object/public/system-files/placeholders/event-placeholder.jpg`}
-    alt="Event image"
-    class="w-full h-36 object-cover mb-8"
+    alt="Event banner"
+    class="w-full aspect-[3] md:aspect-[4.5] object-cover mb-8"
   />
 
   <div class="flex flex-col-reverse md:flex-row gap-8">
@@ -85,7 +86,7 @@ const descriptionHTML = converter.makeHtml(cleanDescription)
         class="flex flex-col gap-4 p-4 bg-green-50 rounded border-green-300 border"
       >
         <li>Plats: {event.location_name}</li>
-        <li>Sista anmälningsdag: {event.date_signup}</li>
+        {event.date_signup && <li>Sista anmälningsdag: {event.date_signup}</li>}
         {
           event.price !== null && (
             <li>
