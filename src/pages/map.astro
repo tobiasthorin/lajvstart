@@ -2,6 +2,7 @@
 import TopLevelPage from "../layouts/TopLevelPage.astro"
 import { getUpcomingEvents } from "../services/eventService"
 import { errorResponse as _errorResponse } from "../utils/responseUtils"
+import { escapeCharacters } from "../utils/textUtils"
 
 const events = await getUpcomingEvents()
 if (!events) {
@@ -13,12 +14,15 @@ const locationScripts = events
     (event) =>
       event.location_latitude !== null && event.location_longitude !== null
   )
-  .map(
-    (event) =>
-      `L.marker([${event.location_latitude}, ${event.location_longitude}])
+  .map((event) => {
+    const escapedName = escapeCharacters(event.name)
+    const escapedLocation = escapeCharacters(event.location_name || "")
+    const escapedDescription = escapeCharacters(event.description_short)
+
+    return `L.marker([${event.location_latitude}, ${event.location_longitude}])
     .addTo(map)
-    .bindPopup("<h3 class='font-bold text-lg'>${event.name}</h3> <p>${event.location_name}</p> <p>${event.description_short}</p> <p><a href='/events/${event.id}'>Go to event</a></p>");`
-  )
+    .bindPopup("<h3 class='font-bold text-lg'>${escapedName}</h3> <p>${escapedLocation}</p> <p>${escapedDescription}</p> <p><a href='/events/${event.id}'>Go to event</a></p>");`
+  })
 ---
 
 <TopLevelPage>
