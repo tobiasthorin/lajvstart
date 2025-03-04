@@ -110,6 +110,7 @@ const { method, action, event } = Astro.props
     label="Longitud"
     name="longitude"
     value={event?.location_longitude}
+    caption="Ett sätt att hitta koordinater är att gå till Google Maps och högerklicka på kartan"
   />
 
   <TextArea
@@ -158,7 +159,14 @@ const { method, action, event } = Astro.props
     accept=".jpg,.jpeg,.png,.bmp,.webp"
   />
 
-  <Select multiple id="eventTagsInput" label="Taggar" name="tags" required>
+  <Select
+    multiple
+    id="eventTagsInput"
+    label="Taggar"
+    name="tags"
+    required
+    caption="Håll inne cmd/ctrl för att välja fler taggar"
+  >
     {
       eventTags.map((tag) => (
         <option value={tag} selected={event?.tags?.includes(tag)}>
