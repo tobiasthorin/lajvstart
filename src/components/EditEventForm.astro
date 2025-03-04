@@ -154,8 +154,18 @@ const { method, action, event } = Astro.props
   <Input
     id="eventPicInput"
     type="file"
-    label="Omslagsbild"
+    label="Bild för listan"
+    caption="Bör vara relativt kvadratisk"
     name="eventPicture"
+    accept=".jpg,.jpeg,.png,.bmp,.webp"
+  />
+
+  <Input
+    id="eventBannerInput"
+    type="file"
+    label="Bild för arrangemangssidan"
+    caption="Bör vara ca 4 gånger så bred som den är hög"
+    name="eventBanner"
     accept=".jpg,.jpeg,.png,.bmp,.webp"
   />
 

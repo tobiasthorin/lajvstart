@@ -55,3 +55,10 @@ export async function uploadEventPicture(
     fileData.path
   }`
 }
+
+export async function uploadEventBanner(
+  eventPictureFile: File,
+  eventId: UserID,
+) {
+  return await uploadEventPicture(eventPictureFile, `${eventId}-banner`)
+}

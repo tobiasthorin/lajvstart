@@ -116,6 +116,7 @@ export type Database = {
           description_short: string
           details: Json
           display_mode: boolean
+          event_banner_url: string | null
           event_image_url: string | null
           external_website_url: string | null
           id: string
@@ -142,6 +143,7 @@ export type Database = {
           description_short: string
           details?: Json
           display_mode?: boolean
+          event_banner_url?: string | null
           event_image_url?: string | null
           external_website_url?: string | null
           id?: string
@@ -168,6 +170,7 @@ export type Database = {
           description_short?: string
           details?: Json
           display_mode?: boolean
+          event_banner_url?: string | null
           event_image_url?: string | null
           external_website_url?: string | null
           id?: string
