@@ -9,6 +9,9 @@ export type UserID = UserDetails["id"]
 const usersCache = useNamespace<UserDetails>(USERS_CACHE)
 
 export async function getUserDetails(userId: UserID) {
+  const cachedData = usersCache.get(userId)
+  if (cachedData) return { data: cachedData, error: null }
+
   const { data, error } = await supabase
     .from("user_details")
     .select()

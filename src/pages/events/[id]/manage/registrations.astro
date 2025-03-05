@@ -19,7 +19,7 @@ try {
   return _errorResponse(error)
 }
 
-if (event.owner_id !== userId) Astro.redirect("/events")
+if (event.owner_id !== userId) return Astro.redirect("/events")
 
 const registrations = await getRegistrationsForEvent(event.id)
 ---
