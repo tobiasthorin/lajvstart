@@ -69,6 +69,10 @@ export function getEventDateString(startDate: Date, endDate: Date) {
     day: "numeric",
     month: "short",
   }).format(endDate)
+
+  if (startDate.toDateString() === endDate.toDateString())
+    return formattedEndDate
+
   return `${formattedStartDate} - ${formattedEndDate}`
 }
 
