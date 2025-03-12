@@ -73,10 +73,10 @@ const fewSpotsRemaining =
         </ul>
 
         <div
-          class="grid grid-cols-[auto,auto] grid-rows-2 gap-x-2 shrink-0 self-start"
+          class="grid grid-cols-[auto,auto] grid-rows-2 gap-x-2 shrink-0 self-start max-md:w-full"
         >
           <span
-            class="text-sm text-gray-600 small-caps justify-self-end content-center"
+            class="text-sm text-gray-600 small-caps md:justify-self-end content-center"
             >{event.location_name}</span
           >
 
@@ -92,7 +92,7 @@ const fewSpotsRemaining =
           >
 
           <span
-            class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 justify-self-end self-start"
+            class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 justify-self-start md:justify-self-end self-start"
           >
             {event.minimum_age ? `${event.minimum_age}+` : "Alla åldrar"}
           </span>
