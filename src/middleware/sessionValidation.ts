@@ -11,7 +11,7 @@ const protectedRoutes = [
   "/api/favourite/**",
   "/api/event/**",
 ]
-const publicRoutes = ["/events/**", "/map"]
+const publicRoutes = ["/events/**", "/map", "/about"]
 
 const usersCache = useNamespace<UserDetails>(USERS_CACHE)
 

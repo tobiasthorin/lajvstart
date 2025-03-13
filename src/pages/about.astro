@@ -1,0 +1,46 @@
+---
+import TopLevelPage from "../layouts/TopLevelPage.astro"
+---
+
+<TopLevelPage>
+  <h2 class="text-4xl text-orange-500 font-display mb-8">Om Lajvstart</h2>
+  <div class="max-w-lg flex flex-col items-center mx-auto">
+    <blockquote class="font-display text-3xl text-cyan-700">
+      "Det skall vara lätt att lajva!"
+    </blockquote>
+
+    <p class="text-center my-4">
+      Lajvstart skapades med ambitionen att samla alla lajvarrangemang i Sverige
+      på ett och samma ställe. Genom att bidra med en gemensam plats för
+      information om såväl arrangemang som hobbyn i allmänhet kan lajvsverige på
+      sikt bli mindre beroende av internationella storföretag för att samordna
+      och organisera sig. Lajvstart vill vara ett rakt och tydligt svar på
+      frågan "Var hittar man lajv?".
+    </p>
+
+    <img
+      class="rounded-full w-32 h-32 mt-8"
+      src={`${import.meta.env.SUPABASE_URL}/storage/v1/object/public/system-files/photos/tobias.jpg`}
+      alt="The face of Tobias Thorin"
+    /><p class="text-center my-4">
+      Lajvstart är skapad av och underhålls av Tobias Thorin, mjukvaruutvecklare
+      och allmän nörd från västsverige. Kontakt: <a
+        class="text-blue-700 underline"
+        href="mailto:tobias@lajvstart.se">tobias@lajvstart.se</a
+      >.
+    </p>
+
+    <img
+      class="h-20 mt-8"
+      src={`${import.meta.env.SUPABASE_URL}/storage/v1/object/public/system-files/photos/discord.png`}
+      alt="The Discord logo"
+    /><p class="text-center my-4">
+      Gå med i Lajvstarts <a
+        href="https://discord.gg/bdA6hfXBgu"
+        class="text-blue-700 underline">Discord</a
+      > om du vill ha de senaste uppdateringarna om vad som händer med tjänsten,
+      komma med förslag eller förbättringar, eller vill vara med och testa ny funktionalitet
+      innan den släpps.
+    </p>
+  </div>
+</TopLevelPage>

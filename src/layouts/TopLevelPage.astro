@@ -143,6 +143,20 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
                     Karta
                   </a>
                 </li>
+
+                <li>
+                  <a
+                    class="block py-2 px-3 text-white"
+                    href="/about"
+                    hx-boost="true"
+                    hx-target="#main"
+                    x-bind:class="activePage === 'about' ? 'font-bold underline underline-offset-8 decoration-4' : ''"
+                    x-on:click="activePage = 'about'"
+                    aria-current="page"
+                  >
+                    Om
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -152,16 +166,6 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
       <main id="main" class="md:max-w-screen-xl w-full mx-auto p-4">
         <slot />
       </main>
-
-      <footer class="flex justify-center w-full mt-64 mb-4">
-        <span class="block px-4">
-          Gå med i Lajvstarts
-          <a href="https://discord.gg/bdA6hfXBgu" class="text-blue-700 ">
-            Discord
-          </a>
-          för uppdateringar och diskussioner.
-        </span>
-      </footer>
     </BaseHtml>
   )
 }
