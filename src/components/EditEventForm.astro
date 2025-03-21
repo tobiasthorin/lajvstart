@@ -86,32 +86,84 @@ const { method, action, event } = Astro.props
     name="finalSignupDate"
     value={event?.date_signup}
   />
+  <fieldset
+    class="flex flex-wrap gap-4 border rounded border-slate-400 bg-slate-100 p-4"
+  >
+    <legend class="px-2">Plats</legend>
 
-  <Input
-    id="eventLocation"
-    type="text"
-    label="Ortsnamn eller Plats"
-    name="location"
-    required
-    value={event?.location_name}
-  />
+    <Input
+      id="eventLocation"
+      type="text"
+      label="Ortsnamn"
+      name="location"
+      required
+      value={event?.location_name}
+      class="flex-1 min-w-[300px]"
+    />
+    <div class="flex-1 flex flex-col gap-4">
+      <div id="map" class="aspect-video rounded min-w-[400px] cursor-pointer">
+      </div>
 
-  <Input
-    id="eventLatitude"
-    type="text"
-    label="Latitud"
-    name="latitude"
-    value={event?.location_latitude}
-  />
+      <script
+        is:inline
+        define:vars={{
+          eventLat: event?.location_latitude,
+          eventLng: event?.location_longitude,
+        }}
+      >
+        let marker
 
-  <Input
-    id="eventLongitude"
-    type="text"
-    label="Longitud"
-    name="longitude"
-    value={event?.location_longitude}
-    caption="Ett sätt att hitta koordinater är att gå till Google Maps och högerklicka på kartan"
-  />
+        var map = L.map("map").setView([61, 14], 6)
+
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution:
+            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }).addTo(map)
+
+        if (eventLat && eventLng) {
+          marker = L.marker([eventLat, eventLng]).addTo(map)
+        }
+
+        map.on("click", (event) => {
+          const latInput = document.querySelector("#eventLatitude")
+          const lngInput = document.querySelector("#eventLongitude")
+          latInput.value = event.latlng.lat
+          lngInput.value = event.latlng.lng
+
+          if (!marker) {
+            marker = L.marker([event.latlng.lat, event.latlng.lng]).addTo(map)
+          } else {
+            marker.setLatLng([event.latlng.lat, event.latlng.lng])
+          }
+        })
+      </script>
+
+      <div class="flex gap-4">
+        <Input
+          id="eventLatitude"
+          type="text"
+          label="Latitud"
+          name="latitude"
+          value={event?.location_latitude}
+          size="small"
+          required
+          readonly
+        />
+
+        <Input
+          id="eventLongitude"
+          type="text"
+          label="Longitud"
+          name="longitude"
+          value={event?.location_longitude}
+          size="small"
+          required
+          readonly
+        />
+      </div>
+    </div>
+  </fieldset>
 
   <TextArea
     id="eventDescriptionShort"
