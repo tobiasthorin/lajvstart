@@ -9,20 +9,17 @@ if (!events) {
   return _errorResponse("Could not get upcoming events")
 }
 
-const locationScripts = events
+const eventsWithLocation = events
   .filter(
     (event) =>
       event.location_latitude !== null && event.location_longitude !== null
   )
-  .map((event) => {
-    const escapedName = escapeCharacters(event.name)
-    const escapedLocation = escapeCharacters(event.location_name || "")
-    const escapedDescription = escapeCharacters(event.description_short)
-
-    return `L.marker([${event.location_latitude}, ${event.location_longitude}])
-    .addTo(map)
-    .bindPopup("<h3 class='font-bold text-lg'>${escapedName}</h3> <p>${escapedLocation}</p> <p>${escapedDescription}</p> <p><a href='/events/${event.id}'>Go to event</a></p>");`
-  })
+  .map((event) => ({
+    ...event,
+    name: escapeCharacters(event.name),
+    location_name: escapeCharacters(event.location_name || ""),
+    description_short: escapeCharacters(event.description_short),
+  }))
 ---
 
 <TopLevelPage>
@@ -32,7 +29,7 @@ const locationScripts = events
 
   <div id="map" class="rounded z-10" style="height: calc(100vh - 190px);"></div>
 
-  <script is:inline>
+  <script is:inline define:vars={{ events: eventsWithLocation }}>
     var map = L.map("map").setView([61, 14], 6)
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -40,7 +37,13 @@ const locationScripts = events
       attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map)
-  </script>
 
-  {locationScripts.map((script) => <script is:inline set:html={script} />)}
+    events.forEach((event) => {
+      L.marker([event.location_latitude, event.location_longitude])
+        .addTo(map)
+        .bindPopup(
+          `<h3 class='font-bold text-lg'>${event.name}</h3> <p>${event.location_name}</p> <p>${event.description_short}</p> <p><a href='/events/${event.id}'>Go to event</a></p>`
+        )
+    })
+  </script>
 </TopLevelPage>
