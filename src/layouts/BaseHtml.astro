@@ -6,7 +6,7 @@ import "tailwindcss/utilities.css"
 
 <html lang="en" class="min-h-screen antialiased">
   <head>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
@@ -18,12 +18,6 @@ import "tailwindcss/utilities.css"
 
     <title>Lajvstart</title>
 
-    <!-- HTMX -->
-    <script is:inline src="https://unpkg.com/htmx.org@1"></script>
-    <script
-      is:inline
-      src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
-
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -31,27 +25,21 @@ import "tailwindcss/utilities.css"
       href="https://fonts.googleapis.com/css2?family=Londrina+Solid&display=swap"
       rel="stylesheet"
     />
+
+    <!-- HTMX -->
+    <script is:inline src="/scripts/htmx.min.js"></script>
+    <script is:inline async src="/scripts/response-targets.js"></script>
+
     <!-- LEAFLET -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-    <script
-      is:inline
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""></script>
+    <script is:inline src="/scripts/leaflet.js"></script>
+    <link rel="stylesheet" href="/styles/leaflet.css" />
+    <script is:inline src="/scripts/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="/styles/MarkerCluster.css" />
+    <link rel="stylesheet" href="/styles/MarkerCluster.Default.css" />
 
     <!-- SIMPLE MDE -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"
-    />
-    <script
-      is:inline
-      src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script is:inline src="/scripts/simplemde.min.js"></script>
+    <link rel="stylesheet" href="/styles/simplemde.min.css" />
   </head>
   <body
     hx-ext="response-targets"
@@ -60,10 +48,8 @@ import "tailwindcss/utilities.css"
     <slot />
 
     <!-- FLOWBITE JS -->
-    <script
-      is:inline
-      src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.js"
-    ></script>
+    <script is:inline async src="/scripts/flowbite.min.js"></script>
+
     <script>
       htmx.onLoad(function () {
         initFlowbite()

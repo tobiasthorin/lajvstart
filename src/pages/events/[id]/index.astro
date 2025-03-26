@@ -18,7 +18,7 @@ import { JSDOM } from "jsdom"
 import DOMPurify from "dompurify"
 import { showdownTailwindExtentions } from "../../../utils/markdownUtils"
 import { getEventDateString } from "../../../utils/eventUtils"
-import { prettifyURL } from "../../../utils/textUtils"
+import { getLowestEventAgeLimit, prettifyURL } from "../../../utils/textUtils"
 
 const { isSignedIn } = Astro.locals
 const { id } = Astro.params
@@ -95,7 +95,9 @@ const descriptionHTML = converter.makeHtml(cleanDescription)
             </li>
           )
         }
-        {event.minimum_age && <li>Åldersgräns: {event.minimum_age}+</li>}
+
+        <li>Åldersgräns: {getLowestEventAgeLimit(event)}</li>
+
         <li>
           Taggar: {
             (event.tags || []).map((tag) => (
