@@ -3,6 +3,7 @@ import type { HTMLAttributes } from "astro/types"
 import type { LARPEvent } from "../types/types"
 import { getRegistrationsForEvent } from "../services/registrationService"
 import { getEventDateString } from "../utils/eventUtils"
+import { getLowestEventAgeLimit } from "../utils/textUtils"
 
 interface Props extends HTMLAttributes<"article"> {
   event: LARPEvent
@@ -62,7 +63,7 @@ const fewSpotsRemaining =
         <span
           class="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 self-start"
         >
-          {event.minimum_age ? `${event.minimum_age}+` : "Alla åldrar"}
+          {getLowestEventAgeLimit(event)}
         </span>
 
         <span class="text-sm text-gray-600 small-caps"

@@ -15,7 +15,9 @@ const eventsWithLocation = events
       event.location_latitude !== null && event.location_longitude !== null
   )
   .map((event) => ({
-    ...event,
+    id: event.id,
+    location_latitude: event.location_latitude,
+    location_longitude: event.location_longitude,
     name: escapeCharacters(event.name),
     location_name: escapeCharacters(event.location_name || ""),
     description_short: escapeCharacters(event.description_short),
@@ -32,18 +34,21 @@ const eventsWithLocation = events
   <script is:inline define:vars={{ events: eventsWithLocation }}>
     var map = L.map("map").setView([61, 14], 6)
 
+    var markers = L.markerClusterGroup()
+    events.forEach((event) => {
+      markers.addLayer(
+        L.marker([event.location_latitude, event.location_longitude]).bindPopup(
+          `<h3 class='font-bold text-lg'>${event.name}</h3> <p>${event.location_name}</p> <p>${event.description_short}</p> <p><a href='/events/${event.id}'>Go to event</a></p>`
+        )
+      )
+    })
+
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
       attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map)
 
-    events.forEach((event) => {
-      L.marker([event.location_latitude, event.location_longitude])
-        .addTo(map)
-        .bindPopup(
-          `<h3 class='font-bold text-lg'>${event.name}</h3> <p>${event.location_name}</p> <p>${event.description_short}</p> <p><a href='/events/${event.id}'>Go to event</a></p>`
-        )
-    })
+    map.addLayer(markers)
   </script>
 </TopLevelPage>
