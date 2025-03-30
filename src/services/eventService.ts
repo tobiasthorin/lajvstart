@@ -9,6 +9,7 @@ import type { LARPEvent } from "../types/types"
 import { log } from "../lib/logger"
 import type { UserID } from "./userService"
 import { z } from "zod"
+import type { Database } from "../types/supabase"
 
 export type EventID = LARPEvent["id"]
 
@@ -37,11 +38,30 @@ const eventDetailSchema = z.object({
     .optional(),
 })
 
+const eventPriceSchema = z.object({
+  price: z.number(),
+  description: z.string(),
+})
+
 export const eventDetailsSchema = z.array(eventDetailSchema)
+export const eventPricesSchema = z.array(eventPriceSchema).nullable()
 
 export type EventDetailsSchema = z.infer<typeof eventDetailsSchema>
 export type EventDetailsType = z.infer<typeof detailsTypeEnum>
 export type EventDetail = z.infer<typeof eventDetailSchema>
+
+export type EventPrice = z.infer<typeof eventPriceSchema>
+export type EventPrices = z.infer<typeof eventPricesSchema>
+
+function mapDataToEvent(
+  data: Database["public"]["Tables"]["events"]["Row"],
+): LARPEvent {
+  return {
+    ...data,
+    details: eventDetailsSchema.parse(data.details),
+    prices: eventPricesSchema.parse(data.prices),
+  }
+}
 
 export async function getUpcomingEvents() {
   const eventsCache = useNamespace<LARPEvent[]>(EVENT_COLLECTIONS_CACHE)
@@ -59,10 +79,7 @@ export async function getUpcomingEvents() {
 
     if (error) throw new Error(error.message)
 
-    const parsedData = data.map((d) => ({
-      ...d,
-      details: eventDetailsSchema.parse(d.details),
-    }))
+    const parsedData = data.map(mapDataToEvent)
 
     eventCollectionsCache.set("upcoming", parsedData, 1000 * 60 * 5)
     return parsedData
@@ -95,10 +112,7 @@ export async function getFilteredEvents({
 
   if (error) throw new Error(error.message)
 
-  const parsedData = data.map((d) => ({
-    ...d,
-    details: eventDetailsSchema.parse(d.details),
-  }))
+  const parsedData = data.map(mapDataToEvent)
 
   return parsedData
 }
@@ -118,10 +132,7 @@ export async function getFavouriteEvents(userId: UserID) {
   )
 
   // TODO: cache?
-  const parsedData = filteredData.map((d) => ({
-    ...d,
-    details: eventDetailsSchema.parse(d.details),
-  }))
+  const parsedData = filteredData.map(mapDataToEvent)
 
   return parsedData
 }
@@ -147,10 +158,7 @@ export async function getEvent(eventId: LARPEvent["id"]) {
     if (error) {
       throw new Error(error.message)
     } else {
-      const parsedData = {
-        ...data,
-        details: eventDetailsSchema.parse(data.details),
-      }
+      const parsedData = mapDataToEvent(data)
 
       eventsCache.set(eventId, parsedData, 1000 * 60 * 5)
       return parsedData
@@ -174,10 +182,7 @@ export async function getMyEvents(userId: UserID) {
     if (error) {
       throw new Error(error.message)
     } else {
-      const parsedData = data.map((d) => ({
-        ...d,
-        details: eventDetailsSchema.parse(d.details),
-      }))
+      const parsedData = data.map(mapDataToEvent)
 
       userEventsCache.set(userId, parsedData, 1000 * 60 * 5)
       return parsedData
@@ -205,6 +210,7 @@ export async function createEvent({
   display_mode,
   price,
   external_website_url,
+  prices,
 }: Omit<LARPEvent, "owner_id" | "details" | "created_at" | "updated_at">) {
   const { data, error: createEventError } = await supabase
     .from("events")
@@ -228,6 +234,7 @@ export async function createEvent({
       display_mode,
       price,
       external_website_url,
+      prices,
     })
     .select()
     .single()
@@ -237,7 +244,7 @@ export async function createEvent({
   eventsCache.clear()
   userEventsCache.clear()
 
-  return data
+  return mapDataToEvent(data)
 }
 
 export async function updateEvent({
@@ -261,6 +268,7 @@ export async function updateEvent({
   price,
   is_published,
   external_website_url,
+  prices,
 }: { id: EventID } & Partial<LARPEvent>) {
   const event = await getEvent(id)
 
@@ -296,6 +304,7 @@ export async function updateEvent({
       price: price ?? event.price,
       is_published: is_published ?? event.is_published,
       external_website_url: external_website_url ?? event.external_website_url,
+      prices: prices === undefined ? event.prices : prices,
     })
     .eq("id", id)
     .select()
@@ -304,10 +313,7 @@ export async function updateEvent({
   if (updateEventError || data === null)
     throw new Error(updateEventError?.message ?? "Data is null")
 
-  const parsedData = {
-    ...data,
-    details: eventDetailsSchema.parse(data.details),
-  }
+  const parsedData = mapDataToEvent(data)
 
   eventsCache.clear()
   userEventsCache.clear()
