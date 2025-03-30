@@ -130,6 +130,7 @@ export type Database = {
           name: string
           owner_id: string
           price: number | null
+          prices: Json | null
           tags: string[] | null
           updated_at: string | null
         }
@@ -157,6 +158,7 @@ export type Database = {
           name?: string
           owner_id?: string
           price?: number | null
+          prices?: Json | null
           tags?: string[] | null
           updated_at?: string | null
         }
@@ -184,6 +186,7 @@ export type Database = {
           name?: string
           owner_id?: string
           price?: number | null
+          prices?: Json | null
           tags?: string[] | null
           updated_at?: string | null
         }
