@@ -47,6 +47,6 @@
     "@types/showdown": "^2.0.6",
     "@types/simplemde": "^1.11.11",
     "@types/uuid": "^9.0.8",
-    "supabase": "^1.223.10"
+    "supabase": "^2.20.5"
   }
 }
