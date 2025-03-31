@@ -16,8 +16,12 @@ const eventImage =
   `${import.meta.env.SUPABASE_URL}/storage/v1/object/public/system-files/placeholders/event-placeholder.jpg`
 
 const registrations = await getRegistrationsForEvent(event.id)
-const spotsRemaining = event.maximum_participants - registrations.length
+const spotsRemaining =
+  event.maximum_participants === null
+    ? null
+    : event.maximum_participants - registrations.length
 const fewSpotsRemaining =
+  event.maximum_participants !== null &&
   registrations.length / event.maximum_participants > 0.8
 ---
 
@@ -85,28 +89,37 @@ const fewSpotsRemaining =
       </ul>
 
       {
-        !event.display_mode && spotsRemaining < 1 && (
-          <span class="font-bold text-red-900 text-right">Slutsålt</span>
-        )
+        !event.display_mode &&
+          spotsRemaining !== null &&
+          spotsRemaining < 1 && (
+            <span class="font-bold text-red-900 text-right">Slutsålt</span>
+          )
       }
       {
-        !event.display_mode && spotsRemaining > 0 && fewSpotsRemaining && (
-          <span class="font-bold text-yellow-600 text-right">
-            {spotsRemaining} platser kvar
-          </span>
-        )
+        !event.display_mode &&
+          spotsRemaining !== null &&
+          spotsRemaining > 0 &&
+          fewSpotsRemaining && (
+            <span class="font-bold text-yellow-600 text-right">
+              {spotsRemaining} platser kvar
+            </span>
+          )
       }
       {
-        !event.display_mode && spotsRemaining > 0 && (
-          <span class="font-bold text-green-700 text-right">
-            {spotsRemaining} platser kvar
-          </span>
-        )
+        !event.display_mode &&
+          spotsRemaining !== null &&
+          spotsRemaining > 0 && (
+            <span class="font-bold text-green-700 text-right">
+              {spotsRemaining} platser kvar
+            </span>
+          )
       }
       {
         event.display_mode && (
           <span class="font-bold text-green-700 text-right">
-            {spotsRemaining} platser
+            {spotsRemaining === null
+              ? "Ingen deltagargräns"
+              : `${spotsRemaining} platser`}
           </span>
         )
       }

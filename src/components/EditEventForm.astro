@@ -238,29 +238,29 @@ const { method, action, event } = Astro.props
     }
   </Select>
 
-  <!-- <Checkbox
-    id="eventBeginnerFriendly"
-    label="Nybörjarvänligt"
-    name="beginnerFriendly"
-    inputProps={{ checked: event?.is_beginner_friendly }}
-  /> -->
+  <fieldset
+    class="flex flex-wrap gap-4 border rounded border-slate-400 bg-slate-100 p-4"
+  >
+    <legend class="px-2">Begränsningar</legend>
 
-  <Input
-    id="ageRestriction"
-    type="number"
-    label="Lägsta tillåtna ålder"
-    name="ageRestriction"
-    value={event?.minimum_age}
-  />
+    <Input
+      id="ageRestriction"
+      type="number"
+      label="Lägsta tillåtna ålder"
+      name="ageRestriction"
+      value={event?.minimum_age}
+      class="flex-1 min-w-[300px]"
+    />
 
-  <Input
-    id="maximumParticipants"
-    type="number"
-    label="Deltagargräns"
-    name="maximumParticipants"
-    value={event?.maximum_participants}
-    required
-  />
+    <Input
+      id="maximumParticipants"
+      type="number"
+      label="Deltagargräns"
+      name="maximumParticipants"
+      value={event?.maximum_participants}
+      class="flex-1 min-w-[300px]"
+    />
+  </fieldset>
 
   <div class="self-end">
     <Button variant="secondary" class="mr-4" type="reset">Rensa</Button>

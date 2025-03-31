@@ -78,7 +78,9 @@ export const POST: APIRoute = async ({ request }) => {
       tags: tags.split(","),
       is_beginner_friendly: !!beginnerFriendly,
       minimum_age: ageRestriction ? Number(ageRestriction) : null,
-      maximum_participants: Number(maximumParticipants),
+      maximum_participants: maximumParticipants
+        ? Number(maximumParticipants)
+        : null,
       location_latitude: latitude ? Number(latitude) : null,
       location_longitude: longitude ? Number(longitude) : null,
       display_mode: !useLajvstartSystem,

@@ -73,8 +73,9 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
       event_banner_url: bannerFilePath,
       tags: tags.split(","),
       is_beginner_friendly: !!beginnerFriendly,
-      minimum_age: ageRestriction ? Number(ageRestriction) : null,
-      maximum_participants: Number(maximumParticipants),
+      minimum_age: ageRestriction === "" ? null : Number(ageRestriction),
+      maximum_participants:
+        maximumParticipants === "" ? null : Number(maximumParticipants),
       location_latitude: latitude ? Number(latitude) : null,
       location_longitude: longitude ? Number(longitude) : null,
       display_mode: !useLajvstartSystem,
