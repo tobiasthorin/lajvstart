@@ -125,7 +125,7 @@ export type Database = {
           location_latitude: number | null
           location_longitude: number | null
           location_name: string | null
-          maximum_participants: number
+          maximum_participants: number | null
           minimum_age: number | null
           name: string
           owner_id: string
@@ -152,7 +152,7 @@ export type Database = {
           location_latitude?: number | null
           location_longitude?: number | null
           location_name?: string | null
-          maximum_participants?: number
+          maximum_participants?: number | null
           minimum_age?: number | null
           name?: string
           owner_id?: string
@@ -179,7 +179,7 @@ export type Database = {
           location_latitude?: number | null
           location_longitude?: number | null
           location_name?: string | null
-          maximum_participants?: number
+          maximum_participants?: number | null
           minimum_age?: number | null
           name?: string
           owner_id?: string
@@ -510,4 +510,3 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
     ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
-
