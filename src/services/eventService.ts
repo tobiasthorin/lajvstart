@@ -278,8 +278,18 @@ export async function updateEvent({
       event_banner_url: event_banner_url ?? event.event_banner_url,
       tags: tags ?? event.tags,
       is_beginner_friendly: is_beginner_friendly ?? event.is_beginner_friendly,
-      minimum_age: minimum_age ?? event.minimum_age,
-      maximum_participants: maximum_participants ?? event.maximum_participants,
+      minimum_age:
+        minimum_age === undefined
+          ? event.minimum_age
+          : minimum_age === null
+            ? null
+            : minimum_age,
+      maximum_participants:
+        maximum_participants === undefined
+          ? event.maximum_participants
+          : maximum_participants === null
+            ? null
+            : maximum_participants,
       location_latitude: location_latitude ?? event.location_latitude,
       location_longitude: location_longitude ?? event.location_longitude,
       display_mode: display_mode ?? event.display_mode,

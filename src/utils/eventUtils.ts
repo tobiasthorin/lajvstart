@@ -32,10 +32,6 @@ export function extractEventFormData(formData: FormData) {
     throw new Error(
       `Missing form data descriptionShort. Recieved: ${descriptionShort}`,
     )
-  if (maximumParticipants === undefined)
-    throw new Error(
-      `Missing form data maximumParticipants. Recieved: ${maximumParticipants}`,
-    )
   if (tags === undefined)
     throw new Error(`Missing form data tags. Recieved: ${tags}`)
 
