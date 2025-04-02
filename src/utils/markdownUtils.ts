@@ -6,6 +6,7 @@ const classMap: Record<string, string> = {
   li: "ui item",
   a: "underline text-orange-700",
   hr: "mb-4 mt-4",
+  p: "mb-4",
 }
 
 export const showdownTailwindExtentions = Object.keys(classMap).map((key) => ({
