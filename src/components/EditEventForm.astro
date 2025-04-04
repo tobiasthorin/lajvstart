@@ -7,6 +7,8 @@ import Input from "./Input.astro"
 import Select from "./Select.astro"
 import TextArea from "./TextArea.astro"
 import type { LARPEvent } from "../types/types"
+import Trash from "./icons/Trash.astro"
+import Plus from "./icons/Plus.astro"
 
 interface Props {
   method: HTMLAttributes<"form">["method"]
@@ -15,6 +17,15 @@ interface Props {
 }
 
 const { method, action, event } = Astro.props
+const initialPrices = !event?.prices
+  ? [{ id: crypto.randomUUID(), price: 0, description: "" }]
+  : event?.prices?.map((price) => ({
+      id: crypto.randomUUID(),
+      price: price.price,
+      description: price.description,
+    }))
+const pricesString = JSON.stringify(initialPrices)
+const isFreeString = !event?.prices ? "true" : "false"
 ---
 
 <form
@@ -53,13 +64,64 @@ const { method, action, event } = Astro.props
     placeholder="https://www.minlajvsida.se"
   />
 
-  <Input
-    id="priceInput"
-    type="number"
-    label="Pris (SEK)"
-    name="price"
-    value={event?.price}
-  />
+  <fieldset
+    class="flex flex-col flex-wrap gap-4 border rounded border-slate-400 bg-slate-100 p-4"
+    x-data={`{ free: ${isFreeString}, prices: ${pricesString} }`}
+  >
+    <legend class="px-2">Prisnivåer</legend>
+
+    <Checkbox
+      id="isFree"
+      label="Detta arrangemang är gratis"
+      name="isFree"
+      x-model="free"
+    />
+
+    <ul x-show="!free" class="flex flex-col gap-4">
+      <template x-for="(price, index) in prices" :key="price.id"
+        ><li class="flex gap-4 items-end">
+          <Input
+            class="flex-1 min-w-20"
+            id=""
+            x-bind:id="`priceValue-${index}`"
+            label="Pris (SEK)"
+            x-bind:name="`priceValue-${index}`"
+            type="number"
+            required
+            min="0"
+            x-bind:value="price.price"
+          />
+          <Input
+            class="flex-[4]"
+            id=""
+            x-bind:id="`priceDescription-${index}`"
+            label="Beskrivning"
+            x-bind:name="`priceDescription-${index}`"
+            x-bind:value="price.description"
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            size="small"
+            class="self-end"
+            x-on:click="prices.splice(index, 1)"
+            x-bind:disabled="prices.length <= 1"
+          >
+            <Trash />
+            <span class="sr-only">Radera prisnivå</span>
+          </Button>
+        </li></template
+      >
+    </ul>
+    <Button
+      class="self-start"
+      type="button"
+      variant="secondary"
+      x-show="!free && (prices === null || prices.length < 5)"
+      x-on:click="prices.push({id:window.crypto.randomUUID(), price: 0, description: ''})"
+      ><Plus /></Button
+    >
+  </fieldset>
 
   <Input
     id="eventStartDateInput"
