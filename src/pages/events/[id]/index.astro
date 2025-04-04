@@ -87,11 +87,24 @@ const descriptionHTML = converter.makeHtml(cleanDescription)
         class="flex flex-col gap-4 p-4 bg-green-50 rounded border-green-300 border"
       >
         <li>Plats: {event.location_name}</li>
+
         {event.date_signup && <li>Sista anmälningsdag: {event.date_signup}</li>}
+
+        {event.prices === null && <p>Gratis</p>}
+
         {
-          event.price !== null && (
+          event.prices !== null && (
             <li>
-              Kostnad: {event.price} {event.currency}
+              <p>Prisnivåer:</p>
+              <ul class="list-disc ml-6">
+                {event.prices.map((price) => (
+                  <li>
+                    <span class="font-bold">{price.price}</span>
+                    <span class="text-sm"> SEK</span>
+                    {price.description && <span> : {price.description}</span>}
+                  </li>
+                ))}
+              </ul>
             </li>
           )
         }
