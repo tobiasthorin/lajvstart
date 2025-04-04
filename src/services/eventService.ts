@@ -208,10 +208,12 @@ export async function createEvent({
   location_latitude,
   location_longitude,
   display_mode,
-  price,
   external_website_url,
   prices,
-}: Omit<LARPEvent, "owner_id" | "details" | "created_at" | "updated_at">) {
+}: Omit<
+  LARPEvent,
+  "owner_id" | "details" | "created_at" | "updated_at" | "price"
+>) {
   const { data, error: createEventError } = await supabase
     .from("events")
     .insert({
@@ -232,7 +234,6 @@ export async function createEvent({
       location_latitude,
       location_longitude,
       display_mode,
-      price,
       external_website_url,
       prices,
     })
@@ -265,7 +266,6 @@ export async function updateEvent({
   location_latitude,
   location_longitude,
   display_mode,
-  price,
   is_published,
   external_website_url,
   prices,
@@ -301,7 +301,7 @@ export async function updateEvent({
       location_latitude: location_latitude ?? event.location_latitude,
       location_longitude: location_longitude ?? event.location_longitude,
       display_mode: display_mode ?? event.display_mode,
-      price: price ?? event.price,
+      price: null,
       is_published: is_published ?? event.is_published,
       external_website_url: external_website_url ?? event.external_website_url,
       prices: prices === undefined ? event.prices : prices,

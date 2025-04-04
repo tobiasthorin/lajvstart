@@ -30,8 +30,9 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
     longitude,
     useLajvstartSystem,
     finalSignupDate,
-    price,
     externalWebsiteURL,
+    prices,
+    isFree,
   } = extractEventFormData(formData)
 
   const eventImageFile = formData.get("eventPicture") as File | null
@@ -80,8 +81,8 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
       location_longitude: longitude ? Number(longitude) : null,
       display_mode: !useLajvstartSystem,
       date_signup: finalSignupDate || null,
-      price: price === "" ? null : Number(price),
       external_website_url: externalWebsiteURL || null,
+      prices: isFree ? null : prices,
     })
   } catch (error) {
     if (error instanceof Error) return errorResponse(error.message, 500)

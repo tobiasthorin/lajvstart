@@ -1,3 +1,4 @@
+import type { EventPrice } from "../services/eventService"
 import type { LARPEvent } from "../types/types"
 
 export function extractEventFormData(formData: FormData) {
@@ -15,8 +16,21 @@ export function extractEventFormData(formData: FormData) {
   const longitude = formData.get("longitude")?.toString()
   const useLajvstartSystem = formData.get("useLajvstartSystem")?.toString()
   const finalSignupDate = formData.get("finalSignupDate")?.toString()
-  const price = formData.get("price")?.toString()
   const externalWebsiteURL = formData.get("externalWebsiteURL")?.toString()
+  const isFree = formData.get("isFree")?.toString()
+
+  const prices: EventPrice[] = []
+
+  for (let index = 0; index < 5; index++) {
+    const price = formData.get(`priceValue-${index}`)?.toString()
+    const description = formData.get(`priceDescription-${index}`)?.toString()
+
+    if (!price && !description) {
+      break
+    }
+
+    prices.push({ price: Number(price), description: description! })
+  }
 
   if (name === undefined)
     throw new Error(`Missing form data name. Recieved: ${name}`)
@@ -50,8 +64,9 @@ export function extractEventFormData(formData: FormData) {
     longitude,
     useLajvstartSystem,
     finalSignupDate,
-    price,
     externalWebsiteURL,
+    prices,
+    isFree,
   }
 }
 
