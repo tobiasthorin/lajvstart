@@ -21,6 +21,7 @@ export async function uploadAvatar(avatarFile: File, userId: UserID) {
       avatarFile,
     )
   } catch (error) {
+    console.error("Error when uploading image (avatar)", error)
     if (error instanceof Error) throw new InternalError(error.message)
     return null
   }
@@ -47,6 +48,7 @@ export async function uploadEventPicture(
       eventPictureFile,
     )
   } catch (error) {
+    console.error("Error when uploading image (event picture)", error)
     if (error instanceof Error) throw new InternalError(error.message)
     return null
   }
