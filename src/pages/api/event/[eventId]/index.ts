@@ -11,7 +11,10 @@ import { extractEventFormData } from "../../../../utils/eventUtils"
 export const PUT: APIRoute = async ({ request, rewrite, params }) => {
   const eventId = params.eventId
 
-  if (!eventId) return errorResponse("Missing event id")
+  if (!eventId) {
+    console.error("Missing event id")
+    return errorResponse("Missing event id")
+  }
 
   const formData = await request.clone().formData()
 
@@ -45,9 +48,10 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
     try {
       filePath = await uploadEventPicture(eventImageFile, eventId)
     } catch (error) {
-      if (error instanceof BadRequestError || error instanceof InternalError)
+      if (error instanceof BadRequestError || error instanceof InternalError) {
+        console.error("Error when uploading event picture", error)
         return errorResponse(error.message, error.errorCode)
-      else throw error
+      } else throw error
     }
   }
 
@@ -55,9 +59,10 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
     try {
       bannerFilePath = await uploadEventBanner(eventBannerFile, eventId)
     } catch (error) {
-      if (error instanceof BadRequestError || error instanceof InternalError)
+      if (error instanceof BadRequestError || error instanceof InternalError) {
+        console.error("Error when uploading event banner", error)
         return errorResponse(error.message, error.errorCode)
-      else throw error
+      } else throw error
     }
   }
 
@@ -85,6 +90,7 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
       prices: isFree ? null : prices,
     })
   } catch (error) {
+    console.error("Error when updating event", error)
     if (error instanceof Error) return errorResponse(error.message, 500)
   }
 
