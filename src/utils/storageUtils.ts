@@ -2,6 +2,8 @@ import { uploadFile } from "../services/fileService"
 import type { UserID } from "../services/userService"
 import { BadRequestError, InternalError } from "./errorUtils"
 
+const IMAGE_SIZE_LIMIT = 5e7
+
 export function getExtention(file: File) {
   const fileNameParts = file.name.split(".")
   return fileNameParts[fileNameParts.length - 1]
@@ -36,8 +38,9 @@ export async function uploadEventPicture(
   eventId: UserID,
 ) {
   if (!eventPictureFile.type.includes("image/"))
-    // TODO: file size
-    throw new BadRequestError("Invalid file type")
+    throw new BadRequestError("Ogiltig filtyp. Endast bilder är tillåtna.")
+  if (eventPictureFile.size >= IMAGE_SIZE_LIMIT)
+    throw new BadRequestError("För stor fil, max storlek 50Mb.")
 
   const fileExtention = getExtention(eventPictureFile)
 
