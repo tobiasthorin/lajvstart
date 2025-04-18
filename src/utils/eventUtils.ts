@@ -70,23 +70,6 @@ export function extractEventFormData(formData: FormData) {
   }
 }
 
-export function getEventDateString(startDate: Date, endDate: Date) {
-  const crossesMonth = startDate.getMonth() !== endDate.getMonth()
-  const formattedStartDate = new Intl.DateTimeFormat("sv", {
-    day: "numeric",
-    month: crossesMonth ? "short" : undefined,
-  }).format(startDate)
-  const formattedEndDate = new Intl.DateTimeFormat("sv", {
-    day: "numeric",
-    month: "short",
-  }).format(endDate)
-
-  if (startDate.toDateString() === endDate.toDateString())
-    return formattedEndDate
-
-  return `${formattedStartDate} - ${formattedEndDate}`
-}
-
 export function groupEvents(events: LARPEvent[]) {
   const monthFormatter = new Intl.DateTimeFormat("sv", { month: "long" })
 

@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from "astro/types"
 import type { LARPEvent } from "../types/types"
 import { getRegistrationsForEvent } from "../services/registrationService"
-import { getEventDateString } from "../utils/eventUtils"
+import { getEventDateString } from "../utils/dateUtils"
 
 interface Props extends HTMLAttributes<"article"> {
   event: LARPEvent
