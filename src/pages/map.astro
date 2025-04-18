@@ -32,9 +32,12 @@ const eventsWithLocation = events
   <div id="map" class="rounded z-10" style="height: calc(100vh - 190px);"></div>
 
   <script is:inline define:vars={{ events: eventsWithLocation }}>
-    var map = L.map("map").setView([61, 14], 6)
+    var map = L.map("map", { maxZoom: 14 }).setView([61, 14], 6)
 
-    var markers = L.markerClusterGroup()
+    var markers = L.markerClusterGroup({
+      showCoverageOnHover: false,
+      maxClusterRadius: 20,
+    })
     events.forEach((event) => {
       markers.addLayer(
         L.marker([event.location_latitude, event.location_longitude]).bindPopup(
