@@ -1,13 +1,11 @@
 ---
 import Link from "../../components/Link.astro"
 import TopLevelPage from "../../layouts/TopLevelPage.astro"
+import { getFriendlyDate } from "../../utils/dateUtils"
 
 const { name, biography, created_at, birth_date, special_needs } =
   Astro.locals.user.details
 const publicUrl = Astro.locals.user.details.profile_picture_url
-
-const joinDate = new Date(created_at).toLocaleDateString()
-const birthDate = new Date(birth_date).toLocaleDateString()
 ---
 
 <TopLevelPage>
@@ -42,10 +40,12 @@ const birthDate = new Date(birth_date).toLocaleDateString()
     </h2>
   </div>
 
-  <p class="mb-4 text-sm text-gray-500">Medlem sedan {joinDate}</p>
+  <p class="mb-4 text-sm text-gray-500">
+    Medlem sedan {getFriendlyDate(new Date(created_at), { displayYear: true })}
+  </p>
 
   <p class="mb-4 text-sm text-gray-700">
-    Födelsedag: {birthDate}
+    Födelsedag: {getFriendlyDate(new Date(birth_date), { displayYear: true })}
   </p>
 
   <p class="mb-4 text-sm text-gray-700">

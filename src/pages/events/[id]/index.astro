@@ -17,7 +17,7 @@ import showdown from "showdown"
 import { JSDOM } from "jsdom"
 import DOMPurify from "dompurify"
 import { showdownTailwindExtentions } from "../../../utils/markdownUtils"
-import { getEventDateString } from "../../../utils/eventUtils"
+import { getEventDateString, getFriendlyDate } from "../../../utils/dateUtils"
 import { getLowestEventAgeLimit, prettifyURL } from "../../../utils/textUtils"
 
 const { isSignedIn } = Astro.locals
@@ -88,7 +88,14 @@ const descriptionHTML = converter.makeHtml(cleanDescription)
       >
         <li>Plats: {event.location_name}</li>
 
-        {event.date_signup && <li>Sista anmälningsdag: {event.date_signup}</li>}
+        {
+          event.date_signup && (
+            <li>
+              Sista anmälningsdag:{" "}
+              {getFriendlyDate(new Date(event.date_signup))}
+            </li>
+          )
+        }
 
         {event.prices === null && <p>Gratis</p>}
 
