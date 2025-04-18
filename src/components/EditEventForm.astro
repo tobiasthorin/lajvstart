@@ -43,7 +43,7 @@ const isFreeString = !event?.prices ? "true" : "false"
     label="Namn"
     name="name"
     required
-    maxlength="100"
+    maxlength="75"
     value={event?.name}
   />
 
@@ -248,6 +248,7 @@ const isFreeString = !event?.prices ? "true" : "false"
       element: descriptionInput,
       spellChecker: false,
       forceSync: true,
+      status: false,
       toolbar: [
         "bold",
         "italic",

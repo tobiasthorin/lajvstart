@@ -23,6 +23,21 @@ const { class: className, value, label, id, caption, ...rest } = Astro.props
     {...rest}>{value}</textarea
   >
   {
+    rest.maxlength && (
+      <p class="text-xs text-right text-gray-500">
+        <span id={id + "count"}>{value?.length || 0}</span>/{rest.maxlength}
+      </p>
+
+      <script is:inline define:vars={{ fieldId: id }}>
+        const field = document.querySelector(`#${fieldId}`);
+        const counter = document.querySelector(`#${fieldId+'count'}`);
+        field.addEventListener('input', (event) => {
+          counter.innerHTML = event.target.value.length
+        });
+      </script>
+    )
+  }
+  {
     caption && (
       <p
         id={`${id}-caption`}
