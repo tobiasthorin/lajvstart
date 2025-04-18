@@ -381,30 +381,19 @@ export type Database = {
     }
     Functions: {
       json_matches_schema: {
-        Args: {
-          schema: Json
-          instance: Json
-        }
+        Args: { schema: Json; instance: Json }
         Returns: boolean
       }
       jsonb_matches_schema: {
-        Args: {
-          schema: Json
-          instance: Json
-        }
+        Args: { schema: Json; instance: Json }
         Returns: boolean
       }
       jsonschema_is_valid: {
-        Args: {
-          schema: Json
-        }
+        Args: { schema: Json }
         Returns: boolean
       }
       jsonschema_validation_errors: {
-        Args: {
-          schema: Json
-          instance: Json
-        }
+        Args: { schema: Json; instance: Json }
         Returns: string[]
       }
     }
@@ -530,4 +519,3 @@ export const Constants = {
     Enums: {},
   },
 } as const
-
