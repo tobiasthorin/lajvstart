@@ -2,6 +2,7 @@
 import "tailwindcss/base.css"
 import "tailwindcss/components.css"
 import "tailwindcss/utilities.css"
+import GlobalStyles from "../components/GlobalStyles.astro"
 ---
 
 <html lang="en" class="min-h-screen antialiased">
@@ -40,6 +41,8 @@ import "tailwindcss/utilities.css"
     <!-- SIMPLE MDE -->
     <script is:inline src="/scripts/simplemde.min.js"></script>
     <link rel="stylesheet" href="/styles/simplemde.min.css" />
+
+    <GlobalStyles />
   </head>
   <body
     hx-ext="response-targets"

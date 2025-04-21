@@ -2,6 +2,7 @@
 import type { EventID } from "../services/eventService"
 import Button from "./Button.astro"
 import Card from "./Card.astro"
+import Spinner from "./Spinner.astro"
 
 interface Props {
   published: boolean
@@ -27,6 +28,10 @@ const { published, eventId } = Astro.props
   <Button
     hx-put={`/api/event/${eventId}/publish`}
     hx-target="#publishCard"
-    hx-swap="outerHTML">{published ? "Opublicera" : "Publicera nu!"}</Button
+    hx-swap="outerHTML"
+    hx-disabled-elt="this"
   >
+    {published ? "Opublicera" : "Publicera nu!"}
+    <Spinner size="small" class="inline-block htmx-indicator" />
+  </Button>
 </Card>

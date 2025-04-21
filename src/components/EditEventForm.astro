@@ -9,6 +9,7 @@ import TextArea from "./TextArea.astro"
 import type { LARPEvent } from "../types/types"
 import Trash from "./icons/Trash.astro"
 import Plus from "./icons/Plus.astro"
+import Spinner from "./Spinner.astro"
 
 interface Props {
   method: HTMLAttributes<"form">["method"]
@@ -34,8 +35,10 @@ const isFreeString = !event?.prices ? "true" : "false"
   action={action}
   hx-boost="true"
   enctype="multipart/form-data"
+  hx-target="#submitButton"
   hx-target-5*="#error-message"
   hx-replace-url="false"
+  hx-disabled-elt="find button[type='submit']"
 >
   <Input
     id="eventName"
@@ -327,7 +330,10 @@ const isFreeString = !event?.prices ? "true" : "false"
 
   <div class="self-end">
     <Button variant="secondary" class="mr-4" type="reset">Rensa</Button>
-    <Button type="submit">{event ? "Uppdatera" : "Skapa!"}</Button>
+    <Button type="submit" id="submitButton"
+      >{event ? "Uppdatera" : "Skapa!"}
+      <Spinner size="small" class="inline-block htmx-indicator" /></Button
+    >
   </div>
 
   <div id="error-message"></div>
