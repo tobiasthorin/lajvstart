@@ -6,9 +6,19 @@ interface Props extends HTMLAttributes<"a"> {
 }
 
 const { class: className, appearance = "link", ...rest } = Astro.props
-const linkClass = `font-medium text-blue-600 dark:text-blue-500 hover:underline ${className}`
-const buttonClass = `inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-cyan-600 rounded-lg hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800 cursor-pointer ${className}`
 ---
 
-<a class={appearance === "link" ? linkClass : buttonClass} {...rest}><slot /></a
+<a
+  class:list={[
+    {
+      "font-medium text-blue-600 dark:text-blue-500 hover:underline":
+        appearance === "link",
+    },
+    {
+      "inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-cyan-600 rounded-lg hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800 cursor-pointer":
+        appearance === "button",
+    },
+    className,
+  ]}
+  {...rest}><slot /></a
 >

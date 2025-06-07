@@ -34,6 +34,7 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
               href="/events"
               hx-boost="true"
               hx-target="#main"
+              hx-swap="show:window:top"
               class="flex items-center space-x-3 rtl:space-x-reverse"
             >
               <h1 class="text-4xl text-white font-display">
@@ -122,6 +123,7 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
                     href="/events"
                     hx-boost="true"
                     hx-target="#main"
+                    hx-swap="show:window:top"
                     x-bind:class="activePage === 'events' ? 'font-bold underline underline-offset-8 decoration-4' : ''"
                     x-on:click="activePage = 'events'"
                     aria-current="page"
@@ -136,25 +138,12 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
                     href="/map"
                     hx-boost="true"
                     hx-target="#main"
+                    hx-swap="show:window:top"
                     x-bind:class="activePage === 'map' ? 'font-bold underline underline-offset-8 decoration-4' : ''"
                     x-on:click="activePage = 'map'"
                     aria-current="page"
                   >
                     Karta
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    class="block py-2 px-3 text-white"
-                    href="/about"
-                    hx-boost="true"
-                    hx-target="#main"
-                    x-bind:class="activePage === 'about' ? 'font-bold underline underline-offset-8 decoration-4' : ''"
-                    x-on:click="activePage = 'about'"
-                    aria-current="page"
-                  >
-                    Om
                   </a>
                 </li>
               </ul>
@@ -163,9 +152,30 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
         </nav>
       </header>
 
-      <main id="main" class="md:max-w-screen-xl w-full mx-auto p-4">
+      <main id="main" class="md:max-w-screen-xl w-full mx-auto p-4 pb-16">
         <slot />
       </main>
+
+      <footer class="p-8 flex flex-col items-center bg-gradient-to-r from-orange-600 via-orange-500 to-orange-400 mt-auto">
+        <Link
+          href="/about"
+          hx-boost="true"
+          hx-target="#main"
+          hx-swap="show:window:top"
+          class="text-white"
+        >
+          Om Lajvstart
+        </Link>
+        <Link
+          href="/policy"
+          hx-boost="true"
+          hx-target="#main"
+          hx-swap="show:window:top"
+          class="text-white"
+        >
+          Innehållspolicy
+        </Link>
+      </footer>
     </BaseHtml>
   )
 }
