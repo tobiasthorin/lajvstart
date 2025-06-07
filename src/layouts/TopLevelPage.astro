@@ -146,6 +146,21 @@ const badge = isLocal ? "Local dev" : isDev ? "Development build" : "Beta"
                     Karta
                   </a>
                 </li>
+
+                <li>
+                  <a
+                    class="block py-2 px-3 text-white"
+                    href="/tools"
+                    hx-boost="true"
+                    hx-target="#main"
+                    hx-swap="show:window:top"
+                    x-bind:class="activePage === 'tools' ? 'font-bold underline underline-offset-8 decoration-4' : ''"
+                    x-on:click="activePage = 'tools'"
+                    aria-current="page"
+                  >
+                    Verktyg
+                  </a>
+                </li>
               </ul>
             </div>
           </div>

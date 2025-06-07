@@ -1,0 +1,33 @@
+---
+import TopLevelPage from "../../layouts/TopLevelPage.astro"
+
+const tools = [
+  {
+    name: "Runicode",
+    description: "Konvertera vanlig text till nordiska runor",
+    path: "runicode",
+  },
+]
+---
+
+<TopLevelPage>
+  <h2 class="text-4xl text-orange-500 font-display mb-8">Verktyg</h2>
+
+  <ul>
+    {
+      tools.map((tool) => (
+        <li class="w-fit bg-white hover:bg-gray-50 border border-gray-200 rounded-lg shadow-lg  dark:bg-gray-800 dark:border-gray-700 ">
+          <a
+            href={`/tools/${tool.path}`}
+            hx-boost="true"
+            hx-target="#main"
+            class="flex flex-col gap-2 p-4"
+          >
+            <p class="text-xl font-bold">{tool.name}</p>
+            <p>{tool.description}</p>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</TopLevelPage>

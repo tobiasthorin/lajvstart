@@ -1,0 +1,237 @@
+---
+import Button from "../../components/Button.astro"
+import TopLevelPage from "../../layouts/TopLevelPage.astro"
+---
+
+<TopLevelPage>
+  <h2 class="text-4xl text-orange-500 font-display mb-8">Runicode</h2>
+
+  <fieldset
+    class="border border-gray-800 w-fit p-2 grid grid-cols-[auto,1fr] gap-2"
+  >
+    <legend class="px-1">Historisk futhark</legend>
+
+    <input type="radio" id="medieval" name="futhark" value="medieval" checked />
+    <label for="medieval">Skandinavisk medeltida</label>
+
+    <input type="radio" id="elder" name="futhark" value="elder" />
+    <label for="elder">Äldre</label>
+  </fieldset>
+
+  <fieldset
+    class="border border-gray-800 w-fit p-2 grid grid-cols-[auto,1fr] gap-2 mt-4"
+  >
+    <legend class="px-1">Fiktionell futhark</legend>
+
+    <input type="radio" id="kir" name="futhark" value="kir" />
+    <label for="kir">Hunaland</label>
+  </fieldset>
+
+  <fieldset
+    class="border border-gray-800 w-fit p-2 grid grid-cols-[auto,1fr] gap-2 mt-4"
+  >
+    <legend class="px-1">Inställningar</legend>
+
+    <input type="checkbox" id="doubles" checked />
+    <label for="doubles">Ta bort dubbelbokstäver</label>
+  </fieldset>
+
+  <label>
+    <p class="mt-4">Text:</p>
+    <textarea id="runicode-input" class="max-w-[50ch] p-4">Futhark</textarea>
+  </label>
+
+  <p class="mt-4">Resultat:</p>
+  <p
+    id="runicode-output"
+    class="max-w-[50ch] break-all text-xl p-2 border rounded"
+  >
+  </p>
+
+  <Button class="mt-4" id="copy" onclick="copyOutput()">Kopiera</Button>
+
+  <script is:inline>
+    const input = document.querySelector("#runicode-input")
+    const output = document.querySelector("#runicode-output")
+    const deDoubleInput = document.querySelector("#doubles")
+    const radios = document.querySelectorAll("input[type=radio]")
+    const copyButton = document.querySelector("#copy")
+
+    let selectedFuthark = "medieval"
+    let deDouble = true
+
+    const runes = {
+      medieval: {
+        a: "ᛆ",
+        b: "ᛒ",
+        c: "ᛍ",
+        d: "ᛑ",
+        e: "ᛂ",
+        f: "ᚠ",
+        g: "ᚵ",
+        h: "ᚼ",
+        i: "ᛁ",
+        j: "ᛁ",
+        k: "ᚴ",
+        l: "ᛚ",
+        m: "ᛉ",
+        n: "ᚿ",
+        o: "ᚮ",
+        p: "ᛔ",
+        q: "ᚴ",
+        r: "ᚱ",
+        s: "ᛋ",
+        t: "ᛏ",
+        u: "ᚢ",
+        v: "ᚡ",
+        w: "ᚡ",
+        x: "ᚴᛋ",
+        y: "ᚤ",
+        z: "ᛋ",
+        å: "ᛆ",
+        ä: "ᛅ",
+        ö: "ᚯ",
+      },
+      elder: {
+        a: "ᚨ",
+        b: "ᛒ",
+        c: "ᚲ",
+        d: "ᛞ",
+        e: "ᛖ",
+        f: "ᚠ",
+        g: "ᚷ",
+        h: "ᚺ",
+        i: "ᛁ",
+        j: "ᛃ",
+        k: "ᚲ",
+        l: "ᛚ",
+        m: "ᛗ",
+        n: "ᚾ",
+        o: "ᛟ",
+        p: "ᛈ",
+        q: "ᚲ",
+        r: "ᚱ",
+        s: "ᛊ",
+        t: "ᛏ",
+        u: "ᚢ",
+        v: "ᚹ",
+        w: "ᚹ",
+        x: "ᚲᛊ",
+        y: "ᚢ",
+        z: "ᛉ",
+        å: "ᛟ",
+        ä: "ᛇ",
+        ö: "ᛟ",
+      },
+      kir: {
+        a: "ᛅ",
+        b: "ᛒ",
+        c: "ᚴ",
+        d: "ᛑ",
+        e: "ᛂ",
+        f: "ᚠ",
+        g: "ᚵ",
+        h: "ᚼ",
+        i: "ᛁ",
+        j: "ᛁ",
+        k: "ᚴ",
+        l: "ᛚ",
+        m: "ᛉ",
+        n: "ᚾ",
+        o: "ᚭ",
+        p: "ᛔ",
+        q: "ᚴ",
+        r: "ᚱ",
+        s: "ᛋ",
+        t: "ᛏ",
+        u: "ᚢ",
+        v: "ᚠ",
+        w: "ᚠ",
+        x: "ᚴᛋ",
+        y: "ᚤ",
+        z: "ᛋ",
+        å: "ᚭ",
+        ä: "ᛂ",
+        ö: "ᚢ",
+      },
+    }
+
+    function runify(inputString) {
+      if (deDouble) {
+        inputString = removeDoubles(inputString)
+      }
+
+      let result = inputString
+        .toLowerCase()
+        .replace(/['\-_\,]/g, "") // remove untranslatable punctuation
+        .replace(/[\.\!\?]\s*/g, ".") // replace sentence punctuation
+        .replace(/\s/g, "᛫") // replace all  whitespace
+        .replace(/\./g, "᛬") // replace punctuation
+        .replace(/th/g, "ᚦ") // replace th
+
+      if (selectedFuthark === "elder") {
+        result = result.replace(/ng/g, "ᛜ")
+      }
+
+      return result.replace(
+        /[\wåäö]/g,
+        (match) => runes[selectedFuthark][match] || match
+      )
+    }
+
+    function removeDoubles(string) {
+      return string.replace(/[^\w\såäö]|(.)(?=\1)/gi, "").replace(/ck/gi, "k")
+    }
+
+    function copyOutput() {
+      if (navigator.clipboard) {
+        navigator.clipboard
+          .writeText(output.innerHTML)
+          .then(() => (copyButton.innerHTML = "Kopierad!"))
+      } else {
+        copyFallback()
+      }
+    }
+
+    function copyFallback() {
+      const textArea = document.createElement("textarea")
+      textArea.value = output.innerHTML
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+
+      document.execCommand("copy")
+
+      document.body.removeChild(textArea)
+    }
+
+    function resetButtonText() {
+      copyButton.innerHTML = "Kopiera"
+    }
+
+    input.addEventListener("input", (event) => {
+      render()
+    })
+
+    deDoubleInput.addEventListener("change", (event) => {
+      deDouble = event.target.checked
+      render()
+    })
+
+    radios.forEach((radioInput) =>
+      radioInput.addEventListener("change", (event) => {
+        selectedFuthark = event.target.value
+        render()
+      })
+    )
+
+    function render() {
+      output.innerHTML = runify(input.value) || "&nbsp;"
+      resetButtonText()
+    }
+
+    ;(function init() {
+      render()
+    })()
+  </script>
+</TopLevelPage>
