@@ -19,13 +19,10 @@ const spotsRemaining =
   event.maximum_participants === null
     ? null
     : event.maximum_participants - registrations.length
-const fewSpotsRemaining =
-  event.maximum_participants !== null &&
-  registrations.length / event.maximum_participants > 0.8
 ---
 
 <article
-  class={"group relative bg-white hover:bg-gray-50 border border-gray-200 rounded-lg shadow-lg  dark:bg-gray-800 dark:border-gray-700" +
+  class={"hidden md:block group relative bg-white hover:bg-gray-50 border border-gray-200 rounded-lg shadow-lg  dark:bg-gray-800 dark:border-gray-700" +
     className}
   {...rest}
 >
@@ -35,111 +32,61 @@ const fewSpotsRemaining =
     hx-target="#main"
     class="flex"
   >
-    <div class="rounded-l-lg w-24 relative overflow-hidden flex-shrink-0">
+    <div class="rounded-l-lg w-32 relative overflow-hidden flex-shrink-0">
       <img
         class="rounded-l-lg object-cover h-full w-full group-hover:scale-105 transition-all aspect-[4/3]"
         src={eventImage}
         alt={`Event image for ${event.name}`}
       />
     </div>
-    <div class="flex gap-2 p-2 w-full max-sm:flex-col max-sm:justify-start">
-      <h5
-        class:list={[
-          {
-            "text-2xl": event.name.length < 45,
-            "text-xl": event.name.length >= 45,
-          },
-          "text-black font-display max-w-sm flex items-start",
-        ]}
-      >
+
+    <div
+      class="grid grid-cols-[1fr_auto] grid-rows-[repeat(3,auto)] p-2 w-full"
+    >
+      <h5 class="text-2xl text-black font-display">
         {event.name}
       </h5>
+      <div class="row-span-2 flex flex-col items-end">
+        <span class="text-sm text-gray-600 small-caps"
+          >{event.location_name}</span
+        >
 
-      <p
-        class="font-normal text-gray-700 dark:text-gray-400 flex items-start mx-8 max-lg:hidden"
-      >
+        <time datetime={event.date_start}
+          >{
+            getEventDateString(
+              new Date(event.date_start),
+              new Date(event.date_end)
+            )
+          }</time
+        >
+      </div>
+
+      <p class="font-normal text-gray-700 dark:text-gray-400">
         {event.description_short}
       </p>
 
-      <div
-        class="flex gap-2 flex-wrap max-sm:justify-start sm:ml-auto lg:flex-shrink-0"
-      >
-        <ul
-          class="sm:ml-auto grid grid-rows-[auto,auto] grid-flow-col gap-2 self-start"
+      <ul class="flex gap-2 mt-2">
+        <span
+          class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 flex items-center"
         >
-          {
-            (event.tags || []).map((tag) => (
-              <li class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 capitalize whitespace-nowrap odd:self-end self-start inline-block">
-                {tag}
-              </li>
-            ))
-          }
-        </ul>
+          {event.minimum_age ? `${event.minimum_age}+` : "Alla åldrar"}
+        </span>
+        {
+          (event.tags || []).map((tag) => (
+            <li class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 capitalize whitespace-nowrap items-center flex">
+              {tag}
+            </li>
+          ))
+        }
+      </ul>
 
-        <div
-          class="grid grid-cols-[auto,auto] grid-rows-2 gap-x-2 shrink-0 self-start max-md:w-full"
-        >
-          <span
-            class="text-sm text-gray-600 small-caps md:justify-self-end content-center"
-            >{event.location_name}</span
-          >
-
-          <time
-            datetime={event.date_start}
-            class="justify-self-end content-center"
-            >{
-              getEventDateString(
-                new Date(event.date_start),
-                new Date(event.date_end)
-              )
-            }</time
-          >
-
-          <span
-            class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300 justify-self-start md:justify-self-end self-start"
-          >
-            {event.minimum_age ? `${event.minimum_age}+` : "Alla åldrar"}
-          </span>
-
-          {
-            !event.display_mode &&
-              spotsRemaining !== null &&
-              spotsRemaining < 1 && (
-                <span class="font-bold text-red-900 justify-self-end content-center">
-                  Slutsålt
-                </span>
-              )
-          }
-          {
-            !event.display_mode &&
-              spotsRemaining !== null &&
-              spotsRemaining > 0 &&
-              fewSpotsRemaining && (
-                <span class="font-bold text-yellow-600 justify-self-end content-center">
-                  {spotsRemaining} platser kvar
-                </span>
-              )
-          }
-          {
-            !event.display_mode &&
-              spotsRemaining !== null &&
-              spotsRemaining > 0 && (
-                <span class="font-bold text-green-700 justify-self-end content-center">
-                  {spotsRemaining} platser kvar
-                </span>
-              )
-          }
-          {
-            event.display_mode && (
-              <span class="font-bold text-green-700 justify-self-end content-center">
-                {spotsRemaining === null
-                  ? "Ingen deltagargräns"
-                  : `${spotsRemaining} platser`}
-              </span>
-            )
-          }
-        </div>
-      </div>
+      <span class="font-bold text-green-700 justify-self-end content-center">
+        {
+          spotsRemaining === null
+            ? "Ingen deltagargräns"
+            : `${spotsRemaining} platser`
+        }
+      </span>
     </div>
   </a>
 </article>

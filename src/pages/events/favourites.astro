@@ -6,6 +6,7 @@ import { errorResponse as _errorResponse } from "../../utils/responseUtils"
 import type { LARPEvent } from "../../types/types"
 import { log } from "../../lib/logger"
 import { getFavouriteEvents } from "../../services/eventService"
+import EventListItem from "../../components/EventListItem.astro"
 
 const userId = Astro.locals.user.id
 
@@ -32,6 +33,7 @@ if (!events) {
       <ul class="grid grid-cols-events gap-8 mb-8">
         {events.map((event) => (
           <li>
+            <EventListItem event={event} />
             <EventCard event={event} />
           </li>
         ))}

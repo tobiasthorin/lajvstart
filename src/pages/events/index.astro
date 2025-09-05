@@ -13,6 +13,7 @@ import { eventTags } from "../../utils/constants"
 import Input from "../../components/Input.astro"
 import EventListItem from "../../components/EventListItem.astro"
 import { groupEvents } from "../../utils/eventUtils"
+import EventCard from "../../components/EventCard.astro"
 
 let events: LARPEvent[] = []
 
@@ -117,6 +118,7 @@ const eventGroups = groupEvents(events)
               {events.map((event) => (
                 <li>
                   <EventListItem event={event} />
+                  <EventCard event={event} />
                 </li>
               ))}
             </ul>
