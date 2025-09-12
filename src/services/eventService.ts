@@ -81,7 +81,7 @@ export async function getUpcomingEvents() {
 
     const parsedData = data.map(mapDataToEvent)
 
-    eventCollectionsCache.set("upcoming", parsedData, 1000 * 60 * 5)
+    eventCollectionsCache.set("upcoming", parsedData, 1000 * 60 * 60)
     return parsedData
   }
 
@@ -184,7 +184,7 @@ export async function getMyEvents(userId: UserID) {
     } else {
       const parsedData = data.map(mapDataToEvent)
 
-      userEventsCache.set(userId, parsedData, 1000 * 60 * 5)
+      userEventsCache.set(userId, parsedData, 1000 * 60 * 30)
       return parsedData
     }
   }
@@ -249,7 +249,7 @@ export async function createEvent({
 }
 
 export async function updateEvent({
-  id,
+  eventId,
   name,
   description,
   description_short,
@@ -269,8 +269,8 @@ export async function updateEvent({
   is_published,
   external_website_url,
   prices,
-}: { id: EventID } & Partial<LARPEvent>) {
-  const event = await getEvent(id)
+}: { eventId: EventID } & Partial<LARPEvent>) {
+  const event = await getEvent(eventId)
 
   const { error: updateEventError, data } = await supabase
     .from("events")
@@ -306,7 +306,7 @@ export async function updateEvent({
       external_website_url: external_website_url ?? event.external_website_url,
       prices: prices === undefined ? event.prices : prices,
     })
-    .eq("id", id)
+    .eq("id", eventId)
     .select()
     .single()
 
@@ -315,8 +315,9 @@ export async function updateEvent({
 
   const parsedData = mapDataToEvent(data)
 
-  eventsCache.clear()
-  userEventsCache.clear()
+  eventCollectionsCache.remove("upcoming")
+  eventsCache.remove(eventId)
+  userEventsCache.remove(data.owner_id)
 
   return parsedData
 }

@@ -17,6 +17,7 @@ function expired(expiresAt?: number) {
 
 function getNamedCache<T>(namespace: string) {
   if (!cacheStore[namespace]) {
+    log(`CACHE INIT: "${namespace}"`)
     cacheStore[namespace] = new Map<
       string,
       { value: T; expiresAt: number | undefined }
@@ -28,37 +29,40 @@ function getNamedCache<T>(namespace: string) {
 
 function useNamespace<T>(namespace: string) {
   const namedCache = getNamedCache<T>(namespace)
-  function get(_key: string) {
-    return undefined as T // Disable cache until I can make it work well all over
-    /* const { value, expiresAt } = namedCache.get(key) || {}
+  function get(key: string) {
+    const { value, expiresAt } = namedCache.get(key) || {}
 
     if (value === undefined) {
-      log(`CACHE: "${namespace}"."${key}" is not set`)
+      log(`CACHE MISS: "${namespace}"."${key}" is not set`)
       return undefined
     }
 
     if (expired(expiresAt)) {
-      log(`CACHE: "${namespace}"."${key}" has expired`)
+      log(
+        `CACHE EXP: "${namespace}"."${key}" has expired ${expiresAt !== undefined && `at ${new Date(expiresAt)}`}`,
+      )
       remove(key)
       return undefined
     }
 
-    log(`CACHE: Returning "${namespace}.${key}"`)
-    return value as T */
+    log(`CACHE HIT: Returning "${namespace}.${key}"`)
+    return value as T
   }
 
   function set(key: string, value: T, timeout?: number) {
     const expiresAt = timeout ? Date.now() + timeout : undefined
 
-    log(`CACHE: setting "${namespace}.${key}"`)
+    log(`CACHE SET: setting "${namespace}.${key}"`)
     namedCache.set(key, { value, expiresAt })
   }
 
   function remove(key: string) {
+    log(`CACHE DEL: removing "${namespace}.${key}"`)
     namedCache.delete(key)
   }
 
   function clear() {
+    log(`CACHE CLEAR: clearing "${namespace}"`)
     namedCache.clear()
   }
 

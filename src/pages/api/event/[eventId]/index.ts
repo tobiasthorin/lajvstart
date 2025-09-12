@@ -68,7 +68,7 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
 
   try {
     updateEvent({
-      id: eventId,
+      eventId,
       name,
       description,
       description_short: descriptionShort,
