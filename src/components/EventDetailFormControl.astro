@@ -120,17 +120,21 @@ const { detail, eventId } = Astro.props
     {
       detail.type === "multiChoiceMultiValue" && (
         <div class="flex flex-col">
-          <Select
-            multiple
+          <wa-select
             label={detail.label}
-            name={detail.label}
             id={detail.label}
-            caption={detail.description}
+            name={detail.label}
+            multiple
+            with-clear
+            size="small"
+            class="border-none p-0"
+            max-options-visible="0"
+            hint={detail.description}
           >
             {detail.options?.map((option) => (
-              <option>{option}</option>
+              <wa-option>{option}</wa-option>
             ))}
-          </Select>
+          </wa-select>
 
           <ul class="flex flex-col gap-2">
             {detail.options?.map((option) => (

@@ -4,7 +4,6 @@ import { eventTags, isProd } from "../utils/constants"
 import Button from "./Button.astro"
 import Checkbox from "./Checkbox.astro"
 import Input from "./Input.astro"
-import Select from "./Select.astro"
 import TextArea from "./TextArea.astro"
 import type { LARPEvent } from "../types/types"
 import Trash from "./icons/Trash.astro"
@@ -287,22 +286,27 @@ const isFreeString = !event?.prices ? "true" : "false"
     accept=".jpg,.jpeg,.png,.bmp,.webp"
   />
 
-  <Select
-    multiple
-    id="eventTagsInput"
+  <wa-select
     label="Taggar"
+    id="eventTagsInput"
     name="tags"
-    required
-    caption="Håll inne cmd/ctrl för att välja fler taggar"
+    multiple
+    with-clear
+    size="small"
+    class="border-none p-0 bg-transparent"
+    max-options-visible="0"
   >
     {
       eventTags.map((tag) => (
-        <option value={tag} selected={event?.tags?.includes(tag)}>
+        <wa-option
+          value={tag}
+          selected={event?.tags?.includes(tag) ? "selected" : undefined}
+        >
           {tag}
-        </option>
+        </wa-option>
       ))
     }
-  </Select>
+  </wa-select>
 
   <fieldset
     class="flex flex-wrap gap-4 border rounded border-slate-400 bg-slate-100 p-4"

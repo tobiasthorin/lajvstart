@@ -2,7 +2,6 @@
 import Button from "../../../../components/Button.astro"
 import Checkbox from "../../../../components/Checkbox.astro"
 import Input from "../../../../components/Input.astro"
-import Select from "../../../../components/Select.astro"
 import TextArea from "../../../../components/TextArea.astro"
 import ManageEvent from "../../../../layouts/ManageEvent.astro"
 import { getEventGroups } from "../../../../services/eventGroupsService"
@@ -57,13 +56,22 @@ const dateFormatter = new Intl.DateTimeFormat("sv", {
 
     <Input id="subject" type="text" label="Ämne" name="subject" required />
 
-    <Select id="toGroups" name="toGroups" label="Skicka till grupper" multiple>
+    <wa-select
+      label="Skicka till grupper"
+      id="toGroups"
+      name="toGroups"
+      multiple
+      with-clear
+      size="small"
+      class="border-none p-0"
+      max-options-visible="0"
+    >
       {
         (groups || []).map((group) => (
-          <option value={group.id}>{group.name}</option>
+          <wa-option value={group.id}>{group.name}</wa-option>
         ))
       }
-    </Select>
+    </wa-select>
 
     <Checkbox
       id="toFavourites"

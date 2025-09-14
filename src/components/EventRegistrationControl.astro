@@ -88,16 +88,20 @@ function getAutofillAccessor(autofillWith: EventDetail["autofillWith"]) {
 
 {
   detail.type === "multiChoiceMultiValue" && (
-    <Select
-      multiple
+    <wa-select
       label={detail.label}
-      name={`detail-${detail.label}`}
       id={detail.id}
-      caption={detail.description}
+      name={`detail-${detail.label}`}
+      multiple
+      with-clear
+      size="small"
+      class="border-none p-0"
+      max-options-visible="0"
+      hint={detail.description}
     >
       {detail.options?.map((option) => (
-        <option>{option}</option>
+        <wa-option>{option}</wa-option>
       ))}
-    </Select>
+    </wa-select>
   )
 }

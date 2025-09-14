@@ -8,7 +8,6 @@ import {
 } from "../../services/eventService"
 import Button from "../../components/Button.astro"
 import Filter from "../../components/icons/Filter.astro"
-import Select from "../../components/Select.astro"
 import { eventTags } from "../../utils/constants"
 import Input from "../../components/Input.astro"
 import EventListItem from "../../components/EventListItem.astro"
@@ -72,15 +71,26 @@ const eventGroups = groupEvents(events)
     >
       <h3 class="col-span-2">Filter</h3>
 
-      <Select multiple label="Taggar" id="tagsFilter" name="tags">
+      <wa-select
+        label="Taggar"
+        id="tagsFilter"
+        name="tags"
+        multiple
+        with-clear
+        size="small"
+        class="border-none p-0"
+      >
         {
           eventTags.map((tag) => (
-            <option value={tag} selected={tags.includes(tag)}>
+            <wa-option
+              value={tag}
+              selected={tags.includes(tag) ? "selected" : undefined}
+            >
               {tag}
-            </option>
+            </wa-option>
           ))
         }
-      </Select>
+      </wa-select>
 
       <Input
         label="Deltagarens ålder"
