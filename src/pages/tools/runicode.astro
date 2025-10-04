@@ -34,6 +34,9 @@ import TopLevelPage from "../../layouts/TopLevelPage.astro"
 
     <input type="checkbox" id="doubles" checked />
     <label for="doubles">Ta bort dubbelbokstäver</label>
+
+    <input type="checkbox" id="linebreaks" />
+    <label for="linebreaks">Bevara radbrytningar</label>
   </fieldset>
 
   <label>
@@ -42,11 +45,10 @@ import TopLevelPage from "../../layouts/TopLevelPage.astro"
   </label>
 
   <p class="mt-4">Resultat:</p>
-  <p
+  <pre
     id="runicode-output"
-    class="max-w-[50ch] break-all text-xl p-2 border rounded"
-  >
-  </p>
+    class="max-w-[50ch] break-all text-xl p-2 border rounded">
+  </pre>
 
   <Button class="mt-4" id="copy" onclick="copyOutput()">Kopiera</Button>
 
@@ -54,11 +56,13 @@ import TopLevelPage from "../../layouts/TopLevelPage.astro"
     const input = document.querySelector("#runicode-input")
     const output = document.querySelector("#runicode-output")
     const deDoubleInput = document.querySelector("#doubles")
+    const linebreaksInput = document.querySelector("#linebreaks")
     const radios = document.querySelectorAll("input[type=radio]")
     const copyButton = document.querySelector("#copy")
 
     let selectedFuthark = "medieval"
     let deDouble = true
+    let linebreaks = false
 
     const runes = {
       medieval: {
@@ -157,17 +161,22 @@ import TopLevelPage from "../../layouts/TopLevelPage.astro"
     }
 
     function runify(inputString) {
+      let result = inputString.toLowerCase()
+
       if (deDouble) {
-        inputString = removeDoubles(inputString)
+        result = removeDoubles(result)
       }
 
-      let result = inputString
-        .toLowerCase()
-        .replace(/['\-_\,]/g, "") // remove untranslatable punctuation
-        .replace(/[\.\!\?]\s*/g, ".") // replace sentence punctuation
-        .replace(/\s/g, "᛫") // replace all  whitespace
-        .replace(/\./g, "᛬") // replace punctuation
-        .replace(/th/g, "ᚦ") // replace th
+      if (!linebreaks) {
+        result = result.replace(/\n/g, "᛫")
+      }
+      //debugger
+      result = result.replace(/['\-_\,]/g, "") // remove untranslatable punctuation
+      result = result.replace(/[\.\!\?] */g, ".") // replace sentence punctuation
+      result = result.replace(/ /g, "᛫") // replace spaces
+      result = result.replace(/\./g, ":") // replace punctuation
+      result = result.replace(/th/g, "ᚦ") // replace th
+      result = result.replace(/:᛫/g, ":") // replace any period-space3
 
       if (selectedFuthark === "elder") {
         result = result.replace(/ng/g, "ᛜ")
@@ -180,7 +189,7 @@ import TopLevelPage from "../../layouts/TopLevelPage.astro"
     }
 
     function removeDoubles(string) {
-      return string.replace(/[^\w\såäö]|(.)(?=\1)/gi, "").replace(/ck/gi, "k")
+      return string.replace(/(.)(?=\1)/gi, "").replace(/ck/gi, "k")
     }
 
     function copyOutput() {
@@ -215,6 +224,11 @@ import TopLevelPage from "../../layouts/TopLevelPage.astro"
 
     deDoubleInput.addEventListener("change", (event) => {
       deDouble = event.target.checked
+      render()
+    })
+
+    linebreaksInput.addEventListener("change", (event) => {
+      linebreaks = event.target.checked
       render()
     })
 
