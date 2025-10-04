@@ -189,7 +189,7 @@ import TopLevelPage from "../../layouts/TopLevelPage.astro"
     }
 
     function removeDoubles(string) {
-      return string.replace(/(.)(?=\1)/gi, "").replace(/ck/gi, "k")
+      return string.replace(/(\D)(?=\1)/gi, "").replace(/ck/gi, "k")
     }
 
     function copyOutput() {
