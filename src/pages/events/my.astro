@@ -35,6 +35,7 @@ if (!events) {
       <TH>Publicerat</TH>
       <TH>Hantera</TH>
       <TH>Duplicera</TH>
+      <TH>Radera</TH>
     </TableHead>
 
     <tbody>
@@ -64,8 +65,20 @@ if (!events) {
                 hx-post={`/api/event/${event.id}/duplicate`}
                 hx-target="#main"
                 hx-boost="true"
+                hx-confirm={`Vill du duplicera lajvet "${event.name}"?`}
               >
                 Duplicera
+              </Link>
+            </TD>
+            <TD>
+              <Link
+                hx-delete={`/api/event/${event.id}`}
+                hx-target="#main"
+                hx-boost="true"
+                hx-confirm={`VARNING: Vill du radera lajvet "${event.name}"? Detta kan inte ångras.`}
+                class="font-bold text-red-700"
+              >
+                ⚠️ Radera
               </Link>
             </TD>
           </TR>
