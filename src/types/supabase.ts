@@ -112,6 +112,7 @@ export type Database = {
           date_end: string
           date_signup: string | null
           date_start: string
+          deleted: boolean
           description: string
           description_short: string
           details: Json
@@ -140,6 +141,7 @@ export type Database = {
           date_end: string
           date_signup?: string | null
           date_start: string
+          deleted?: boolean
           description?: string
           description_short: string
           details?: Json
@@ -168,6 +170,7 @@ export type Database = {
           date_end?: string
           date_signup?: string | null
           date_start?: string
+          deleted?: boolean
           description?: string
           description_short?: string
           details?: Json
@@ -519,3 +522,4 @@ export const Constants = {
     Enums: {},
   },
 } as const
+

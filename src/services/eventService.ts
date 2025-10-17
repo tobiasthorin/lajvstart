@@ -74,6 +74,7 @@ export async function getUpcomingEvents() {
     const { data, error } = await supabase
       .from("events")
       .select()
+      .eq("deleted", false)
       .gte("date_start", new Date().toISOString())
       .eq("is_published", true)
       .order("date_start")
@@ -96,7 +97,7 @@ export async function getFilteredEvents({
   tags?: string[]
   minAge?: number
 }) {
-  let query = supabase.from("events").select()
+  let query = supabase.from("events").select().eq("deleted", false)
 
   if (tags && tags.length > 0) {
     query = query.overlaps("tags", tags)
@@ -122,6 +123,7 @@ export async function getFavouriteEvents(userId: UserID) {
   const { data, error } = await supabase
     .from("events")
     .select("*, favourites!inner(event_id, user_id)")
+    .eq("deleted", false)
     .eq("is_published", true)
     .order("date_start")
 
@@ -153,6 +155,7 @@ export async function getEvent(eventId: LARPEvent["id"]) {
     const { data, error } = await supabase
       .from("events")
       .select()
+      .eq("deleted", false)
       .eq("id", eventId)
       .single()
 
@@ -178,6 +181,7 @@ export async function getMyEvents(userId: UserID) {
     const { data, error } = await supabase
       .from("events")
       .select()
+      .eq("deleted", false)
       .eq("owner_id", userId)
 
     if (error) {
@@ -213,7 +217,7 @@ export async function createEvent({
   prices,
 }: Omit<
   LARPEvent,
-  "owner_id" | "details" | "created_at" | "updated_at" | "price"
+  "owner_id" | "details" | "created_at" | "updated_at" | "price" | "deleted"
 >) {
   const { data, error: createEventError } = await supabase
     .from("events")
@@ -270,6 +274,7 @@ export async function updateEvent({
   is_published,
   external_website_url,
   prices,
+  deleted,
 }: { eventId: EventID } & Partial<LARPEvent>) {
   const event = await getEvent(eventId)
 
@@ -306,6 +311,7 @@ export async function updateEvent({
       is_published: is_published ?? event.is_published,
       external_website_url: external_website_url ?? event.external_website_url,
       prices: prices === undefined ? event.prices : prices,
+      deleted: deleted === undefined ? event.deleted : deleted,
     })
     .eq("id", eventId)
     .select()
@@ -332,4 +338,8 @@ export async function duplicateEvent({ eventId }: { eventId: EventID }) {
     name: eventToDuplicate.name + " (Copy)",
     is_published: false,
   })
+}
+
+export async function softDeleteEvent({ eventId }: { eventId: EventID }) {
+  await updateEvent({ eventId, deleted: true })
 }

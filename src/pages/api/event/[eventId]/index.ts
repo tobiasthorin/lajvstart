@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro"
-import { updateEvent } from "../../../../services/eventService"
+import { updateEvent, softDeleteEvent } from "../../../../services/eventService"
 import { BadRequestError, InternalError } from "../../../../utils/errorUtils"
 import { errorResponse } from "../../../../utils/responseUtils"
 import {
@@ -95,4 +95,21 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
   }
 
   return rewrite(`/api/event/updateResponse`)
+}
+
+export const DELETE: APIRoute = async ({ rewrite, params }) => {
+  const eventId = params.eventId
+  if (!eventId) return errorResponse("Missing event id")
+
+  try {
+    await softDeleteEvent({
+      eventId,
+    })
+
+    return rewrite(`/events/my`)
+  } catch (error) {
+    console.error(error)
+    if (error instanceof Error) return errorResponse(error.message, 500)
+    return errorResponse("Unknown error", 500)
+  }
 }
