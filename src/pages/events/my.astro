@@ -32,7 +32,9 @@ if (!events) {
     <TableHead>
       <TH>Arrangemang</TH>
       <TH>Börjar</TH>
+      <TH>Publicerat</TH>
       <TH>Hantera</TH>
+      <TH>Duplicera</TH>
     </TableHead>
 
     <tbody>
@@ -42,12 +44,28 @@ if (!events) {
             <TD>{event.name}</TD>
             <TD>{event.date_start}</TD>
             <TD>
+              {event.is_published ? (
+                <span class="text-green-700">Publicerat ✅</span>
+              ) : (
+                <span class="text-red-700">Ej publicerat ❌</span>
+              )}
+            </TD>
+            <TD>
               <Link
                 href={`/events/${event.id}/manage/overview`}
                 hx-target="#main"
                 hx-boost="true"
               >
                 Hantera
+              </Link>
+            </TD>
+            <TD>
+              <Link
+                hx-post={`/api/event/${event.id}/duplicate`}
+                hx-target="#main"
+                hx-boost="true"
+              >
+                Duplicera
               </Link>
             </TD>
           </TR>

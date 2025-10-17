@@ -10,6 +10,7 @@ import { log } from "../lib/logger"
 import type { UserID } from "./userService"
 import { z } from "zod"
 import type { Database } from "../types/supabase"
+import { v4 as uuidv4 } from "uuid"
 
 export type EventID = LARPEvent["id"]
 
@@ -320,4 +321,15 @@ export async function updateEvent({
   userEventsCache.remove(data.owner_id)
 
   return parsedData
+}
+
+export async function duplicateEvent({ eventId }: { eventId: EventID }) {
+  const eventToDuplicate = await getEvent(eventId)
+
+  return await createEvent({
+    ...eventToDuplicate,
+    id: uuidv4(),
+    name: eventToDuplicate.name + " (Copy)",
+    is_published: false,
+  })
 }
