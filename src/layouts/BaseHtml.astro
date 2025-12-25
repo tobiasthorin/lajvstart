@@ -3,6 +3,7 @@ import "tailwindcss/base.css"
 import "tailwindcss/components.css"
 import "tailwindcss/utilities.css"
 import GlobalStyles from "../components/GlobalStyles.astro"
+import { isProd } from "../utils/constants"
 ---
 
 <html lang="en" class="min-h-screen antialiased">
@@ -53,6 +54,18 @@ import GlobalStyles from "../components/GlobalStyles.astro"
     </script>
 
     <GlobalStyles />
+
+    <!-- UMAMI Tracking -->
+    {
+      isProd && (
+        <script
+          is:inline
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="97fdd60f-df66-452e-9784-0ac9dacc5369"
+        />
+      )
+    }
   </head>
   <body
     hx-ext="response-targets"
