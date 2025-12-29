@@ -1,0 +1,150 @@
+---
+import TopLevelPage from "../../layouts/TopLevelPage.astro"
+
+const larpPages = [
+  {
+    name: "Lajvhistoria",
+    description: "Ett växande arkiv över lajv som spelats i Sverige",
+    url: "https://lajvhistoria.se/",
+  },
+  {
+    name: "Prylkompaniet",
+    description: "Uthyrning av utrustning och rekvisita",
+    url: "https://www.prylkompaniet.com/",
+  },
+]
+
+const larpStores = [
+  {
+    name: "Black Emporium",
+    description: "Accessoarer och vapen, inrikntning senmedeltid/renässans",
+    url: "https://blackemporium.se/",
+  },
+  {
+    name: "Gripheim",
+    description: "Stort utbud av utrustning och vapen",
+    url: "https://gripheim.se/",
+  },
+  {
+    name: "Korps",
+    description: "Utrustning och hantverksmaterial för lajv och reenactment",
+    url: "https://www.korps.se/",
+  },
+]
+
+const larpSites = [
+  {
+    name: "Berghem",
+    description: "Lajvby nära Skillingaryd, Småland",
+    url: "https://berghemsvanner.se/",
+  },
+  {
+    name: "Lajvområdet i Tällby",
+    description: "Lajvby i Tällby, Västerbotten",
+    url: "https://kulturforeningensl.wixsite.com/kulturforeningensli",
+  },
+  {
+    name: "Pegas Lajvby",
+    description: "Lajvby vid Alnaryd, Blekinge",
+    url: "https://www.pegas.nu/",
+  },
+]
+
+const larpPhotographers = [
+  {
+    name: "Hanna Olsson",
+    url: "https://www.instagram.com/larp_photography/",
+  },
+  {
+    name: "Olivia Koba",
+    url: "https://www.instagram.com/weaverofwonder/",
+  },
+]
+---
+
+<TopLevelPage>
+  <h2 class="text-4xl text-orange-500 font-display mb-8">Länkar</h2>
+
+  <h3 class="text-2xl text-orange-800 font-display my-4">Lajv i Sverige</h3>
+
+  <ul class="flex flex-wrap gap-4">
+    {
+      larpPages.map((page) => (
+        <li class="w-fit bg-white hover:bg-gray-50 border border-gray-200 rounded-lg shadow-lg  dark:bg-gray-800 dark:border-gray-700 ">
+          <a
+            href={page.url}
+            hx-boost="true"
+            hx-target="#main"
+            class="flex flex-col p-4"
+          >
+            <p class="text-xl font-bold">{page.name}</p>
+            <p class="text-sm text-gray-700 mb-2">{page.url}</p>
+            <p>{page.description}</p>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h3 class="text-2xl text-orange-800 font-display my-4">Lajvområden</h3>
+
+  <ul class="flex flex-wrap gap-4">
+    {
+      larpSites.map((site) => (
+        <li class="w-fit bg-white hover:bg-gray-50 border border-gray-200 rounded-lg shadow-lg  dark:bg-gray-800 dark:border-gray-700 ">
+          <a
+            href={site.url}
+            hx-boost="true"
+            hx-target="#main"
+            class="flex flex-col p-4"
+          >
+            <p class="text-xl font-bold">{site.name}</p>
+            <p class="text-sm text-gray-700 mb-2">{site.url}</p>
+            <p>{site.description}</p>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h3 class="text-2xl text-orange-800 font-display my-4">Försäljare</h3>
+
+  <ul class="flex flex-wrap gap-4">
+    {
+      larpStores.map((store) => (
+        <li class="w-fit bg-white hover:bg-gray-50 border border-gray-200 rounded-lg shadow-lg  dark:bg-gray-800 dark:border-gray-700 ">
+          <a
+            href={store.url}
+            hx-boost="true"
+            hx-target="#main"
+            class="flex flex-col p-4"
+          >
+            <p class="text-xl font-bold">{store.name}</p>
+            <p class="text-sm text-gray-700 mb-2">{store.url}</p>
+            <p>{store.description}</p>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h3 class="text-2xl text-orange-800 font-display my-4">Lajvfotografer</h3>
+
+  <ul class="flex flex-wrap gap-4">
+    {
+      larpPhotographers.map((photographer) => (
+        <li class="w-fit bg-white hover:bg-gray-50 border border-gray-200 rounded-lg shadow-lg  dark:bg-gray-800 dark:border-gray-700 ">
+          <a
+            href={photographer.url}
+            hx-boost="true"
+            hx-target="#main"
+            class="flex flex-col p-4"
+          >
+            <p class="text-xl font-bold">{photographer.name}</p>
+            <p class="text-sm text-gray-700 mb-2">{photographer.url}</p>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</TopLevelPage>
