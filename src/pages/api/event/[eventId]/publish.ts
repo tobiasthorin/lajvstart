@@ -35,7 +35,7 @@ export const PUT: APIRoute = async ({ rewrite, params }) => {
       EVENT_COLLECTIONS_CACHE,
     )
     eventCollectionsCache.remove("upcoming")
-
+    console.log("bools", isProd, event.has_been_announced, event.is_published)
     if (isProd && !event.has_been_announced && !event.is_published) {
       await sendDiscordMessage(constructAnnouncement(event))
 

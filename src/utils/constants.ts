@@ -36,4 +36,3 @@ console.log(`Environment:
   isDev:${isDev}
   isProd:${isProd}
   isLocal:${isLocal}`)
-console.log("Variables:", JSON.stringify(import.meta.env))
