@@ -3,6 +3,20 @@ import { getEvent, updateEvent } from "../../../../services/eventService"
 import { errorResponse } from "../../../../utils/responseUtils"
 import type { LARPEvent } from "../../../../types/types"
 import { EVENT_COLLECTIONS_CACHE, useNamespace } from "../../../../lib/cache"
+import { sendDiscordMessage } from "../../../../lib/discord"
+import { getEventDateString } from "../../../../utils/dateUtils"
+import { isProd } from "../../../../utils/constants"
+
+function constructAnnouncement(event: LARPEvent) {
+  return `Ett nytt lajv har annonserats!
+
+**${event.name}**
+*${getEventDateString(new Date(event.date_start), new Date(event.date_end))}*
+
+${event.description_short}
+
+https://www.lajvstart.se/events/${event.id}`
+}
 
 export const PUT: APIRoute = async ({ rewrite, params }) => {
   const eventId = params.eventId
@@ -21,6 +35,15 @@ export const PUT: APIRoute = async ({ rewrite, params }) => {
       EVENT_COLLECTIONS_CACHE,
     )
     eventCollectionsCache.remove("upcoming")
+
+    if (isProd && !event.has_been_announced && !event.is_published) {
+      await sendDiscordMessage(constructAnnouncement(event))
+
+      await updateEvent({
+        eventId: eventId,
+        has_been_announced: true,
+      })
+    }
 
     return rewrite(
       `/api/event/${eventId}/publishResponse?published=${updatedEvent.is_published ? "true" : "false"}`,

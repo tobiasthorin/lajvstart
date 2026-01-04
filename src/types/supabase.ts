@@ -120,6 +120,7 @@ export type Database = {
           event_banner_url: string | null
           event_image_url: string | null
           external_website_url: string | null
+          has_been_announced: boolean | null
           id: string
           is_beginner_friendly: boolean
           is_published: boolean
@@ -149,6 +150,7 @@ export type Database = {
           event_banner_url?: string | null
           event_image_url?: string | null
           external_website_url?: string | null
+          has_been_announced?: boolean | null
           id?: string
           is_beginner_friendly?: boolean
           is_published?: boolean
@@ -178,6 +180,7 @@ export type Database = {
           event_banner_url?: string | null
           event_image_url?: string | null
           external_website_url?: string | null
+          has_been_announced?: boolean | null
           id?: string
           is_beginner_friendly?: boolean
           is_published?: boolean

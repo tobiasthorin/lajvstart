@@ -221,7 +221,13 @@ export async function createEvent({
   prices,
 }: Omit<
   LARPEvent,
-  "owner_id" | "details" | "created_at" | "updated_at" | "price" | "deleted"
+  | "owner_id"
+  | "details"
+  | "created_at"
+  | "updated_at"
+  | "price"
+  | "deleted"
+  | "has_been_announced"
 >) {
   const { data, error: createEventError } = await supabase
     .from("events")
@@ -279,6 +285,7 @@ export async function updateEvent({
   external_website_url,
   prices,
   deleted,
+  has_been_announced,
 }: { eventId: EventID } & Partial<LARPEvent>) {
   const event = await getEvent(eventId)
 
@@ -316,6 +323,10 @@ export async function updateEvent({
       external_website_url: external_website_url ?? event.external_website_url,
       prices: prices === undefined ? event.prices : prices,
       deleted: deleted === undefined ? event.deleted : deleted,
+      has_been_announced:
+        has_been_announced === undefined
+          ? event.has_been_announced
+          : has_been_announced,
     })
     .eq("id", eventId)
     .select()
