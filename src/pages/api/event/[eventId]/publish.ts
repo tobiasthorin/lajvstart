@@ -5,7 +5,7 @@ import type { LARPEvent } from "../../../../types/types"
 import { EVENT_COLLECTIONS_CACHE, useNamespace } from "../../../../lib/cache"
 import { sendDiscordMessage } from "../../../../lib/discord"
 import { getEventDateString } from "../../../../utils/dateUtils"
-import { isDev, isLocal, isProd } from "../../../../utils/constants"
+import { isProd } from "../../../../utils/constants"
 
 function constructAnnouncement(event: LARPEvent) {
   return `Ett nytt lajv har annonserats!
@@ -36,12 +36,7 @@ export const PUT: APIRoute = async ({ rewrite, params }) => {
     )
     eventCollectionsCache.remove("upcoming")
 
-    if (
-      !isDev &&
-      !isLocal &&
-      !event.has_been_announced &&
-      !event.is_published
-    ) {
+    if (isProd && !event.has_been_announced && !event.is_published) {
       await sendDiscordMessage(constructAnnouncement(event))
 
       await updateEvent({

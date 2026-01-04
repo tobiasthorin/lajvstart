@@ -31,3 +31,8 @@ if (isDev) baseURL = "https://dev.lajvstart.se"
 if (isProd) baseURL = "https://www.lajvstart.se"
 
 export { baseURL }
+
+console.log(`Environment:
+  isDev:${isDev}
+  isProd:${isProd}
+  isLocal:${isLocal}`)
