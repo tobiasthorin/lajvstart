@@ -92,10 +92,12 @@ export async function getUpcomingEvents() {
 
 export async function getFilteredEvents({
   tags,
-  minAge,
+  dateFrom,
+  dateTo,
 }: {
   tags?: string[]
-  minAge?: number
+  dateFrom?: string | null
+  dateTo?: string | null
 }) {
   let query = supabase.from("events").select().eq("deleted", false)
 
@@ -103,12 +105,14 @@ export async function getFilteredEvents({
     query = query.overlaps("tags", tags)
   }
 
-  if (minAge) {
-    query = query.lte("minimum_age", minAge)
+  if (dateTo) {
+    query = query.lte("date_start", dateTo)
+  }
+  if (dateFrom) {
+    query = query.gte("date_start", dateFrom)
   }
 
   const { data, error } = await query
-    .gte("date_start", new Date().toISOString())
     .eq("is_published", true)
     .order("date_start")
 

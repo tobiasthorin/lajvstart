@@ -18,12 +18,13 @@ let events: LARPEvent[] = []
 
 const searchParams = Astro.url.searchParams
 const tags = searchParams.getAll("tags")
-const minAge = Number(searchParams.get("minAge"))
+const dateFrom = searchParams.get("from")
+const dateTo = searchParams.get("to")
 
 // If there are search params, filter events accordingly
 if (Astro.url.search) {
   try {
-    events = await getFilteredEvents({ tags, minAge })
+    events = await getFilteredEvents({ tags, dateFrom, dateTo })
   } catch (error) {
     console.error(error)
     if (error instanceof Error) {
@@ -42,21 +43,30 @@ if (Astro.url.search) {
   }
 }
 
+let numberOfFilters = 0
+if (tags.length > 0) numberOfFilters++
+if (dateFrom) numberOfFilters++
+if (dateTo) numberOfFilters++
+
 const eventGroups = groupEvents(events)
 ---
 
 <TopLevelPage>
-  <div x-data="{ filtersOpen: false }">
+  <div x-data={`{ filtersOpen: ${numberOfFilters > 0 ? "true" : "false"} }`}>
     <div
       class="flex max-md:flex-wrap items-baseline justify-center md:justify-between gap-4"
     >
-      <h2 class="text-5xl text-orange-500 font-display mb-8">Kommande lajv</h2>
+      <h2 class="text-5xl text-orange-500 font-display mb-8">
+        {numberOfFilters > 0 ? "Filtrerade lajv" : "Kommande lajv"}
+      </h2>
       <div class="flex gap-2">
         <Button
           size="small"
           class="flex gap-2"
           x-on:click="filtersOpen = !filtersOpen"
-          ><Filter class="text-white" />Filter
+          ><Filter class="text-white" />Filter{
+            numberOfFilters > 0 && ` (${numberOfFilters})`
+          }
         </Button>
       </div>
     </div>
@@ -70,6 +80,22 @@ const eventGroups = groupEvents(events)
       class="bg-white rounded-lg p-4 mb-8 border grid grid-cols-2 gap-4 font-bold"
     >
       <h3 class="col-span-2">Filter</h3>
+
+      <Input
+        id="dateFrom"
+        type="date"
+        label="Från datum"
+        name="from"
+        value={dateFrom}
+      />
+
+      <Input
+        id="dateTo"
+        type="date"
+        label="Till datum"
+        name="to"
+        value={dateTo}
+      />
 
       <wa-select
         label="Taggar"
@@ -91,14 +117,6 @@ const eventGroups = groupEvents(events)
           ))
         }
       </wa-select>
-
-      <Input
-        label="Deltagarens ålder"
-        id="minAgeFilter"
-        name="minAge"
-        type="number"
-        value={minAge}
-      />
 
       <div class="col-span-2 place-self-end">
         <Button hx-get="/events" hx-target="#main" hx-push-url="true"
