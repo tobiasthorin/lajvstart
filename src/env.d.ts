@@ -13,6 +13,7 @@ declare global {
     readonly EMAIL_PORT: string
     readonly EMAIL_USER: string
     readonly EMAIL_PASSWORD: string
+    readonly DISCORD_BOT_TOKEN: string
   }
 
   interface ImportMeta {
