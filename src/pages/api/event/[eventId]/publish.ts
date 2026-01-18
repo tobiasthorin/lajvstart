@@ -11,7 +11,7 @@ function constructAnnouncement(event: LARPEvent) {
   return `Ett nytt lajv har annonserats!
 
 **${event.name}**
-*${getEventDateString(new Date(event.date_start), new Date(event.date_end))}*
+*${getEventDateString(new Date(event.date_start), new Date(event.date_end))}, ${event.location_name}*
 
 ${event.description_short}
 

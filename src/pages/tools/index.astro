@@ -5,7 +5,14 @@ const tools = [
   {
     name: "Runicode",
     description: "Konvertera vanlig text till nordiska runor",
+    isExternal: false,
     path: "runicode",
+  },
+  {
+    name: "Ensemble",
+    description: "Lär dig karaktärer inför ett lajv",
+    isExternal: true,
+    path: "https://www.ensemble.nu/",
   },
 ]
 ---
@@ -13,12 +20,12 @@ const tools = [
 <TopLevelPage>
   <h2 class="text-4xl text-orange-500 font-display mb-8">Verktyg</h2>
 
-  <ul>
+  <ul class="flex flex-wrap gap-4">
     {
       tools.map((tool) => (
         <li class="w-fit bg-white hover:bg-gray-50 border border-gray-200 rounded-lg shadow-lg  dark:bg-gray-800 dark:border-gray-700 ">
           <a
-            href={`/tools/${tool.path}`}
+            href={tool.isExternal ? tool.path : `/tools/${tool.path}`}
             hx-boost="true"
             hx-target="#main"
             class="flex flex-col gap-2 p-4"
