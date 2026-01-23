@@ -1,5 +1,7 @@
 ---
 import Card from "../../../../components/Card.astro"
+import EventCard from "../../../../components/EventCard.astro"
+import EventListItem from "../../../../components/EventListItem.astro"
 import PublishCard from "../../../../components/PublishCard.astro"
 import ManageEvent from "../../../../layouts/ManageEvent.astro"
 import { getEvent } from "../../../../services/eventService"
@@ -34,5 +36,17 @@ const registrations = await getRegistrationsForEvent(event.id)
     }
 
     <PublishCard eventId={event.id} published={event.is_published} />
+  </div>
+  <div
+    class="mt-4 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+  >
+    <h3
+      class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+    >
+      Så här blir ditt lajv i listan
+    </h3>
+
+    <EventListItem event={event} />
+    <EventCard event={event} />
   </div>
 </ManageEvent>
