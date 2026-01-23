@@ -87,6 +87,15 @@ const descriptionHTML = converter.makeHtml(cleanDescription)
         class="flex flex-col gap-4 p-4 bg-green-50 rounded border-green-300 border"
       >
         <li>Plats: {event.location_name}</li>
+        <li>
+          Datum: {
+            getEventDateString(
+              new Date(event.date_start),
+              new Date(event.date_end),
+              { monthFormat: "long" }
+            )
+          }
+        </li>
 
         {
           event.date_signup && (

@@ -1,12 +1,16 @@
-export function getEventDateString(startDate: Date, endDate: Date) {
+export function getEventDateString(
+  startDate: Date,
+  endDate: Date,
+  options?: { monthFormat?: Intl.DateTimeFormatOptions["month"] },
+) {
   const crossesMonth = startDate.getMonth() !== endDate.getMonth()
   const formattedStartDate = new Intl.DateTimeFormat("sv", {
     day: "numeric",
-    month: crossesMonth ? "short" : undefined,
+    month: crossesMonth ? options?.monthFormat || "short" : undefined,
   }).format(startDate)
   const formattedEndDate = new Intl.DateTimeFormat("sv", {
     day: "numeric",
-    month: "short",
+    month: options?.monthFormat || "short",
   }).format(endDate)
 
   if (startDate.toDateString() === endDate.toDateString())
