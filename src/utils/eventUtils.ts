@@ -1,5 +1,6 @@
 import type { EventPrice } from "../services/eventService"
 import type { LARPEvent } from "../types/types"
+import { PRICE_LEVEL_LIMIT } from "./constants"
 
 export function extractEventFormData(formData: FormData) {
   const name = formData.get("name")?.toString()
@@ -21,7 +22,7 @@ export function extractEventFormData(formData: FormData) {
 
   const prices: EventPrice[] = []
 
-  for (let index = 0; index < 5; index++) {
+  for (let index = 0; index < PRICE_LEVEL_LIMIT; index++) {
     const price = formData.get(`priceValue-${index}`)?.toString()
     const description = formData.get(`priceDescription-${index}`)?.toString()
 

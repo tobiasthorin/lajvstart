@@ -1,6 +1,6 @@
 ---
 import type { HTMLAttributes } from "astro/types"
-import { eventTags, isProd } from "../utils/constants"
+import { eventTags, isProd, PRICE_LEVEL_LIMIT } from "../utils/constants"
 import Button from "./Button.astro"
 import Checkbox from "./Checkbox.astro"
 import Input from "./Input.astro"
@@ -119,7 +119,7 @@ const isFreeString = !event?.prices ? "true" : "false"
       class="self-start"
       type="button"
       variant="secondary"
-      x-show="!free && (prices === null || prices.length < 5)"
+      x-show={`!free && (prices === null || prices.length < ${PRICE_LEVEL_LIMIT})`}
       x-on:click="prices.push({id:window.crypto.randomUUID(), price: 0, description: ''})"
       ><Plus /></Button
     >

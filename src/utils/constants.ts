@@ -1,3 +1,5 @@
+export const PRICE_LEVEL_LIMIT = 10
+
 export const eventTags = [
   "Bar",
   "Blankvapen",
