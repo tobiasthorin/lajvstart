@@ -1,47 +1,64 @@
-# Astro Starter Kit: Minimal
+# Lajvstart
 
-```sh
-npm create astro@latest -- --template minimal
-```
+[Lajvstart](https://www.lajvstart.se) är ett projekt som på lång sikt ämnar bli ett nav för lajvsverige, och kanske mer därtill.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+För diskussioner, feedback, och support - gå med i Lajvstarts [Discord](https://discord.gg/bdA6hfXBgu).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Struktur
 
-## 🚀 Project Structure
+Projektet fick sin början till stor del på grund av nyfikenhet på ny och lite annorlunda teknologi, därför är teknologistacken som följer:
 
-Inside of your Astro project, you'll see the following folders and files:
+- Databas (Postgresql), autentisering, och fillagring sköts av [Supabase](https://supabase.com/).
+- Webbservern är [Astro](https://astro.build/) (i Server Side Rendering-läge) och kör på [Netlify](https://www.netlify.com/).
+- Astro servar HTML som med hjälp av [HTMX](https://htmx.org/) gör partiella siduppdateringar i webläsaren.
+- Stylingen görs med [Tailwind](https://tailwindcss.com/).
+- Små interaktiva bitar sköts med det deklarativa JavaScript-biblioteket [Alpine](https://alpinejs.dev/).
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+Man kan till och med kalla det för [AHA-stacken](https://ahastack.dev/)!
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Lokal utveckling
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### Installation
 
-Any static assets, like images, can be placed in the `public/` directory.
+- Klona repot till din dator och installera dependencies med
+  ```
+  npm install
+  ```
 
-## 🧞 Commands
+- Se till att du har Docker installerat och kör sedan
+  ```
+  npx supabase init
+  ```
+  och
+  ```
+  npx supabase start
+  ```
+  Detta startar ett gäng containers lokalt med databas, dashboard mm så att du kan utveckla helt och hållet mot en lokal infrastruktur och inte behöver gå mot en instans på supabase.com. Se https://supabase.com/docs/guides/local-development för mer info.
 
-All commands are run from the root of the project, from a terminal:
+- Skapa en fil som heter `.env` i projektets mapp och fyll den med följande:
+  ```
+  SUPABASE_URL=http://127.0.0.1:54321
+  SUPABASE_ANON_KEY=abcde12345
+  DEBUG=false
+  ```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+  Se till att datan matchar värdena för din lokala Supabase-instans. Du kan hitta dem genom att köra
+  ``` 
+  npx supabase status
+  ```
+- Nu kan du köra
+  ```
+  npm run start
+  ```
+  och komma åt lajvstart lokalt i din webbläsare. Skapa en användare genom UI:t och börja utveckla!
 
-## 👀 Want to learn more?
+  ### Migrationer och typer
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+  Om du gör några ändringar i databasen lokalt (som att lägga till en ny kolumn eller tabell) behöver du uppdatera typerna så att man får korrekt autocompletion direkt från databaslagret. Kör:
+  ```
+  npm run types
+  ```
+  För att ändringen även skall appliceras på produktionsdatabasen måste du skapa en migration. Kör följande och använd ett migrationsnamn som beskriver ändringen:
+  ```
+  npm run migrate -- MIGRATIONSNAMN
+  ```
