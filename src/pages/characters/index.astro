@@ -19,6 +19,7 @@ let characters: Character[] | null
 try {
   characters = await getCharactersForUser(userId)
 } catch (error) {
+  console.error(error)
   return _errorResponse("Error while fetching characters")
 }
 ---

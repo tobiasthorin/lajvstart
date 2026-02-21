@@ -1,7 +1,8 @@
 import type { APIRoute } from "astro"
+
 import { supabase } from "../../../lib/supabase"
-import { errorResponse } from "../../../utils/responseUtils"
 import { getUserDetailsByEmail } from "../../../services/userService"
+import { errorResponse } from "../../../utils/responseUtils"
 
 export const POST: APIRoute = async ({ request }) => {
   const formData = await request.formData()
@@ -23,7 +24,7 @@ export const POST: APIRoute = async ({ request }) => {
     return errorResponse(`Det finns redan en användare med denna epost.`, 400)
   }
 
-  const { error: signUpError, data } = await supabase.auth.signUp({
+  const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
   })
@@ -31,18 +32,18 @@ export const POST: APIRoute = async ({ request }) => {
   if (signUpError)
     return errorResponse(`Error signing up: ${signUpError.message}`, 500)
 
-  let filePath: string | null = null
+  const filePath: null | string = null
 
   const { error: createProfileError } = await supabase
     .from("user_details")
     .insert({
-      user_id: data.user!.id,
-      created_at: data.user!.created_at,
       biography,
       birth_date: birthDate,
-      profile_picture_url: filePath,
-      name,
+      created_at: data.user!.created_at,
       email,
+      name,
+      profile_picture_url: filePath,
+      user_id: data.user!.id,
     })
 
   if (createProfileError)
@@ -52,7 +53,7 @@ export const POST: APIRoute = async ({ request }) => {
     )
 
   return new Response(null, {
-    status: 302,
     headers: { "HX-Redirect": "/verifyYourEmail" },
+    status: 302,
   })
 }

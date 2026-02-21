@@ -1,5 +1,6 @@
-import { uploadFile } from "../services/fileService"
 import type { UserID } from "../services/userService"
+
+import { uploadFile } from "../services/fileService"
 import { BadRequestError, InternalError } from "./errorUtils"
 
 const IMAGE_SIZE_LIMIT = 5e7
@@ -33,6 +34,13 @@ export async function uploadAvatar(avatarFile: File, userId: UserID) {
   }`
 }
 
+export async function uploadEventBanner(
+  eventPictureFile: File,
+  eventId: UserID,
+) {
+  return await uploadEventPicture(eventPictureFile, `${eventId}-banner`)
+}
+
 export async function uploadEventPicture(
   eventPictureFile: File,
   eventId: UserID,
@@ -59,11 +67,4 @@ export async function uploadEventPicture(
   return `${import.meta.env.SUPABASE_URL}/storage/v1/object/public/user-files/${
     fileData.path
   }`
-}
-
-export async function uploadEventBanner(
-  eventPictureFile: File,
-  eventId: UserID,
-) {
-  return await uploadEventPicture(eventPictureFile, `${eventId}-banner`)
 }

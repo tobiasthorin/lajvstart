@@ -1,10 +1,11 @@
 import type { APIRoute } from "astro"
+
+import { createCharacter } from "../../../../../services/characterService"
 import { uploadFile } from "../../../../../services/fileService"
 import { errorResponse } from "../../../../../utils/responseUtils"
-import { createCharacter } from "../../../../../services/characterService"
 import { getExtention } from "../../../../../utils/storageUtils"
 
-export const POST: APIRoute = async ({ request, params, rewrite }) => {
+export const POST: APIRoute = async ({ params, request, rewrite }) => {
   const formData = await request.clone().formData()
   const characterName = formData.get("characterName")?.toString()
   const characterDescription = formData.get("characterDescription")?.toString()
@@ -23,7 +24,7 @@ export const POST: APIRoute = async ({ request, params, rewrite }) => {
 
   const pictureFile = formData.get("characterPicture") as File | null
 
-  let filePath: string | null = null
+  let filePath: null | string = null
 
   if (pictureFile) {
     const extention = getExtention(pictureFile)
@@ -42,9 +43,9 @@ export const POST: APIRoute = async ({ request, params, rewrite }) => {
 
   try {
     await createCharacter(userId, {
-      name: characterName,
       description: characterDescription,
       image_url: `${import.meta.env.SUPABASE_URL}/storage/v1/object/public/user-files/${filePath}`,
+      name: characterName,
     })
   } catch (error) {
     if (error instanceof Error) return errorResponse(error.message, 500)

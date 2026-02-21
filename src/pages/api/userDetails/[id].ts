@@ -1,11 +1,13 @@
 import type { APIRoute } from "astro"
-import { supabase } from "../../../lib/supabase"
-import { errorResponse } from "../../../utils/responseUtils"
-import { uploadAvatar } from "../../../utils/storageUtils"
-import { BadRequestError, InternalError } from "../../../utils/errorUtils"
+
 import type { UserDetails } from "../../../services/userService"
 
-export const PUT: APIRoute = async ({ request, params }) => {
+import { supabase } from "../../../lib/supabase"
+import { BadRequestError, InternalError } from "../../../utils/errorUtils"
+import { errorResponse } from "../../../utils/responseUtils"
+import { uploadAvatar } from "../../../utils/storageUtils"
+
+export const PUT: APIRoute = async ({ params, request }) => {
   const formData = await request.formData()
   const name = formData.get("name")?.toString()
   const biography = formData.get("biography")?.toString()
@@ -22,7 +24,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
 
   const avatarFile = formData.get("profilePicture") as File | null
 
-  let filePath: string | null = null
+  let filePath: null | string = null
 
   if (avatarFile) {
     try {
@@ -35,10 +37,10 @@ export const PUT: APIRoute = async ({ request, params }) => {
   }
 
   const newData: Partial<UserDetails> = {
-    name,
     biography,
     birth_date: birthDate,
     birth_date_public: !!birthDatePublic,
+    name,
     special_needs: specialNeeds || null,
   }
 

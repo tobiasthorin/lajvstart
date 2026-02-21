@@ -177,12 +177,12 @@ const isFreeString = !event?.prices ? "true" : "false"
       >
         let marker
 
-        var map = L.map("map").setView([61, 14], 6)
+        const map = L.map("map").setView([61, 14], 6)
 
         L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          maxZoom: 19,
           attribution:
-            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 19,
         }).addTo(map)
 
         if (eventLat && eventLng) {
@@ -245,27 +245,27 @@ const isFreeString = !event?.prices ? "true" : "false"
   />
 
   <script is:inline>
-    var descriptionInput = document.getElementById("eventDescription")
-    var simplemde = new SimpleMDE({
-      element: descriptionInput,
-      spellChecker: false,
-      forceSync: true,
-      status: false,
-      toolbar: [
-        "bold",
-        "italic",
-        "|",
-        "heading-1",
-        "heading-2",
-        "|",
-        "unordered-list",
-        "ordered-list",
-        "link",
-        "horizontal-rule",
-        "|",
-        "guide",
-      ],
-    })
+    const descriptionInput = document.getElementById("eventDescription")
+    const simplemde = new SimpleMDE({
+  element: descriptionInput,
+  forceSync: true,
+  spellChecker: false,
+  status: false,
+  toolbar: [
+    "bold",
+    "italic",
+    "|",
+    "heading-1",
+    "heading-2",
+    "|",
+    "unordered-list",
+    "ordered-list",
+    "link",
+    "horizontal-rule",
+    "|",
+    "guide",
+  ],
+})
   </script>
 
   <Input

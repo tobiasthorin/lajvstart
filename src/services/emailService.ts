@@ -1,36 +1,36 @@
 import Nodemailer from "nodemailer"
 
 type SendEmailParams = {
-  subject: string
-  recipients: string[]
   body: string
   eventName: string
+  recipients: string[]
+  subject: string
 }
 
 export async function sendEmail({
-  subject,
-  recipients,
   body,
   eventName,
+  recipients,
+  subject,
 }: SendEmailParams) {
   const transporter = Nodemailer.createTransport({
+    auth: {
+      pass: import.meta.env.EMAIL_PASSWORD,
+      user: import.meta.env.EMAIL_USER,
+    },
     host: import.meta.env.EMAIL_HOST,
     port: Number(import.meta.env.EMAIL_PORT),
     secure: Number(import.meta.env.EMAIL_PORT) === 465,
-    auth: {
-      user: import.meta.env.EMAIL_USER,
-      pass: import.meta.env.EMAIL_PASSWORD,
-    },
   })
 
   const adresses = recipients.join(", ")
 
   const info = await transporter.sendMail({
-    from: `"${eventName}" <noreply@lajvstart.se>`,
-    to: "noreply@lajvstart.se",
     bcc: adresses,
+    from: `"${eventName}" <noreply@lajvstart.se>`,
     subject,
     text: body,
+    to: "noreply@lajvstart.se",
   })
 
   return info

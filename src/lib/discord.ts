@@ -7,12 +7,12 @@ export async function sendDiscordMessage(content: string) {
   const response = await fetch(
     `https://discord.com/api/v9/channels/${ANNOUNCEMENT_CHANNEL_ID}/messages`,
     {
-      method: "post",
       body: JSON.stringify({ content }),
       headers: {
         Authorization: `Bot ${BOT_TOKEN}`,
         "Content-Type": "application/json",
       },
+      method: "post",
     },
   )
   console.log("response", response)

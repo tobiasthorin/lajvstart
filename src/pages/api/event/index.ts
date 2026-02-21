@@ -1,45 +1,48 @@
 import type { APIRoute } from "astro"
+
+import { v4 as uuidv4 } from "uuid"
+
+import type { LARPEvent } from "../../../types/types"
+
+import { useNamespace, USER_EVENTS_CACHE } from "../../../lib/cache"
+import { createEvent } from "../../../services/eventService"
+import { BadRequestError, InternalError } from "../../../utils/errorUtils"
+import { extractEventFormData } from "../../../utils/eventUtils"
+import { errorResponse } from "../../../utils/responseUtils"
 import {
   uploadEventBanner,
   uploadEventPicture,
 } from "../../../utils/storageUtils"
-import { BadRequestError, InternalError } from "../../../utils/errorUtils"
-import { errorResponse } from "../../../utils/responseUtils"
-import { v4 as uuidv4 } from "uuid"
-import { createEvent } from "../../../services/eventService"
-import { extractEventFormData } from "../../../utils/eventUtils"
-import { useNamespace, USER_EVENTS_CACHE } from "../../../lib/cache"
-import type { LARPEvent } from "../../../types/types"
 
 export const POST: APIRoute = async ({ request }) => {
   const formData = await request.clone().formData()
 
   const {
-    name,
-    startDate,
-    endDate,
-    location,
-    descriptionShort,
-    description,
-    tags,
-    beginnerFriendly,
     ageRestriction,
-    maximumParticipants,
-    latitude,
-    longitude,
-    useLajvstartSystem,
-    finalSignupDate,
+    beginnerFriendly,
+    description,
+    descriptionShort,
+    endDate,
     externalWebsiteURL,
-    prices,
+    finalSignupDate,
     isFree,
+    latitude,
+    location,
+    longitude,
+    maximumParticipants,
+    name,
+    prices,
+    startDate,
+    tags,
+    useLajvstartSystem,
   } = extractEventFormData(formData)
 
   const eventImageFile = formData.get("eventPicture") as File | null
   const eventBannerFile = formData.get("eventBanner") as File | null
 
-  let filePath: string | null = null
-  let bannerFilePath: string | null = null
-  let eventId = uuidv4()
+  let filePath: null | string = null
+  let bannerFilePath: null | string = null
+  const eventId = uuidv4()
 
   if (eventImageFile) {
     try {
@@ -68,29 +71,29 @@ export const POST: APIRoute = async ({ request }) => {
 
   try {
     const createdEvent = createEvent({
-      id: eventId,
-      name,
-      description,
-      description_short: descriptionShort,
-      date_start: startDate,
+      currency: "SEK",
       date_end: endDate,
       date_signup: finalSignupDate || null,
-      location_name: location,
-      event_image_url: filePath,
+      date_start: startDate,
+      description,
+      description_short: descriptionShort,
+      display_mode: !useLajvstartSystem,
       event_banner_url: bannerFilePath,
-      tags: tags.split(","),
+      event_image_url: filePath,
+      external_website_url: externalWebsiteURL || null,
+      id: eventId,
       is_beginner_friendly: !!beginnerFriendly,
-      minimum_age: ageRestriction ? Number(ageRestriction) : null,
+      is_published: false,
+      location_latitude: latitude ? Number(latitude) : null,
+      location_longitude: longitude ? Number(longitude) : null,
+      location_name: location,
       maximum_participants: maximumParticipants
         ? Number(maximumParticipants)
         : null,
-      location_latitude: latitude ? Number(latitude) : null,
-      location_longitude: longitude ? Number(longitude) : null,
-      display_mode: !useLajvstartSystem,
-      currency: "SEK",
-      is_published: false,
-      external_website_url: externalWebsiteURL || null,
+      minimum_age: ageRestriction ? Number(ageRestriction) : null,
+      name,
       prices: isFree ? null : prices,
+      tags: tags.split(","),
     })
 
     createdId = (await createdEvent).id

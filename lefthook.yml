@@ -1,0 +1,20 @@
+pre-push:
+  jobs:
+    - name: packages audit
+      tags:
+        - frontend
+        - security
+      run: npm audit
+    - name: test
+      tags:
+        - test
+      run: npm test
+
+pre-commit:
+  parallel: false
+  jobs:
+    - name: lint
+      run: npx eslint {staged_files}
+      glob: "*.{js,mjs,ts,json,css,scss}"
+    - name: format
+      run: npx prettier -uw {staged_files}

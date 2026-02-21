@@ -1,9 +1,11 @@
-import { supabase } from "../lib/supabase"
-import micromatch from "micromatch"
-import { getUserDetails, type UserDetails } from "../services/userService"
-import { log } from "../lib/logger"
-import { useNamespace, USERS_CACHE } from "../lib/cache"
 import type { APIContext, MiddlewareNext } from "astro"
+
+import micromatch from "micromatch"
+
+import { useNamespace, USERS_CACHE } from "../lib/cache"
+import { log } from "../lib/logger"
+import { supabase } from "../lib/supabase"
+import { getUserDetails, type UserDetails } from "../services/userService"
 
 const protectedRoutes = [
   "/profile/**",
@@ -19,7 +21,7 @@ export async function sessionValidation(
   context: APIContext,
   next: MiddlewareNext,
 ) {
-  const { locals, url, cookies, redirect } = context
+  const { cookies, locals, redirect, url } = context
 
   if (micromatch.isMatch(url.pathname, protectedRoutes)) {
     log(`Accessing protected route: ${url.pathname}`)
@@ -42,8 +44,8 @@ export async function sessionValidation(
       locals.isSignedIn = true
 
       const { data: sessionData, error } = await supabase.auth.setSession({
-        refresh_token: refreshToken.value,
         access_token: accessToken.value,
+        refresh_token: refreshToken.value,
       })
 
       let userDetails = usersCache.get(sessionData.user?.id!)
@@ -65,22 +67,22 @@ export async function sessionValidation(
       }
 
       locals.user = {
-        id: sessionData.user?.id!,
-        email: sessionData.user?.email!,
         details: userDetails,
+        email: sessionData.user?.email!,
+        id: sessionData.user?.id!,
       }
 
       cookies.set("sb-access-token", sessionData?.session?.access_token!, {
-        sameSite: "lax",
-        path: "/",
-        secure: true,
         maxAge: 60 * 30, // 30 minutes
+        path: "/",
+        sameSite: "lax",
+        secure: true,
       })
       cookies.set("sb-refresh-token", sessionData?.session?.refresh_token!, {
-        sameSite: "lax",
-        path: "/",
-        secure: true,
         maxAge: 60 * 60 * 24 * 30, // 30 days
+        path: "/",
+        sameSite: "lax",
+        secure: true,
       })
     }
   }

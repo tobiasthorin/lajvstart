@@ -1,259 +1,299 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
 
 export type Database = {
   graphql_public: {
+    CompositeTypes: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
     Tables: {
       [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
-    Functions: {
-      graphql: {
-        Args: {
-          operationName?: string
-          query?: string
-          variables?: Json
-          extensions?: Json
-        }
-        Returns: Json
-      }
+  }
+  public: {
+    CompositeTypes: {
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
     }
-    CompositeTypes: {
-      [_ in never]: never
+    Functions: {
+      json_matches_schema: {
+        Args: { instance: Json; schema: Json }
+        Returns: boolean
+      }
+      jsonb_matches_schema: {
+        Args: { instance: Json; schema: Json }
+        Returns: boolean
+      }
+      jsonschema_is_valid: {
+        Args: { schema: Json }
+        Returns: boolean
+      }
+      jsonschema_validation_errors: {
+        Args: { instance: Json; schema: Json }
+        Returns: string[]
+      }
     }
-  }
-  public: {
     Tables: {
       characters: {
-        Row: {
-          created_at: string
-          deleted: boolean
-          description: string | null
-          id: number
-          image_url: string | null
-          name: string | null
-          updated_at: string | null
-          user_id: string
-        }
         Insert: {
           created_at?: string
           deleted?: boolean
-          description?: string | null
+          description?: null | string
           id?: number
-          image_url?: string | null
-          name?: string | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Update: {
-          created_at?: string
-          deleted?: boolean
-          description?: string | null
-          id?: number
-          image_url?: string | null
-          name?: string | null
-          updated_at?: string | null
+          image_url?: null | string
+          name?: null | string
+          updated_at?: null | string
           user_id?: string
         }
         Relationships: []
-      }
-      event_groups: {
         Row: {
           created_at: string
           deleted: boolean
-          description: string | null
-          event_id: string | null
-          id: string
-          name: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string
-          deleted?: boolean
-          description?: string | null
-          event_id?: string | null
-          id?: string
-          name?: string | null
-          updated_at?: string | null
+          description: null | string
+          id: number
+          image_url: null | string
+          name: null | string
+          updated_at: null | string
+          user_id: string
         }
         Update: {
           created_at?: string
           deleted?: boolean
-          description?: string | null
-          event_id?: string | null
+          description?: null | string
+          id?: number
+          image_url?: null | string
+          name?: null | string
+          updated_at?: null | string
+          user_id?: string
+        }
+      }
+      event_groups: {
+        Insert: {
+          created_at?: string
+          deleted?: boolean
+          description?: null | string
+          event_id?: null | string
           id?: string
-          name?: string | null
-          updated_at?: string | null
+          name?: null | string
+          updated_at?: null | string
         }
         Relationships: [
           {
-            foreignKeyName: "event_groups_event_id_fkey"
             columns: ["event_id"]
+            foreignKeyName: "event_groups_event_id_fkey"
             isOneToOne: false
-            referencedRelation: "events"
             referencedColumns: ["id"]
+            referencedRelation: "events"
           },
         ]
+        Row: {
+          created_at: string
+          deleted: boolean
+          description: null | string
+          event_id: null | string
+          id: string
+          name: null | string
+          updated_at: null | string
+        }
+        Update: {
+          created_at?: string
+          deleted?: boolean
+          description?: null | string
+          event_id?: null | string
+          id?: string
+          name?: null | string
+          updated_at?: null | string
+        }
       }
       events: {
+        Insert: {
+          created_at?: string
+          currency?: string
+          date_end: string
+          date_signup?: null | string
+          date_start: string
+          deleted?: boolean
+          description?: string
+          description_short: string
+          details?: Json
+          display_mode?: boolean
+          event_banner_url?: null | string
+          event_image_url?: null | string
+          external_website_url?: null | string
+          has_been_announced?: boolean | null
+          id?: string
+          is_beginner_friendly?: boolean
+          is_published?: boolean
+          location_latitude?: null | number
+          location_longitude?: null | number
+          location_name?: null | string
+          maximum_participants?: null | number
+          minimum_age?: null | number
+          name?: string
+          owner_id?: string
+          price?: null | number
+          prices?: Json | null
+          tags?: null | string[]
+          updated_at?: null | string
+        }
+        Relationships: []
         Row: {
           created_at: string
           currency: string
           date_end: string
-          date_signup: string | null
+          date_signup: null | string
           date_start: string
           deleted: boolean
           description: string
           description_short: string
           details: Json
           display_mode: boolean
-          event_banner_url: string | null
-          event_image_url: string | null
-          external_website_url: string | null
+          event_banner_url: null | string
+          event_image_url: null | string
+          external_website_url: null | string
           has_been_announced: boolean | null
           id: string
           is_beginner_friendly: boolean
           is_published: boolean
-          location_latitude: number | null
-          location_longitude: number | null
-          location_name: string | null
-          maximum_participants: number | null
-          minimum_age: number | null
+          location_latitude: null | number
+          location_longitude: null | number
+          location_name: null | string
+          maximum_participants: null | number
+          minimum_age: null | number
           name: string
           owner_id: string
-          price: number | null
+          price: null | number
           prices: Json | null
-          tags: string[] | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string
-          currency?: string
-          date_end: string
-          date_signup?: string | null
-          date_start: string
-          deleted?: boolean
-          description?: string
-          description_short: string
-          details?: Json
-          display_mode?: boolean
-          event_banner_url?: string | null
-          event_image_url?: string | null
-          external_website_url?: string | null
-          has_been_announced?: boolean | null
-          id?: string
-          is_beginner_friendly?: boolean
-          is_published?: boolean
-          location_latitude?: number | null
-          location_longitude?: number | null
-          location_name?: string | null
-          maximum_participants?: number | null
-          minimum_age?: number | null
-          name?: string
-          owner_id?: string
-          price?: number | null
-          prices?: Json | null
-          tags?: string[] | null
-          updated_at?: string | null
+          tags: null | string[]
+          updated_at: null | string
         }
         Update: {
           created_at?: string
           currency?: string
           date_end?: string
-          date_signup?: string | null
+          date_signup?: null | string
           date_start?: string
           deleted?: boolean
           description?: string
           description_short?: string
           details?: Json
           display_mode?: boolean
-          event_banner_url?: string | null
-          event_image_url?: string | null
-          external_website_url?: string | null
+          event_banner_url?: null | string
+          event_image_url?: null | string
+          external_website_url?: null | string
           has_been_announced?: boolean | null
           id?: string
           is_beginner_friendly?: boolean
           is_published?: boolean
-          location_latitude?: number | null
-          location_longitude?: number | null
-          location_name?: string | null
-          maximum_participants?: number | null
-          minimum_age?: number | null
+          location_latitude?: null | number
+          location_longitude?: null | number
+          location_name?: null | string
+          maximum_participants?: null | number
+          minimum_age?: null | number
           name?: string
           owner_id?: string
-          price?: number | null
+          price?: null | number
           prices?: Json | null
-          tags?: string[] | null
-          updated_at?: string | null
+          tags?: null | string[]
+          updated_at?: null | string
         }
-        Relationships: []
       }
       favourites: {
-        Row: {
-          created_at: string
-          event_id: string | null
-          id: string
-          updated_at: string | null
-          user_details: string | null
-          user_id: string | null
-        }
         Insert: {
           created_at?: string
-          event_id?: string | null
+          event_id?: null | string
           id?: string
-          updated_at?: string | null
-          user_details?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          event_id?: string | null
-          id?: string
-          updated_at?: string | null
-          user_details?: string | null
-          user_id?: string | null
+          updated_at?: null | string
+          user_details?: null | string
+          user_id?: null | string
         }
         Relationships: [
           {
-            foreignKeyName: "favourites_event_id_fkey"
             columns: ["event_id"]
+            foreignKeyName: "favourites_event_id_fkey"
             isOneToOne: false
-            referencedRelation: "events"
             referencedColumns: ["id"]
+            referencedRelation: "events"
           },
           {
-            foreignKeyName: "favourites_user_details_fkey"
             columns: ["user_details"]
+            foreignKeyName: "favourites_user_details_fkey"
             isOneToOne: false
-            referencedRelation: "user_details"
             referencedColumns: ["id"]
+            referencedRelation: "user_details"
           },
         ]
+        Row: {
+          created_at: string
+          event_id: null | string
+          id: string
+          updated_at: null | string
+          user_details: null | string
+          user_id: null | string
+        }
+        Update: {
+          created_at?: string
+          event_id?: null | string
+          id?: string
+          updated_at?: null | string
+          user_details?: null | string
+          user_id?: null | string
+        }
       }
       mailings: {
-        Row: {
-          body: string
-          created_at: string
-          event_id: string
-          id: number
-          subject: string
-          to: string[]
-        }
         Insert: {
           body: string
           created_at?: string
           event_id: string
           id?: number
+          subject: string
+          to: string[]
+        }
+        Relationships: [
+          {
+            columns: ["event_id"]
+            foreignKeyName: "mailings_event_id_fkey"
+            isOneToOne: false
+            referencedColumns: ["id"]
+            referencedRelation: "events"
+          },
+        ]
+        Row: {
+          body: string
+          created_at: string
+          event_id: string
+          id: number
           subject: string
           to: string[]
         }
@@ -265,154 +305,142 @@ export type Database = {
           subject?: string
           to?: string[]
         }
-        Relationships: [
-          {
-            foreignKeyName: "mailings_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       registrations: {
-        Row: {
-          created_at: string
-          deleted: boolean | null
-          details: Json | null
-          event_group: string | null
-          event_id: string
-          id: string
-          is_approved: boolean
-          is_paid: boolean
-          updated_at: string | null
-          user_details: string | null
-          user_id: string
-        }
         Insert: {
           created_at?: string
           deleted?: boolean | null
           details?: Json | null
-          event_group?: string | null
+          event_group?: null | string
           event_id: string
           id?: string
           is_approved?: boolean
           is_paid?: boolean
-          updated_at?: string | null
-          user_details?: string | null
+          updated_at?: null | string
+          user_details?: null | string
+          user_id: string
+        }
+        Relationships: [
+          {
+            columns: ["event_id"]
+            foreignKeyName: "public_registrations_event_id_fkey"
+            isOneToOne: false
+            referencedColumns: ["id"]
+            referencedRelation: "events"
+          },
+          {
+            columns: ["event_group"]
+            foreignKeyName: "registrations_event_group_fkey"
+            isOneToOne: false
+            referencedColumns: ["id"]
+            referencedRelation: "event_groups"
+          },
+          {
+            columns: ["user_details"]
+            foreignKeyName: "registrations_user_details_fkey"
+            isOneToOne: false
+            referencedColumns: ["user_id"]
+            referencedRelation: "user_details"
+          },
+        ]
+        Row: {
+          created_at: string
+          deleted: boolean | null
+          details: Json | null
+          event_group: null | string
+          event_id: string
+          id: string
+          is_approved: boolean
+          is_paid: boolean
+          updated_at: null | string
+          user_details: null | string
           user_id: string
         }
         Update: {
           created_at?: string
           deleted?: boolean | null
           details?: Json | null
-          event_group?: string | null
+          event_group?: null | string
           event_id?: string
           id?: string
           is_approved?: boolean
           is_paid?: boolean
-          updated_at?: string | null
-          user_details?: string | null
+          updated_at?: null | string
+          user_details?: null | string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "public_registrations_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "registrations_event_group_fkey"
-            columns: ["event_group"]
-            isOneToOne: false
-            referencedRelation: "event_groups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "registrations_user_details_fkey"
-            columns: ["user_details"]
-            isOneToOne: false
-            referencedRelation: "user_details"
-            referencedColumns: ["user_id"]
-          },
-        ]
       }
       user_details: {
+        Insert: {
+          biography?: null | string
+          birth_date: string
+          birth_date_public?: boolean
+          created_at?: string
+          email?: string
+          id?: string
+          name?: null | string
+          profile_picture_url?: null | string
+          special_needs?: null | string
+          updated_at?: null | string
+          user_id: string
+        }
+        Relationships: []
         Row: {
-          biography: string | null
+          biography: null | string
           birth_date: string
           birth_date_public: boolean
           created_at: string
           email: string
           id: string
-          name: string | null
-          profile_picture_url: string | null
-          special_needs: string | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          biography?: string | null
-          birth_date: string
-          birth_date_public?: boolean
-          created_at?: string
-          email?: string
-          id?: string
-          name?: string | null
-          profile_picture_url?: string | null
-          special_needs?: string | null
-          updated_at?: string | null
+          name: null | string
+          profile_picture_url: null | string
+          special_needs: null | string
+          updated_at: null | string
           user_id: string
         }
         Update: {
-          biography?: string | null
+          biography?: null | string
           birth_date?: string
           birth_date_public?: boolean
           created_at?: string
           email?: string
           id?: string
-          name?: string | null
-          profile_picture_url?: string | null
-          special_needs?: string | null
-          updated_at?: string | null
+          name?: null | string
+          profile_picture_url?: null | string
+          special_needs?: null | string
+          updated_at?: null | string
           user_id?: string
         }
-        Relationships: []
       }
     }
     Views: {
       [_ in never]: never
     }
-    Functions: {
-      json_matches_schema: {
-        Args: { schema: Json; instance: Json }
-        Returns: boolean
-      }
-      jsonb_matches_schema: {
-        Args: { schema: Json; instance: Json }
-        Returns: boolean
-      }
-      jsonschema_is_valid: {
-        Args: { schema: Json }
-        Returns: boolean
-      }
-      jsonschema_validation_errors: {
-        Args: { schema: Json; instance: Json }
-        Returns: string[]
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof Database },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type Json =
+  | boolean
+  | Json[]
+  | null
+  | number
+  | string
+  | { [key: string]: Json | undefined }
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
@@ -487,35 +515,7 @@ export type TablesUpdate<
       : never
     : never
 
-export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
-  }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
-
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
-  }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+type DefaultSchema = Database[Extract<keyof Database, "public">]
 
 export const Constants = {
   graphql_public: {
@@ -525,4 +525,3 @@ export const Constants = {
     Enums: {},
   },
 } as const
-

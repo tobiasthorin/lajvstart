@@ -1,9 +1,10 @@
 import type { APIRoute } from "astro"
-import { errorResponse } from "../../../../../../utils/responseUtils"
+
 import { updateRegistration } from "../../../../../../services/registrationService"
 import { handleServiceError } from "../../../../../../utils/errorUtils"
+import { errorResponse } from "../../../../../../utils/responseUtils"
 
-export const PUT: APIRoute = async ({ request, params, rewrite }) => {
+export const PUT: APIRoute = async ({ params, request, rewrite }) => {
   const eventId = params.eventId
   const registrationId = params.registrationId
 

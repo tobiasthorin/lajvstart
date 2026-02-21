@@ -1,20 +1,20 @@
 export function log(
   message: string,
-  level: "info" | "warning" | "error" = "info"
+  level: "error" | "info" | "warning" = "info",
 ) {
   if (!import.meta.env.DEBUG_LOGS) return
 
-  const log = { timestamp: new Date().toISOString(), message }
+  const log = { message, timestamp: new Date().toISOString() }
 
   switch (level) {
+    case "error":
+      console.error(log)
+      break
     case "info":
       console.log(log)
       break
     case "warning":
       console.warn(log)
-      break
-    case "error":
-      console.error(log)
       break
 
     default:

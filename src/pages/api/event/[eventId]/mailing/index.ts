@@ -1,12 +1,13 @@
 import type { APIRoute } from "astro"
-import { errorResponse } from "../../../../../utils/responseUtils"
-import { createMailing } from "../../../../../services/mailingService"
-import { getRegistrationsForEvent } from "../../../../../services/registrationService"
-import { getFavouritesForEvent } from "../../../../../services/favouritesService"
+
 import { sendEmail } from "../../../../../services/emailService"
 import { getEvent } from "../../../../../services/eventService"
+import { getFavouritesForEvent } from "../../../../../services/favouritesService"
+import { createMailing } from "../../../../../services/mailingService"
+import { getRegistrationsForEvent } from "../../../../../services/registrationService"
+import { errorResponse } from "../../../../../utils/responseUtils"
 
-export const POST: APIRoute = async ({ request, params, rewrite }) => {
+export const POST: APIRoute = async ({ params, request, rewrite }) => {
   const eventId = params.eventId
 
   if (!eventId) return errorResponse("Missing event id")
@@ -22,7 +23,7 @@ export const POST: APIRoute = async ({ request, params, rewrite }) => {
   if (!subject) return errorResponse("Missing subject", 400)
   if (!body) return errorResponse("Missing body", 400)
 
-  let allAddresses = new Set<string>()
+  const allAddresses = new Set<string>()
 
   if (toAdditional) {
     toAdditional
@@ -54,16 +55,16 @@ export const POST: APIRoute = async ({ request, params, rewrite }) => {
   const event = await getEvent(eventId)
 
   await sendEmail({
-    subject,
-    recipients: [...allAddresses.values()],
     body,
     eventName: event.name,
+    recipients: [...allAddresses.values()],
+    subject,
   })
 
   await createMailing({
+    body,
     event_id: eventId,
     subject,
-    body,
     to: [...allAddresses.values()],
   })
 

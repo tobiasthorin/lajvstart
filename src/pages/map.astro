@@ -32,12 +32,12 @@ const eventsWithLocation = events
   <div id="map" class="rounded z-10" style="height: calc(100vh - 190px);"></div>
 
   <script is:inline define:vars={{ events: eventsWithLocation }}>
-    var map = L.map("map", { maxZoom: 14 }).setView([62, 16], 5)
+    const map = L.map("map", { maxZoom: 14 }).setView([62, 16], 5)
 
-    var markers = L.markerClusterGroup({
-      showCoverageOnHover: false,
-      maxClusterRadius: 20,
-    })
+    const markers = L.markerClusterGroup({
+  maxClusterRadius: 20,
+  showCoverageOnHover: false,
+})
     events.forEach((event) => {
       markers.addLayer(
         L.marker([event.location_latitude, event.location_longitude]).bindPopup(
@@ -47,9 +47,9 @@ const eventsWithLocation = events
     })
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
       attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19,
     }).addTo(map)
 
     map.addLayer(markers)

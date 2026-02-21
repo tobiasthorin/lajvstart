@@ -1,10 +1,11 @@
 import type { APIRoute } from "astro"
-import { errorResponse } from "../../../../../utils/responseUtils"
+
 import { addDetailToEvent } from "../../../../../services/eventDetailsService"
 import {
-  getEvent,
   type EventDetailsType,
+  getEvent,
 } from "../../../../../services/eventService"
+import { errorResponse } from "../../../../../utils/responseUtils"
 
 const autofillOptions = ["characterName", "characterDescription"] as const
 const autofillNameOptions = ["Character name", "Character description"] as const
@@ -14,7 +15,7 @@ const autofillNames = new Map([
   [autofillOptions[1], autofillNameOptions[1]],
 ])
 
-export const POST: APIRoute = async ({ request, params, rewrite }) => {
+export const POST: APIRoute = async ({ params, request, rewrite }) => {
   const eventId = params.eventId
 
   if (!eventId) return errorResponse("Missing event id")
@@ -37,7 +38,7 @@ export const POST: APIRoute = async ({ request, params, rewrite }) => {
   if (
     !autofillWith ||
     !autofillOptions.includes(autofillWith) ||
-    ["number", "checkbox", "multiChoice", "multiChoiceMultiValue"].includes(
+    ["checkbox", "multiChoice", "multiChoiceMultiValue", "number"].includes(
       controlType,
     )
   )
@@ -47,15 +48,15 @@ export const POST: APIRoute = async ({ request, params, rewrite }) => {
 
   try {
     await addDetailToEvent(event, {
-      id: crypto.randomUUID(),
-      type: controlType,
-      label: controlName,
-      description: controlDescription,
-      options: controlType === "multiChoice" ? [] : undefined,
       autofillWith,
       autofillWithName: autofillWith
         ? autofillNames.get(autofillWith)
         : undefined,
+      description: controlDescription,
+      id: crypto.randomUUID(),
+      label: controlName,
+      options: controlType === "multiChoice" ? [] : undefined,
+      type: controlType,
     })
   } catch (error) {
     console.error(error)

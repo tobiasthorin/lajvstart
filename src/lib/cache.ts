@@ -7,7 +7,7 @@ export const USERS_CACHE = "users"
 
 const cacheStore: Record<
   string,
-  Map<string, { value: unknown; expiresAt: number | undefined }>
+  Map<string, { expiresAt: number | undefined; value: unknown }>
 > = {}
 const defaultNamespace = "defaultNamespace"
 
@@ -20,7 +20,7 @@ function getNamedCache<T>(namespace: string) {
     log(`CACHE INIT: "${namespace}"`)
     cacheStore[namespace] = new Map<
       string,
-      { value: T; expiresAt: number | undefined }
+      { expiresAt: number | undefined; value: T }
     >()
   }
 
@@ -30,7 +30,7 @@ function getNamedCache<T>(namespace: string) {
 function useNamespace<T>(namespace: string) {
   const namedCache = getNamedCache<T>(namespace)
   function get(key: string) {
-    const { value, expiresAt } = namedCache.get(key) || {}
+    const { expiresAt, value } = namedCache.get(key) || {}
 
     if (value === undefined) {
       log(`CACHE MISS: "${namespace}"."${key}" is not set`)
@@ -53,7 +53,7 @@ function useNamespace<T>(namespace: string) {
     const expiresAt = timeout ? Date.now() + timeout : undefined
 
     log(`CACHE SET: setting "${namespace}.${key}"`)
-    namedCache.set(key, { value, expiresAt })
+    namedCache.set(key, { expiresAt, value })
   }
 
   function remove(key: string) {
@@ -76,9 +76,9 @@ function useNamespace<T>(namespace: string) {
     return expiresAt - Date.now()
   }
 
-  return { get, set, remove, clear, timeTillExpires }
+  return { clear, get, remove, set, timeTillExpires }
 }
 
-const { get, set, remove } = useNamespace(defaultNamespace)
+const { get, remove, set } = useNamespace(defaultNamespace)
 
-export { get, set, remove, useNamespace }
+export { get, remove, set, useNamespace }

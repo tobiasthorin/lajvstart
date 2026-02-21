@@ -1,14 +1,15 @@
 import type { APIRoute } from "astro"
-import { updateEvent, softDeleteEvent } from "../../../../services/eventService"
+
+import { softDeleteEvent, updateEvent } from "../../../../services/eventService"
 import { BadRequestError, InternalError } from "../../../../utils/errorUtils"
+import { extractEventFormData } from "../../../../utils/eventUtils"
 import { errorResponse } from "../../../../utils/responseUtils"
 import {
   uploadEventBanner,
   uploadEventPicture,
 } from "../../../../utils/storageUtils"
-import { extractEventFormData } from "../../../../utils/eventUtils"
 
-export const PUT: APIRoute = async ({ request, rewrite, params }) => {
+export const PUT: APIRoute = async ({ params, request, rewrite }) => {
   const eventId = params.eventId
 
   if (!eventId) {
@@ -19,30 +20,30 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
   const formData = await request.clone().formData()
 
   const {
-    name,
-    startDate,
-    endDate,
-    location,
-    descriptionShort,
-    description,
-    tags,
-    beginnerFriendly,
     ageRestriction,
-    maximumParticipants,
-    latitude,
-    longitude,
-    useLajvstartSystem,
-    finalSignupDate,
+    beginnerFriendly,
+    description,
+    descriptionShort,
+    endDate,
     externalWebsiteURL,
-    prices,
+    finalSignupDate,
     isFree,
+    latitude,
+    location,
+    longitude,
+    maximumParticipants,
+    name,
+    prices,
+    startDate,
+    tags,
+    useLajvstartSystem,
   } = extractEventFormData(formData)
 
   const eventImageFile = formData.get("eventPicture") as File | null
   const eventBannerFile = formData.get("eventBanner") as File | null
 
-  let filePath: string | null = null
-  let bannerFilePath: string | null = null
+  let filePath: null | string = null
+  let bannerFilePath: null | string = null
 
   if (eventImageFile) {
     try {
@@ -68,26 +69,26 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
 
   try {
     updateEvent({
-      eventId,
-      name,
+      date_end: endDate,
+      date_signup: finalSignupDate || null,
+      date_start: startDate,
       description,
       description_short: descriptionShort,
-      date_start: startDate,
-      date_end: endDate,
-      location_name: location,
-      event_image_url: filePath,
+      display_mode: !useLajvstartSystem,
       event_banner_url: bannerFilePath,
-      tags: tags.split(","),
+      event_image_url: filePath,
+      eventId,
+      external_website_url: externalWebsiteURL || null,
       is_beginner_friendly: !!beginnerFriendly,
-      minimum_age: ageRestriction === "" ? null : Number(ageRestriction),
-      maximum_participants:
-        maximumParticipants === "" ? null : Number(maximumParticipants),
       location_latitude: latitude ? Number(latitude) : null,
       location_longitude: longitude ? Number(longitude) : null,
-      display_mode: !useLajvstartSystem,
-      date_signup: finalSignupDate || null,
-      external_website_url: externalWebsiteURL || null,
+      location_name: location,
+      maximum_participants:
+        maximumParticipants === "" ? null : Number(maximumParticipants),
+      minimum_age: ageRestriction === "" ? null : Number(ageRestriction),
+      name,
       prices: isFree ? null : prices,
+      tags: tags.split(","),
     })
   } catch (error) {
     console.error("Error when updating event", error)
@@ -97,7 +98,7 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
   return rewrite(`/api/event/updateResponse`)
 }
 
-export const DELETE: APIRoute = async ({ rewrite, params }) => {
+export const DELETE: APIRoute = async ({ params, rewrite }) => {
   const eventId = params.eventId
   if (!eventId) return errorResponse("Missing event id")
 

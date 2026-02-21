@@ -1,15 +1,16 @@
 import type { APIRoute } from "astro"
-import { errorResponse } from "../../../../../utils/responseUtils"
+
+import { createEventGroup } from "../../../../../services/eventGroupsService"
 import {
   createRegistration,
   findRegistration,
-  replaceRegistration,
   type RegistrationDetails,
+  replaceRegistration,
 } from "../../../../../services/registrationService"
-import { createEventGroup } from "../../../../../services/eventGroupsService"
+import { errorResponse } from "../../../../../utils/responseUtils"
 
 // TODO: separate into post and patch/put?
-export const PUT: APIRoute = async ({ request, params, locals }) => {
+export const PUT: APIRoute = async ({ locals, params, request }) => {
   const eventId = params.eventId
 
   if (!eventId) return errorResponse("Missing event id")

@@ -1,23 +1,21 @@
-/// <reference path="../.astro/types.d.ts" />
-
 import SimpleMDE from "simplemde"
 
 declare global {
+  interface ImportMeta {
+    readonly env: ImportMetaEnv
+  }
+
   interface ImportMetaEnv {
-    readonly SUPABASE_URL: string
-    readonly SUPABASE_ANON_KEY: string
     readonly DEBUG: "true" | undefined
     readonly DEBUG_LOGS: "true" | undefined
     readonly DEV_BUILD: boolean
+    readonly DISCORD_BOT_TOKEN: string
     readonly EMAIL_HOST: string
+    readonly EMAIL_PASSWORD: string
     readonly EMAIL_PORT: string
     readonly EMAIL_USER: string
-    readonly EMAIL_PASSWORD: string
-    readonly DISCORD_BOT_TOKEN: string
-  }
-
-  interface ImportMeta {
-    readonly env: ImportMetaEnv
+    readonly SUPABASE_ANON_KEY: string
+    readonly SUPABASE_URL: string
   }
 
   interface Window {
@@ -35,9 +33,9 @@ declare global {
     interface Locals {
       isSignedIn: boolean
       user: {
-        id: string
-        email: string
         details: import("./types/supabase").Tables<"user_details">
+        email: string
+        id: string
       }
     }
   }

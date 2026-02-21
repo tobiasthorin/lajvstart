@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro"
+
 import { removeOptionFromDetail } from "../../../../../../../services/eventDetailsService"
 import { getEvent } from "../../../../../../../services/eventService"
 import { errorResponse } from "../../../../../../../utils/responseUtils"

@@ -1,9 +1,10 @@
 import type { APIRoute } from "astro"
-import { errorResponse } from "../../../../../../../utils/responseUtils"
+
 import { addOptionToDetail } from "../../../../../../../services/eventDetailsService"
 import { getEvent } from "../../../../../../../services/eventService"
+import { errorResponse } from "../../../../../../../utils/responseUtils"
 
-export const POST: APIRoute = async ({ request, params, rewrite }) => {
+export const POST: APIRoute = async ({ params, request, rewrite }) => {
   const eventId = params.eventId
   const detailId = params.detailId
 

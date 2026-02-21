@@ -1,8 +1,9 @@
 import type { APIRoute } from "astro"
-import { errorResponse } from "../../../../../utils/responseUtils"
-import { createEventGroup } from "../../../../../services/eventGroupsService"
 
-export const POST: APIRoute = async ({ request, params, rewrite }) => {
+import { createEventGroup } from "../../../../../services/eventGroupsService"
+import { errorResponse } from "../../../../../utils/responseUtils"
+
+export const POST: APIRoute = async ({ params, request, rewrite }) => {
   const eventId = params.eventId
 
   if (!eventId) return errorResponse("Missing event id")

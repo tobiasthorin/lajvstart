@@ -1,16 +1,18 @@
-import { supabase } from "./../lib/supabase"
+import { v4 as uuidv4 } from "uuid"
+import { z } from "zod"
+
+import type { Database } from "../types/supabase"
+import type { LARPEvent } from "../types/types"
+import type { UserID } from "./userService"
+
 import {
-  useNamespace,
   EVENT_COLLECTIONS_CACHE,
   EVENTS_CACHE,
+  useNamespace,
   USER_EVENTS_CACHE,
 } from "../lib/cache"
-import type { LARPEvent } from "../types/types"
 import { log } from "../lib/logger"
-import type { UserID } from "./userService"
-import { z } from "zod"
-import type { Database } from "../types/supabase"
-import { v4 as uuidv4 } from "uuid"
+import { supabase } from "./../lib/supabase"
 
 export type EventID = LARPEvent["id"]
 
@@ -28,124 +30,109 @@ export const detailsTypeEnum = z.enum([
 ])
 
 const eventDetailSchema = z.object({
-  id: z.string(),
-  label: z.string(),
-  description: z.string().optional(),
-  type: detailsTypeEnum,
-  options: z.array(z.string()).optional(),
   autofillWith: z.enum(["characterName", "characterDescription"]).optional(),
   autofillWithName: z
     .enum(["Character name", "Character description"])
     .optional(),
+  description: z.string().optional(),
+  id: z.string(),
+  label: z.string(),
+  options: z.array(z.string()).optional(),
+  type: detailsTypeEnum,
 })
 
 const eventPriceSchema = z.object({
-  price: z.number(),
   description: z.string(),
+  price: z.number(),
 })
 
 export const eventDetailsSchema = z.array(eventDetailSchema)
 export const eventPricesSchema = z.array(eventPriceSchema).nullable()
 
+export type EventDetail = z.infer<typeof eventDetailSchema>
 export type EventDetailsSchema = z.infer<typeof eventDetailsSchema>
 export type EventDetailsType = z.infer<typeof detailsTypeEnum>
-export type EventDetail = z.infer<typeof eventDetailSchema>
 
 export type EventPrice = z.infer<typeof eventPriceSchema>
 export type EventPrices = z.infer<typeof eventPricesSchema>
 
-function mapDataToEvent(
-  data: Database["public"]["Tables"]["events"]["Row"],
-): LARPEvent {
-  return {
-    ...data,
-    details: eventDetailsSchema.parse(data.details),
-    prices: eventPricesSchema.parse(data.prices),
-  }
-}
-
-export async function getUpcomingEvents() {
-  const eventsCache = useNamespace<LARPEvent[]>(EVENT_COLLECTIONS_CACHE)
-  let events = eventsCache.get("upcoming")
-
-  if (!events) {
-    console.log("Getting events from DB")
-
-    const { data, error } = await supabase
-      .from("events")
-      .select()
-      .eq("deleted", false)
-      .gte("date_start", new Date().toISOString())
-      .eq("is_published", true)
-      .order("date_start")
-
-    if (error) throw new Error(error.message)
-
-    const parsedData = data.map(mapDataToEvent)
-
-    eventCollectionsCache.set("upcoming", parsedData, 1000 * 60 * 60)
-    return parsedData
-  }
-
-  return events
-}
-
-export async function getFilteredEvents({
+export async function createEvent({
+  date_end,
+  date_signup,
+  date_start,
+  description,
+  description_short,
+  display_mode,
+  event_banner_url,
+  event_image_url,
+  external_website_url,
+  id,
+  is_beginner_friendly,
+  location_latitude,
+  location_longitude,
+  location_name,
+  maximum_participants,
+  minimum_age,
+  name,
+  prices,
   tags,
-  dateFrom,
-  dateTo,
-}: {
-  tags?: string[]
-  dateFrom?: string | null
-  dateTo?: string | null
-}) {
-  let query = supabase.from("events").select().eq("deleted", false)
+}: Omit<
+  LARPEvent,
+  | "created_at"
+  | "deleted"
+  | "details"
+  | "has_been_announced"
+  | "owner_id"
+  | "price"
+  | "updated_at"
+>) {
+  const { data, error: createEventError } = await supabase
+    .from("events")
+    .insert({
+      date_end,
+      date_signup,
+      date_start,
+      description,
+      description_short,
+      display_mode,
+      event_banner_url,
+      event_image_url,
+      external_website_url,
+      id,
+      is_beginner_friendly,
+      location_latitude,
+      location_longitude,
+      location_name,
+      maximum_participants,
+      minimum_age,
+      name,
+      prices,
+      tags: tags,
+    })
+    .select()
+    .single()
 
-  if (tags && tags.length > 0) {
-    query = query.overlaps("tags", tags)
-  }
+  if (createEventError) throw new Error(createEventError.message)
 
-  if (dateTo) {
-    query = query.lte("date_start", dateTo)
-  }
-  if (dateFrom) {
-    query = query.gte("date_start", dateFrom)
-  }
+  eventsCache.clear()
+  userEventsCache.clear()
 
-  const { data, error } = await query
-    .eq("is_published", true)
-    .order("date_start")
-
-  if (error) throw new Error(error.message)
-
-  const parsedData = data.map(mapDataToEvent)
-
-  return parsedData
+  return mapDataToEvent(data)
 }
 
-export async function getFavouriteEvents(userId: UserID) {
-  const { data, error } = await supabase
-    .from("events")
-    .select("*, favourites!inner(event_id, user_id)")
-    .eq("deleted", false)
-    .eq("is_published", true)
-    .order("date_start")
+export async function duplicateEvent({ eventId }: { eventId: EventID }) {
+  const eventToDuplicate = await getEvent(eventId)
 
-  if (error) throw new Error(error.message)
-
-  // TODO: do this in query
-  const filteredData = (data || []).filter((event) =>
-    event.favourites.some((fav) => fav.user_id === userId),
-  )
-
-  // TODO: cache?
-  const parsedData = filteredData.map(mapDataToEvent)
-
-  return parsedData
+  return await createEvent({
+    ...eventToDuplicate,
+    id: uuidv4(),
+    is_published: false,
+    name: eventToDuplicate.name + " (Copy)",
+  })
 }
 
 export async function getEvent(eventId: LARPEvent["id"]) {
-  let event = eventsCache.get(eventId)
+  const event = eventsCache.get(eventId)
 
   if (event) {
     const parsedData = {
@@ -174,8 +161,62 @@ export async function getEvent(eventId: LARPEvent["id"]) {
   }
 }
 
+export async function getFavouriteEvents(userId: UserID) {
+  const { data, error } = await supabase
+    .from("events")
+    .select("*, favourites!inner(event_id, user_id)")
+    .eq("deleted", false)
+    .eq("is_published", true)
+    .order("date_start")
+
+  if (error) throw new Error(error.message)
+
+  // TODO: do this in query
+  const filteredData = (data || []).filter((event) =>
+    event.favourites.some((fav) => fav.user_id === userId),
+  )
+
+  // TODO: cache?
+  const parsedData = filteredData.map(mapDataToEvent)
+
+  return parsedData
+}
+
+export async function getFilteredEvents({
+  dateFrom,
+  dateTo,
+  tags,
+}: {
+  dateFrom?: null | string
+  dateTo?: null | string
+  tags?: string[]
+}) {
+  let query = supabase.from("events").select().eq("deleted", false)
+
+  if (tags && tags.length > 0) {
+    query = query.overlaps("tags", tags)
+  }
+
+  if (dateTo) {
+    query = query.lte("date_start", dateTo)
+  }
+  if (dateFrom) {
+    query = query.gte("date_start", dateFrom)
+  }
+
+  const { data, error } = await query
+    .eq("is_published", true)
+    .order("date_start")
+
+  if (error) throw new Error(error.message)
+
+  const parsedData = data.map(mapDataToEvent)
+
+  return parsedData
+}
+
 export async function getMyEvents(userId: UserID) {
-  let events = userEventsCache.get(userId)
+  const events = userEventsCache.get(userId)
 
   if (events) {
     return events
@@ -199,134 +240,100 @@ export async function getMyEvents(userId: UserID) {
   }
 }
 
-export async function createEvent({
-  id,
-  name,
-  description,
-  description_short,
-  date_start,
-  date_end,
-  date_signup,
-  location_name,
-  event_image_url,
-  event_banner_url,
-  tags,
-  is_beginner_friendly,
-  minimum_age,
-  maximum_participants,
-  location_latitude,
-  location_longitude,
-  display_mode,
-  external_website_url,
-  prices,
-}: Omit<
-  LARPEvent,
-  | "owner_id"
-  | "details"
-  | "created_at"
-  | "updated_at"
-  | "price"
-  | "deleted"
-  | "has_been_announced"
->) {
-  const { data, error: createEventError } = await supabase
-    .from("events")
-    .insert({
-      id,
-      name,
-      description,
-      description_short,
-      date_start,
-      date_end,
-      date_signup,
-      location_name,
-      event_image_url,
-      event_banner_url,
-      tags: tags,
-      is_beginner_friendly,
-      minimum_age,
-      maximum_participants,
-      location_latitude,
-      location_longitude,
-      display_mode,
-      external_website_url,
-      prices,
-    })
-    .select()
-    .single()
+export async function getUpcomingEvents() {
+  const eventsCache = useNamespace<LARPEvent[]>(EVENT_COLLECTIONS_CACHE)
+  const events = eventsCache.get("upcoming")
 
-  if (createEventError) throw new Error(createEventError.message)
+  if (!events) {
+    console.log("Getting events from DB")
 
-  eventsCache.clear()
-  userEventsCache.clear()
+    const { data, error } = await supabase
+      .from("events")
+      .select()
+      .eq("deleted", false)
+      .gte("date_start", new Date().toISOString())
+      .eq("is_published", true)
+      .order("date_start")
 
-  return mapDataToEvent(data)
+    if (error) throw new Error(error.message)
+
+    const parsedData = data.map(mapDataToEvent)
+
+    eventCollectionsCache.set("upcoming", parsedData, 1000 * 60 * 60)
+    return parsedData
+  }
+
+  return events
+}
+
+export async function softDeleteEvent({ eventId }: { eventId: EventID }) {
+  await updateEvent({ deleted: true, eventId })
 }
 
 export async function updateEvent({
-  eventId,
-  name,
-  description,
-  description_short,
-  date_start,
   date_end,
   date_signup,
-  location_name,
-  event_image_url,
+  date_start,
+  deleted,
+  description,
+  description_short,
+  display_mode,
   event_banner_url,
-  tags,
+  event_image_url,
+  eventId,
+  external_website_url,
+  has_been_announced,
   is_beginner_friendly,
-  minimum_age,
-  maximum_participants,
+  is_published,
   location_latitude,
   location_longitude,
-  display_mode,
-  is_published,
-  external_website_url,
+  location_name,
+  maximum_participants,
+  minimum_age,
+  name,
   prices,
-  deleted,
-  has_been_announced,
-}: { eventId: EventID } & Partial<LARPEvent>) {
+  tags,
+}: Partial<LARPEvent> & { eventId: EventID }) {
   const event = await getEvent(eventId)
 
-  const { error: updateEventError, data } = await supabase
+  const { data, error: updateEventError } = await supabase
     .from("events")
     .update({
-      name: name ?? event.name,
-      description: description ?? event.description,
-      description_short: description_short ?? event.description_short,
-      date_start: date_start ?? event.date_start,
       date_end: date_end ?? event.date_end,
       date_signup: date_signup ?? event.date_signup,
-      location_name: location_name ?? event.location_name,
-      event_image_url: event_image_url ?? event.event_image_url,
+      date_start: date_start ?? event.date_start,
+      deleted: deleted === undefined ? event.deleted : deleted,
+      description: description ?? event.description,
+      description_short: description_short ?? event.description_short,
+      display_mode: display_mode ?? event.display_mode,
       event_banner_url: event_banner_url ?? event.event_banner_url,
-      tags: tags ?? event.tags,
+      event_image_url: event_image_url ?? event.event_image_url,
+      external_website_url: external_website_url ?? event.external_website_url,
+      has_been_announced:
+        has_been_announced === undefined
+          ? event.has_been_announced
+          : has_been_announced,
       is_beginner_friendly: is_beginner_friendly ?? event.is_beginner_friendly,
-      minimum_age:
-        minimum_age === undefined
-          ? event.minimum_age
-          : minimum_age === null
-            ? null
-            : minimum_age,
+      is_published: is_published ?? event.is_published,
+      location_latitude: location_latitude ?? event.location_latitude,
+      location_longitude: location_longitude ?? event.location_longitude,
+      location_name: location_name ?? event.location_name,
       maximum_participants:
         maximum_participants === undefined
           ? event.maximum_participants
           : maximum_participants === null
             ? null
             : maximum_participants,
-      location_latitude: location_latitude ?? event.location_latitude,
-      location_longitude: location_longitude ?? event.location_longitude,
-      display_mode: display_mode ?? event.display_mode,
+      minimum_age:
+        minimum_age === undefined
+          ? event.minimum_age
+          : minimum_age === null
+            ? null
+            : minimum_age,
+      name: name ?? event.name,
       price: null,
-      is_published: is_published ?? event.is_published,
-      external_website_url: external_website_url ?? event.external_website_url,
       prices: prices === undefined ? event.prices : prices,
-      deleted: deleted === undefined ? event.deleted : deleted,
-      has_been_announced:
-        has_been_announced === undefined
-          ? event.has_been_announced
-          : has_been_announced,
+      tags: tags ?? event.tags,
     })
     .eq("id", eventId)
     .select()
@@ -344,17 +351,12 @@ export async function updateEvent({
   return parsedData
 }
 
-export async function duplicateEvent({ eventId }: { eventId: EventID }) {
-  const eventToDuplicate = await getEvent(eventId)
-
-  return await createEvent({
-    ...eventToDuplicate,
-    id: uuidv4(),
-    name: eventToDuplicate.name + " (Copy)",
-    is_published: false,
-  })
-}
-
-export async function softDeleteEvent({ eventId }: { eventId: EventID }) {
-  await updateEvent({ eventId, deleted: true })
+function mapDataToEvent(
+  data: Database["public"]["Tables"]["events"]["Row"],
+): LARPEvent {
+  return {
+    ...data,
+    details: eventDetailsSchema.parse(data.details),
+    prices: eventPricesSchema.parse(data.prices),
+  }
 }

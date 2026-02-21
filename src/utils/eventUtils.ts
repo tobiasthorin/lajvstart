@@ -1,5 +1,6 @@
 import type { EventPrice } from "../services/eventService"
 import type { LARPEvent } from "../types/types"
+
 import { PRICE_LEVEL_LIMIT } from "./constants"
 
 export function extractEventFormData(formData: FormData) {
@@ -30,7 +31,7 @@ export function extractEventFormData(formData: FormData) {
       break
     }
 
-    prices.push({ price: Number(price), description: description! })
+    prices.push({ description: description!, price: Number(price) })
   }
 
   if (name === undefined)
@@ -51,23 +52,23 @@ export function extractEventFormData(formData: FormData) {
     throw new Error(`Missing form data tags. Recieved: ${tags}`)
 
   return {
-    name,
-    startDate,
-    endDate,
-    location,
-    descriptionShort,
-    description,
-    tags,
-    beginnerFriendly,
     ageRestriction,
-    maximumParticipants,
-    latitude,
-    longitude,
-    useLajvstartSystem,
-    finalSignupDate,
+    beginnerFriendly,
+    description,
+    descriptionShort,
+    endDate,
     externalWebsiteURL,
-    prices,
+    finalSignupDate,
     isFree,
+    latitude,
+    location,
+    longitude,
+    maximumParticipants,
+    name,
+    prices,
+    startDate,
+    tags,
+    useLajvstartSystem,
   }
 }
 

@@ -1,11 +1,13 @@
 import type { APIRoute } from "astro"
-import { getEvent, updateEvent } from "../../../../services/eventService"
-import { errorResponse } from "../../../../utils/responseUtils"
+
 import type { LARPEvent } from "../../../../types/types"
+
 import { EVENT_COLLECTIONS_CACHE, useNamespace } from "../../../../lib/cache"
 import { sendDiscordMessage } from "../../../../lib/discord"
-import { getEventDateString } from "../../../../utils/dateUtils"
+import { getEvent, updateEvent } from "../../../../services/eventService"
 import { isProd } from "../../../../utils/constants"
+import { getEventDateString } from "../../../../utils/dateUtils"
+import { errorResponse } from "../../../../utils/responseUtils"
 
 function constructAnnouncement(event: LARPEvent) {
   return `Ett nytt lajv har annonserats!
@@ -18,7 +20,7 @@ ${event.description_short}
 https://www.lajvstart.se/events/${event.id}`
 }
 
-export const PUT: APIRoute = async ({ rewrite, params }) => {
+export const PUT: APIRoute = async ({ params, rewrite }) => {
   const eventId = params.eventId
   if (!eventId) return errorResponse("Missing event id")
 

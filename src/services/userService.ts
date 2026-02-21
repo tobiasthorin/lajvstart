@@ -1,6 +1,7 @@
-import { USERS_CACHE, useNamespace } from "../lib/cache"
-import { supabase } from "../lib/supabase"
 import type { Tables } from "../types/supabase"
+
+import { useNamespace, USERS_CACHE } from "../lib/cache"
+import { supabase } from "../lib/supabase"
 
 export type UserDetails = Tables<"user_details">
 

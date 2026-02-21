@@ -1,7 +1,8 @@
 import type { APIRoute } from "astro"
-import { errorResponse } from "../../../../../../utils/responseUtils"
+
 import { removeDetailFromEvent } from "../../../../../../services/eventDetailsService"
 import { getEvent } from "../../../../../../services/eventService"
+import { errorResponse } from "../../../../../../utils/responseUtils"
 
 export const DELETE: APIRoute = async ({ params, rewrite }) => {
   const eventId = params.eventId

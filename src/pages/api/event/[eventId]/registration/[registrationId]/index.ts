@@ -1,10 +1,11 @@
 import type { APIRoute } from "astro"
+
 import {
   deleteRegistration,
   updateRegistration,
 } from "../../../../../../services/registrationService"
-import { errorResponse } from "../../../../../../utils/responseUtils"
 import { handleServiceError } from "../../../../../../utils/errorUtils"
+import { errorResponse } from "../../../../../../utils/responseUtils"
 
 export const DELETE: APIRoute = async ({ params, rewrite }) => {
   const eventId = params.eventId
@@ -23,7 +24,7 @@ export const DELETE: APIRoute = async ({ params, rewrite }) => {
   }
 }
 
-export const PATCH: APIRoute = async ({ request, params, rewrite }) => {
+export const PATCH: APIRoute = async ({ params, request, rewrite }) => {
   const eventId = params.eventId
   const registrationId = params.registrationId
 
@@ -42,13 +43,13 @@ export const PATCH: APIRoute = async ({ request, params, rewrite }) => {
 
   try {
     await updateRegistration(registrationId, {
-      isPaid: isPaid !== null ? (isPaid === "true" ? true : false) : undefined,
       isApproved:
         isApproved !== null
           ? isApproved === "true"
             ? true
             : false
           : undefined,
+      isPaid: isPaid !== null ? (isPaid === "true" ? true : false) : undefined,
     })
   } catch (error) {
     return handleServiceError(error)

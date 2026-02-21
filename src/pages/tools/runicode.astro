@@ -65,158 +65,158 @@ import TopLevelPage from "../../layouts/TopLevelPage.astro"
     let linebreaks = false
 
     const runes = {
-      medieval: {
-        a: "ᛆ",
-        b: "ᛒ",
-        c: "ᛍ",
-        d: "ᛑ",
-        e: "ᛂ",
-        f: "ᚠ",
-        g: "ᚵ",
-        h: "ᚼ",
-        i: "ᛁ",
-        j: "ᛁ",
-        k: "ᚴ",
-        l: "ᛚ",
-        m: "ᛉ",
-        n: "ᚿ",
-        o: "ᚮ",
-        p: "ᛔ",
-        q: "ᚴ",
-        r: "ᚱ",
-        s: "ᛋ",
-        t: "ᛏ",
-        u: "ᚢ",
-        v: "ᚡ",
-        w: "ᚡ",
-        x: "ᚴᛋ",
-        y: "ᚤ",
-        z: "ᛋ",
-        å: "ᛆ",
-        ä: "ᛅ",
-        ö: "ᚯ",
-      },
       elder: {
-        a: "ᚨ",
-        b: "ᛒ",
-        c: "ᚲ",
-        d: "ᛞ",
-        e: "ᛖ",
-        f: "ᚠ",
-        g: "ᚷ",
-        h: "ᚺ",
-        i: "ᛁ",
-        j: "ᛃ",
-        k: "ᚲ",
-        l: "ᛚ",
-        m: "ᛗ",
-        n: "ᚾ",
-        o: "ᛟ",
-        p: "ᛈ",
-        q: "ᚲ",
-        r: "ᚱ",
-        s: "ᛊ",
-        t: "ᛏ",
-        u: "ᚢ",
-        v: "ᚹ",
-        w: "ᚹ",
-        x: "ᚲᛊ",
-        y: "ᚢ",
-        z: "ᛉ",
-        å: "ᛟ",
-        ä: "ᛇ",
-        ö: "ᛟ",
-      },
-      kir: {
-        a: "ᛅ",
-        b: "ᛒ",
-        c: "ᚴ",
-        d: "ᛑ",
-        e: "ᛂ",
-        f: "ᚠ",
-        g: "ᚵ",
-        h: "ᚼ",
-        i: "ᛁ",
-        j: "ᛁ",
-        k: "ᚴ",
-        l: "ᛚ",
-        m: "ᛉ",
-        n: "ᚾ",
-        o: "ᚭ",
-        p: "ᛔ",
-        q: "ᚴ",
-        r: "ᚱ",
-        s: "ᛋ",
-        t: "ᛏ",
-        u: "ᚢ",
-        v: "ᚠ",
-        w: "ᚠ",
-        x: "ᚴᛋ",
-        y: "ᚤ",
-        z: "ᛋ",
-        å: "ᚭ",
-        ä: "ᛂ",
-        ö: "ᚢ",
-      },
-    }
-
-    function runify(inputString) {
-      let result = inputString.toLowerCase()
-
-      if (deDouble) {
-        result = removeDoubles(result)
-      }
-
-      if (!linebreaks) {
-        result = result.replace(/\n/g, "᛫")
-      }
-      //debugger
-      result = result.replace(/['\-_\,]/g, "") // remove untranslatable punctuation
-      result = result.replace(/[\.\!\?] */g, ".") // replace sentence punctuation
-      result = result.replace(/ /g, "᛫") // replace spaces
-      result = result.replace(/\./g, ":") // replace punctuation
-      result = result.replace(/th/g, "ᚦ") // replace th
-      result = result.replace(/:᛫/g, ":") // replace any period-space3
-
-      if (selectedFuthark === "elder") {
-        result = result.replace(/ng/g, "ᛜ")
-      }
-
-      return result.replace(
-        /[\wåäö]/g,
-        (match) => runes[selectedFuthark][match] || match
-      )
-    }
-
-    function removeDoubles(string) {
-      return string.replace(/(\D)(?=\1)/gi, "").replace(/ck/gi, "k")
-    }
-
-    function copyOutput() {
-      if (navigator.clipboard) {
-        navigator.clipboard
-          .writeText(output.innerHTML)
-          .then(() => (copyButton.innerHTML = "Kopierad!"))
-      } else {
-        copyFallback()
-      }
+    a: "ᚨ",
+    å: "ᛟ",
+    ä: "ᛇ",
+    b: "ᛒ",
+    c: "ᚲ",
+    d: "ᛞ",
+    e: "ᛖ",
+    f: "ᚠ",
+    g: "ᚷ",
+    h: "ᚺ",
+    i: "ᛁ",
+    j: "ᛃ",
+    k: "ᚲ",
+    l: "ᛚ",
+    m: "ᛗ",
+    n: "ᚾ",
+    o: "ᛟ",
+    ö: "ᛟ",
+    p: "ᛈ",
+    q: "ᚲ",
+    r: "ᚱ",
+    s: "ᛊ",
+    t: "ᛏ",
+    u: "ᚢ",
+    v: "ᚹ",
+    w: "ᚹ",
+    x: "ᚲᛊ",
+    y: "ᚢ",
+    z: "ᛉ",
+  },
+  kir: {
+    a: "ᛅ",
+    å: "ᚭ",
+    ä: "ᛂ",
+    b: "ᛒ",
+    c: "ᚴ",
+    d: "ᛑ",
+    e: "ᛂ",
+    f: "ᚠ",
+    g: "ᚵ",
+    h: "ᚼ",
+    i: "ᛁ",
+    j: "ᛁ",
+    k: "ᚴ",
+    l: "ᛚ",
+    m: "ᛉ",
+    n: "ᚾ",
+    o: "ᚭ",
+    ö: "ᚢ",
+    p: "ᛔ",
+    q: "ᚴ",
+    r: "ᚱ",
+    s: "ᛋ",
+    t: "ᛏ",
+    u: "ᚢ",
+    v: "ᚠ",
+    w: "ᚠ",
+    x: "ᚴᛋ",
+    y: "ᚤ",
+    z: "ᛋ",
+  },
+  medieval: {
+    a: "ᛆ",
+    å: "ᛆ",
+    ä: "ᛅ",
+    b: "ᛒ",
+    c: "ᛍ",
+    d: "ᛑ",
+    e: "ᛂ",
+    f: "ᚠ",
+    g: "ᚵ",
+    h: "ᚼ",
+    i: "ᛁ",
+    j: "ᛁ",
+    k: "ᚴ",
+    l: "ᛚ",
+    m: "ᛉ",
+    n: "ᚿ",
+    o: "ᚮ",
+    ö: "ᚯ",
+    p: "ᛔ",
+    q: "ᚴ",
+    r: "ᚱ",
+    s: "ᛋ",
+    t: "ᛏ",
+    u: "ᚢ",
+    v: "ᚡ",
+    w: "ᚡ",
+    x: "ᚴᛋ",
+    y: "ᚤ",
+    z: "ᛋ",
+  },
     }
 
     function copyFallback() {
-      const textArea = document.createElement("textarea")
-      textArea.value = output.innerHTML
-      document.body.appendChild(textArea)
-      textArea.focus()
-      textArea.select()
+  const textArea = document.createElement("textarea")
+  textArea.value = output.innerHTML
+  document.body.appendChild(textArea)
+  textArea.focus()
+  textArea.select()
 
-      document.execCommand("copy")
+  document.execCommand("copy")
 
-      document.body.removeChild(textArea)
-    }
+  document.body.removeChild(textArea)
+}
 
-    function resetButtonText() {
-      copyButton.innerHTML = "Kopiera"
-    }
+function copyOutput() {
+  if (navigator.clipboard) {
+    navigator.clipboard
+      .writeText(output.innerHTML)
+      .then(() => (copyButton.innerHTML = "Kopierad!"))
+  } else {
+    copyFallback()
+  }
+}
+
+function removeDoubles(string) {
+  return string.replace(/(\D)(?=\1)/gi, "").replace(/ck/gi, "k")
+}
+
+function resetButtonText() {
+  copyButton.innerHTML = "Kopiera"
+}
+
+function runify(inputString) {
+  let result = inputString.toLowerCase()
+
+  if (deDouble) {
+    result = removeDoubles(result)
+  }
+
+  if (!linebreaks) {
+    result = result.replace(/\n/g, "᛫")
+  }
+  //debugger
+  result = result.replace(/['\-_\,]/g, "") // remove untranslatable punctuation
+  result = result.replace(/[\.\!\?] */g, ".") // replace sentence punctuation
+  result = result.replace(/ /g, "᛫") // replace spaces
+  result = result.replace(/\./g, ":") // replace punctuation
+  result = result.replace(/th/g, "ᚦ") // replace th
+  result = result.replace(/:᛫/g, ":") // replace any period-space3
+
+  if (selectedFuthark === "elder") {
+    result = result.replace(/ng/g, "ᛜ")
+  }
+
+  return result.replace(
+    /[\wåäö]/g,
+    (match) => runes[selectedFuthark][match] || match
+  )
+}
 
     input.addEventListener("input", (event) => {
       render()

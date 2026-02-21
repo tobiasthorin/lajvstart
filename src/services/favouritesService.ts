@@ -1,7 +1,8 @@
-import { supabase } from "../lib/supabase"
 import type { Tables } from "../types/supabase"
 import type { EventID } from "./eventService"
 import type { UserDetails, UserID } from "./userService"
+
+import { supabase } from "../lib/supabase"
 
 export type Favourite = Tables<"favourites">
 
@@ -16,6 +17,22 @@ export async function getFavourite(userId: UserID, eventId: EventID) {
   return data
 }
 
+export async function getFavouritesForEvent(eventId: EventID) {
+  const { data, error } = await supabase
+    .from("favourites")
+    .select(
+      `
+      *,
+      user_details(
+        email
+      )`,
+    )
+    .eq("event_id", eventId)
+
+  if (error) throw new Error(error.message)
+  return data
+}
+
 export async function toggleFavourite(
   userId: UserID,
   eventId: EventID,
@@ -24,13 +41,13 @@ export async function toggleFavourite(
   const favourite = await getFavourite(userId, eventId)
 
   if (!favourite) {
-    const { error, data } = await supabase
+    const { data, error } = await supabase
       .from("favourites")
       .insert([
         {
           event_id: eventId,
-          user_id: userId,
           user_details: userDetails.id,
+          user_id: userId,
         },
       ])
       .select()
@@ -49,20 +66,4 @@ export async function toggleFavourite(
 
     return null
   }
-}
-
-export async function getFavouritesForEvent(eventId: EventID) {
-  const { error, data } = await supabase
-    .from("favourites")
-    .select(
-      `
-      *,
-      user_details(
-        email
-      )`,
-    )
-    .eq("event_id", eventId)
-
-  if (error) throw new Error(error.message)
-  return data
 }

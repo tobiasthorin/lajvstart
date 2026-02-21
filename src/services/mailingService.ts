@@ -1,11 +1,12 @@
-import { supabase } from "../lib/supabase"
 import type { Tables } from "../types/supabase"
 import type { EventID } from "./eventService"
+
+import { supabase } from "../lib/supabase"
 
 export type Mailing = Tables<"mailings">
 
 export async function createMailing(
-  mailingData: Omit<Mailing, "id" | "created_at">,
+  mailingData: Omit<Mailing, "created_at" | "id">,
 ) {
   const { error } = await supabase.from("mailings").insert(mailingData)
 
@@ -13,7 +14,7 @@ export async function createMailing(
 }
 
 export async function getMailings(eventId: EventID) {
-  const { error, data } = await supabase
+  const { data, error } = await supabase
     .from("mailings")
     .select()
     .eq("event_id", eventId)

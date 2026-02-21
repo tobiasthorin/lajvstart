@@ -1,10 +1,11 @@
 import type { APIRoute } from "astro"
+
 import {
   deleteCharacter,
   editCharacter,
 } from "../../../../../../services/characterService"
-import { errorResponse } from "../../../../../../utils/responseUtils"
 import { uploadFile } from "../../../../../../services/fileService"
+import { errorResponse } from "../../../../../../utils/responseUtils"
 import { getExtention } from "../../../../../../utils/storageUtils"
 
 export const DELETE: APIRoute = async ({ params }) => {
@@ -44,7 +45,7 @@ export const PUT: APIRoute = async ({ params, request, rewrite }) => {
 
   const pictureFile = formData.get("characterPicture") as File | null
 
-  let filePath: string | null = null
+  let filePath: null | string = null
 
   if (pictureFile) {
     const extention = getExtention(pictureFile)
@@ -63,9 +64,9 @@ export const PUT: APIRoute = async ({ params, request, rewrite }) => {
 
   try {
     await editCharacter(userId, Number(characterId), {
-      name: characterName,
       description: characterDescription,
       image_url: `${import.meta.env.SUPABASE_URL}/storage/v1/object/public/user-files/${filePath}`,
+      name: characterName,
     })
   } catch (error) {
     if (error instanceof Error) return errorResponse(error.message, 500)

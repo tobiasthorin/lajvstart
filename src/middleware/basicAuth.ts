@@ -1,8 +1,9 @@
 import type { APIContext, MiddlewareNext } from "astro"
+
 import { isLocal, isProd } from "../utils/constants"
 
 export function basicAuth(context: APIContext, next: MiddlewareNext) {
-  if(isProd || isLocal) return next()
+  if (isProd || isLocal) return next()
 
   // If a basic auth header is present, it wil take the string form: "Basic authValue"
   const basicAuth = context.request.headers.get("authorization")
@@ -23,9 +24,9 @@ export function basicAuth(context: APIContext, next: MiddlewareNext) {
   }
 
   return new Response("Auth required", {
-    status: 401,
     headers: {
       "WWW-authenticate": 'Basic realm="Secure Area"',
     },
+    status: 401,
   })
 }
