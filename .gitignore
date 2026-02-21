@@ -1,6 +1,7 @@
 # build output
 dist/
 .netlify
+
 # generated types
 .astro/
 
@@ -15,7 +16,10 @@ pnpm-debug.log*
 
 # environment variables
 .env
-.env.production
+.env.*
 
 # macOS-specific files
 .DS_Store
+
+# test
+coverage/

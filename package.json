@@ -14,7 +14,9 @@
     "astro": "astro",
     "types": "npx supabase gen types typescript --local > src/types/supabase.ts",
     "supabase": "supabase",
-    "migrate": "npx supabase db diff -f"
+    "migrate": "npx supabase db diff -f",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@astrojs/alpinejs": "^0.4.8",
@@ -48,6 +50,10 @@
     "@types/showdown": "^2.0.6",
     "@types/simplemde": "^1.11.11",
     "@types/uuid": "^9.0.8",
-    "supabase": "^2.20.12"
+    "@vitest/coverage-v8": "^4.0.18",
+    "simplemde": "^1.11.2",
+    "supabase": "^2.20.12",
+    "vitest": "^4.0.18",
+    "vitest-create-mock": "^0.0.8"
   }
 }

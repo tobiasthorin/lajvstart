@@ -1,4 +1,10 @@
 {
-  "recommendations": ["astro-build.astro-vscode","denoland.vscode-deno"] ,
+  "recommendations": [
+    "astro-build.astro-vscode",
+    "bradlc.vscode-tailwindcss",
+    "denoland.vscode-deno",
+    "supabase.vscode-supabase-extension",
+    "tamasfe.even-better-toml"
+  ],
   "unwantedRecommendations": []
 }

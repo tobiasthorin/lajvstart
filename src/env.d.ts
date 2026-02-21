@@ -1,6 +1,6 @@
 /// <reference path="../.astro/types.d.ts" />
 
-import SimpleMDE from "@types/simplemde"
+import SimpleMDE from "simplemde"
 
 declare global {
   interface ImportMetaEnv {
