@@ -6,6 +6,7 @@
     "dbaeumer.vscode-eslint",
     "denoland.vscode-deno",
     "esbenp.prettier-vscode",
+    "github.vscode-github-actions",
     "supabase.vscode-supabase-extension",
     "tamasfe.even-better-toml"
   ],
