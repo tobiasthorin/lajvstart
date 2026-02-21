@@ -17,5 +17,7 @@ pre-commit:
     - name: lint
       run: npx eslint {staged_files}
       glob: "*.{js,mjs,ts,json,css,scss}"
+      stage_fixed: true
     - name: format
       run: npx prettier -uw {staged_files}
+      stage_fixed: true
