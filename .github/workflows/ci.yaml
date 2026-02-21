@@ -22,19 +22,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: './package.json'
+          node-version-file: "./package.json"
           cache: npm
-          cache-dependency-path: 'package-lock.yaml'
+          cache-dependency-path: "package-lock.yaml"
 
       - name: Install dependencies
         run: npm ci
 
       - name: Lint files
         run: npm run lint:ci
-      
+
       - name: Run tests
         run: npm run test:ci
-        
+
       - uses: supabase/setup-cli@v1
         with:
           version: latest
