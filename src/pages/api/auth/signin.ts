@@ -37,11 +37,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     sameSite: "lax",
     path: "/",
     secure: true,
+    maxAge: 60 * 30, // 30 minutes
   })
   cookies.set("sb-refresh-token", refresh_token, {
     sameSite: "lax",
     path: "/",
     secure: true,
+    maxAge: 60 * 60 * 24 * 30, // 30 days
   })
 
   return new Response(null, {

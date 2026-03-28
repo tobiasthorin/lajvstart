@@ -31,7 +31,7 @@ export async function sessionValidation(
     const accessToken = cookies.get("sb-access-token")
     const refreshToken = cookies.get("sb-refresh-token")
 
-    const isSignedOut = !accessToken || !refreshToken
+    const isSignedOut = !refreshToken
     if (isSignedOut) {
       locals.isSignedIn = false
 
@@ -43,7 +43,7 @@ export async function sessionValidation(
 
       const { data: sessionData, error } = await supabase.auth.setSession({
         refresh_token: refreshToken.value,
-        access_token: accessToken.value,
+        access_token: accessToken?.value ?? "",
       })
 
       let userDetails = usersCache.get(sessionData.user?.id!)
