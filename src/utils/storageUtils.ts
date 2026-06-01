@@ -49,6 +49,7 @@ export async function uploadEventPicture(
     fileData = await uploadFile(
       `events/${eventId}.${fileExtention}`,
       eventPictureFile,
+      { cacheControl: "604_800" }, // 7 day cache for event images (is this too much?)
     )
   } catch (error) {
     console.error("Error when uploading image (event picture)", error)
