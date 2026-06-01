@@ -116,7 +116,7 @@ const descriptionHTML = converter.makeHtml(cleanDescription)
                 {event.prices.map((price) => (
                   <li>
                     <span class="font-bold">{price.price}</span>
-                    <span class="text-sm"> SEK</span>
+                    <span class="text-sm"> {event.currency ?? "SEK"}</span>
                     {price.description && <span> : {price.description}</span>}
                   </li>
                 ))}

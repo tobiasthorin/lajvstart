@@ -36,6 +36,7 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
     externalWebsiteURL,
     prices,
     isFree,
+    currency,
   } = extractEventFormData(formData)
 
   const eventImageFile = formData.get("eventPicture") as File | null
@@ -88,6 +89,7 @@ export const PUT: APIRoute = async ({ request, rewrite, params }) => {
       date_signup: finalSignupDate || null,
       external_website_url: externalWebsiteURL || null,
       prices: isFree ? null : prices,
+      currency,
     })
   } catch (error) {
     console.error("Error when updating event", error)

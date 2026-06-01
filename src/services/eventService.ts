@@ -219,6 +219,7 @@ export async function createEvent({
   display_mode,
   external_website_url,
   prices,
+  currency,
 }: Omit<
   LARPEvent,
   | "owner_id"
@@ -251,6 +252,7 @@ export async function createEvent({
       display_mode,
       external_website_url,
       prices,
+      currency,
     })
     .select()
     .single()
@@ -284,6 +286,7 @@ export async function updateEvent({
   is_published,
   external_website_url,
   prices,
+  currency,
   deleted,
   has_been_announced,
 }: { eventId: EventID } & Partial<LARPEvent>) {
@@ -322,6 +325,7 @@ export async function updateEvent({
       is_published: is_published ?? event.is_published,
       external_website_url: external_website_url ?? event.external_website_url,
       prices: prices === undefined ? event.prices : prices,
+      currency: currency ?? event.currency,
       deleted: deleted === undefined ? event.deleted : deleted,
       has_been_announced:
         has_been_announced === undefined

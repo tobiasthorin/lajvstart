@@ -68,7 +68,7 @@ const isFreeString = !event?.prices ? "true" : "false"
 
   <fieldset
     class="flex flex-col flex-wrap gap-4 border rounded border-slate-400 bg-slate-100 p-4"
-    x-data={`{ free: ${isFreeString}, prices: ${pricesString} }`}
+    x-data={`{ free: ${isFreeString}, prices: ${pricesString}, currency: '${event?.currency ?? "SEK"}' }`}
   >
     <legend class="px-2">Prisnivåer</legend>
 
@@ -79,6 +79,21 @@ const isFreeString = !event?.prices ? "true" : "false"
       x-model="free"
     />
 
+    <div x-show="!free" class="flex flex-col gap-1">
+      <label class="text-sm font-medium text-gray-700" for="currency">Valuta</label>
+      <select
+        id="currency"
+        x-model="currency"
+        class="border border-slate-400 rounded px-3 py-2 text-sm bg-white w-28 self-start"
+      >
+        <option value="SEK">SEK</option>
+        <option value="DKK">DKK</option>
+        <option value="EUR">EUR</option>
+        <option value="NOK">NOK</option>
+      </select>
+    </div>
+    <input type="hidden" name="currency" x-bind:value="currency" />
+
     <ul x-show="!free" class="flex flex-col gap-4">
       <template x-for="(price, index) in prices" :key="price.id"
         ><li class="flex gap-4 items-end">
@@ -86,7 +101,7 @@ const isFreeString = !event?.prices ? "true" : "false"
             class="flex-1 min-w-20"
             id=""
             x-bind:id="`priceValue-${index}`"
-            label="Pris (SEK)"
+            label="Pris"
             x-bind:name="`priceValue-${index}`"
             type="number"
             required

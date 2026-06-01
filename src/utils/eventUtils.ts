@@ -19,6 +19,7 @@ export function extractEventFormData(formData: FormData) {
   const finalSignupDate = formData.get("finalSignupDate")?.toString()
   const externalWebsiteURL = formData.get("externalWebsiteURL")?.toString()
   const isFree = formData.get("isFree")?.toString()
+  const currency = formData.get("currency")?.toString() ?? "SEK"
 
   const prices: EventPrice[] = []
 
@@ -68,6 +69,7 @@ export function extractEventFormData(formData: FormData) {
     externalWebsiteURL,
     prices,
     isFree,
+    currency,
   }
 }
 

@@ -32,6 +32,7 @@ export const POST: APIRoute = async ({ request }) => {
     externalWebsiteURL,
     prices,
     isFree,
+    currency,
   } = extractEventFormData(formData)
 
   const eventImageFile = formData.get("eventPicture") as File | null
@@ -87,7 +88,7 @@ export const POST: APIRoute = async ({ request }) => {
       location_latitude: latitude ? Number(latitude) : null,
       location_longitude: longitude ? Number(longitude) : null,
       display_mode: !useLajvstartSystem,
-      currency: "SEK",
+      currency,
       is_published: false,
       external_website_url: externalWebsiteURL || null,
       prices: isFree ? null : prices,
