@@ -4,11 +4,9 @@ A platform for LARP organizers to list their events and for LARP players to find
 
 ## Tech Stack
 
-- The database, auth, and storage is hosted on Supabase
-- Key frameworks/libraries
-  - Astro
-  - HTMX
-  - Alpine
+- Astro: Web server
+- HTMX: Server-side rendering and SPA-like updates on the client
+- Alpine: Client-side state management and UI interactions
 
 ## Dev Setup
 
@@ -33,8 +31,7 @@ Commands to install dependencies and run the project locally.
 
 ## Conventions
 
-Any project-specific patterns: naming, file structure, state management approach, etc.
-
 ## External Services
 
-APIs or services this project depends on, and where credentials come from.
+Supabase: Database, auth, and storage
+Netlify: Hosting and CI/CD
